@@ -1,0 +1,13 @@
+{
+  "name": "@itsvari/content",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./collections": "./src/collections.ts"
+  },
+  "peerDependencies": {
+    "astro": "^7.2.2"
+  }
+}

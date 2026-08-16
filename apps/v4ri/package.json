@@ -1,0 +1,22 @@
+{
+  "name": "@itsvari/music",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "astro build",
+    "cf-typegen": "wrangler types",
+    "check": "astro check",
+    "deploy": "wrangler deploy",
+    "dev": "astro dev",
+    "preview": "astro build && wrangler dev",
+    "upload": "wrangler versions upload"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.2.1",
+    "@astrojs/rss": "^4.0.19",
+    "@itsvari/content": "workspace:*",
+    "@itsvari/ui": "workspace:*",
+    "astro": "^7.2.2"
+  }
+}
