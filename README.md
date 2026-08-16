@@ -30,4 +30,5 @@ pnpm test
 pnpm build
 ```
 
-See [`docs/architecture.md`](docs/architecture.md) for the content and deployment architecture.
+See [`docs/architecture.md`](docs/architecture.md) for the content architecture and
+[`docs/deployment.md`](docs/deployment.md) for Workers Builds configuration.

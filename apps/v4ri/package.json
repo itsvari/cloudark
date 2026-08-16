@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "build": "astro build",
     "cf-typegen": "wrangler types",
     "check": "astro check",
     "deploy": "wrangler deploy",
     "dev": "astro dev",
-    "preview": "astro build && wrangler dev",
+    "preview": "astro build && astro preview",
     "upload": "wrangler versions upload"
   },
   "dependencies": {

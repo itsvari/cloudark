@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://v4ri.wav/sitemap.xml
