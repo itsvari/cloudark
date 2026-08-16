@@ -1,4 +1,20 @@
-export const siteOrigins = {
-  itsvari: "https://itsvari.com",
-  v4ri: "https://v4ri.wav",
-} as const;
+export {
+  canonicalUrl,
+  contentPath,
+  createActivityFeed,
+  getEventPhase,
+  isPublished,
+  publishesTo,
+  siteOrigins,
+} from "./domain";
+
+export type {
+  ActivityItem,
+  ActivityKind,
+  ActivitySources,
+  EditorialEventStatus,
+  EventPhase,
+  EventTiming,
+  PublicationData,
+  Site,
+} from "./domain";
