@@ -1,0 +1,29 @@
+---
+import { getPost } from "@itsvari/content/astro";
+import { canonicalUrl } from "@itsvari/content";
+import { formatDate } from "@itsvari/ui";
+import { render } from "astro:content";
+
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const id = Astro.params.id;
+const post = id ? await getPost(id, "itsvari") : undefined;
+
+if (!post) return Astro.rewrite("/404");
+
+const { Content } = await render(post);
+const canonical = canonicalUrl("post", post.id, post.data.canonicalSite);
+---
+
+<SiteLayout canonical={canonical} description={post.data.summary} title={post.data.title}>
+  <article>
+    <p class="meta">
+      <span>{post.data.kind}</span>
+      <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
+    </p>
+    <h1>{post.data.title}</h1>
+    <p>{post.data.summary}</p>
+    {post.data.canonicalSite === "v4ri" && <p>Originally published on <a href={canonical}>v4ri.wav</a>.</p>}
+    <Content />
+  </article>
+</SiteLayout>

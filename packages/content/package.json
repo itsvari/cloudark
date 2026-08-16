@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./astro": "./src/astro.ts",
     "./collections": "./src/collections.ts"
   },
   "peerDependencies": {

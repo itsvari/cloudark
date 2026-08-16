@@ -4,6 +4,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./ActivityList.astro": "./src/ActivityList.astro",
+    "./EmptyState.astro": "./src/EmptyState.astro"
+  },
+  "dependencies": {
+    "@itsvari/content": "workspace:*"
   }
 }

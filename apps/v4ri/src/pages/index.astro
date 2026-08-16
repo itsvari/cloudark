@@ -1,8 +1,28 @@
 ---
+import { getActivityFeed, getEvents } from "@itsvari/content/astro";
+import { getEventPhase } from "@itsvari/content";
+import ActivityList from "@itsvari/ui/ActivityList.astro";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+
 import SiteLayout from "../layouts/SiteLayout.astro";
+
+const now = new Date();
+const [activity, events] = await Promise.all([
+  getActivityFeed("v4ri", now),
+  getEvents("v4ri", now),
+]);
+const nextEvent = events.find(({ data }) => getEventPhase(data, now) !== "past");
 ---
 
-<SiteLayout description="DJ and music archive for v4ri." title="v4ri.wav">
-  <h1>v4ri.wav</h1>
-  <p>Music site architecture is ready for content.</p>
+<SiteLayout description="DJ gigs, recorded sets, music releases, and notes from v4ri." title="v4ri.wav">
+  <section class="hero">
+    <p>DJ / producer</p>
+    <h1>v4ri.wav</h1>
+    {nextEvent ? <p>Next: <a href={`/gigs/${nextEvent.id}`}>{nextEvent.data.title}</a></p> : <p>No upcoming gigs announced.</p>}
+  </section>
+
+  <section class="section">
+    <h2>Latest</h2>
+    {activity.length > 0 ? <ActivityList items={activity} /> : <EmptyState />}
+  </section>
 </SiteLayout>

@@ -1,0 +1,27 @@
+---
+import { getRelease } from "@itsvari/content/astro";
+import { canonicalUrl } from "@itsvari/content";
+import { formatDate } from "@itsvari/ui";
+import { render } from "astro:content";
+
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const id = Astro.params.id;
+const release = id ? await getRelease(id, "v4ri") : undefined;
+
+if (!release) return Astro.rewrite("/404");
+
+const { Content } = await render(release);
+---
+
+<SiteLayout canonical={canonicalUrl("release", release.id, release.data.canonicalSite)} description={release.data.summary} title={release.data.title}>
+  <article>
+    <p class="meta"><span>{release.data.type}</span><time datetime={release.data.releaseDate.toISOString()}>{formatDate(release.data.releaseDate)}</time></p>
+    <h1>{release.data.title}</h1>
+    <p>{release.data.summary}</p>
+    <Content />
+    {Object.keys(release.data.links).length > 0 && (
+      <ul>{Object.entries(release.data.links).map(([label, href]) => <li><a href={href}>{label}</a></li>)}</ul>
+    )}
+  </article>
+</SiteLayout>

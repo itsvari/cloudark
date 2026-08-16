@@ -1,8 +1,22 @@
 ---
+import { getActivityFeed } from "@itsvari/content/astro";
+import ActivityList from "@itsvari/ui/ActivityList.astro";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+
 import SiteLayout from "../layouts/SiteLayout.astro";
+
+const activity = await getActivityFeed("itsvari");
 ---
 
-<SiteLayout description="Personal portfolio for Ashe." title="itsvari">
-  <h1>itsvari</h1>
-  <p>Personal portfolio architecture is ready for content.</p>
+<SiteLayout description="Personal portfolio, projects, writing, and activity for Ashe." title="itsvari">
+  <section class="hero">
+    <p>Personal portfolio</p>
+    <h1>Hi. I’m Ashe.</h1>
+    <p>I write code and make music.</p>
+  </section>
+
+  <section class="section">
+    <h2>Recent activity</h2>
+    {activity.length > 0 ? <ActivityList items={activity} /> : <EmptyState />}
+  </section>
 </SiteLayout>

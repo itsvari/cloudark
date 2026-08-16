@@ -1,0 +1,23 @@
+---
+import { getProjects } from "@itsvari/content/astro";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const projects = await getProjects("itsvari");
+---
+
+<SiteLayout description="Software and creative projects by Ashe." title="Projects">
+  <h1>Projects</h1>
+  {projects.length > 0 ? (
+    <ol class="entry-list">
+      {projects.map((project) => (
+        <li>
+          <p class="meta"><span>{project.data.status}</span>{project.data.featured && <span>Featured</span>}</p>
+          <h2><a href={`/projects/${project.id}`}>{project.data.title}</a></h2>
+          <p>{project.data.summary}</p>
+        </li>
+      ))}
+    </ol>
+  ) : <EmptyState message="No projects have been published yet." />}
+</SiteLayout>

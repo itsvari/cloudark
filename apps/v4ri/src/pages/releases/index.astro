@@ -1,0 +1,24 @@
+---
+import { getReleases } from "@itsvari/content/astro";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+import { formatDate } from "@itsvari/ui";
+
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const releases = await getReleases("v4ri");
+---
+
+<SiteLayout description="Music releases and recorded mixes from v4ri." title="Releases">
+  <h1>Releases</h1>
+  {releases.length > 0 ? (
+    <ol class="entry-list">
+      {releases.map((release) => (
+        <li>
+          <p class="meta"><span>{release.data.type}</span><time datetime={release.data.releaseDate.toISOString()}>{formatDate(release.data.releaseDate)}</time></p>
+          <h2><a href={`/releases/${release.id}`}>{release.data.title}</a></h2>
+          <p>{release.data.summary}</p>
+        </li>
+      ))}
+    </ol>
+  ) : <EmptyState message="No releases have been published yet." />}
+</SiteLayout>

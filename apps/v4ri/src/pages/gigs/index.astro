@@ -1,0 +1,36 @@
+---
+import { getEvents } from "@itsvari/content/astro";
+import { getEventPhase } from "@itsvari/content";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+import { formatDateTime } from "@itsvari/ui";
+
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const now = new Date();
+const events = await getEvents("v4ri", now);
+const live = events.filter(({ data }) => getEventPhase(data, now) === "live");
+const upcoming = events.filter(({ data }) => getEventPhase(data, now) === "upcoming");
+const past = events.filter(({ data }) => getEventPhase(data, now) === "past").reverse();
+---
+
+<SiteLayout description="Upcoming and past v4ri DJ gigs." title="Gigs">
+  <h1>Gigs</h1>
+  {events.length === 0 && <EmptyState message="No gigs have been published yet." />}
+  {[{ label: "Live now", entries: live }, { label: "Upcoming", entries: upcoming }, { label: "Past", entries: past }].map(({ label, entries }) => entries.length > 0 && (
+    <section class="section">
+      <h2>{label}</h2>
+      <ol class="entry-list">
+        {entries.map((event) => (
+          <li>
+            <p class="meta">
+              <time datetime={event.data.startsAt.toISOString()}>{formatDateTime(event.data.startsAt)}</time>
+              <span>{event.data.eventStatus}</span>
+            </p>
+            <h3><a href={`/gigs/${event.id}`}>{event.data.title}</a></h3>
+            <p>{event.data.venue.name}, {event.data.venue.city}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  ))}
+</SiteLayout>

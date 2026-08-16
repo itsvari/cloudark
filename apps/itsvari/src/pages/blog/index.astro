@@ -1,0 +1,25 @@
+---
+import { getPosts } from "@itsvari/content/astro";
+import { canonicalUrl } from "@itsvari/content";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+import { formatDate } from "@itsvari/ui";
+
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const posts = await getPosts("itsvari");
+---
+
+<SiteLayout description="Writing and notes from Ashe." title="Blog">
+  <h1>Blog</h1>
+  {posts.length > 0 ? (
+    <ol class="entry-list">
+      {posts.map((post) => (
+        <li>
+          <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
+          <h2><a href={canonicalUrl("post", post.id, post.data.canonicalSite)}>{post.data.title}</a></h2>
+          <p>{post.data.summary}</p>
+        </li>
+      ))}
+    </ol>
+  ) : <EmptyState message="No posts have been published yet." />}
+</SiteLayout>

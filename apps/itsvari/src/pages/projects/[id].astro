@@ -1,0 +1,25 @@
+---
+import { getProject } from "@itsvari/content/astro";
+import { render } from "astro:content";
+
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const id = Astro.params.id;
+const project = id ? await getProject(id, "itsvari") : undefined;
+
+if (!project) return Astro.rewrite("/404");
+
+const { Content } = await render(project);
+---
+
+<SiteLayout description={project.data.summary} title={project.data.title}>
+  <article>
+    <p class="meta"><span>{project.data.status}</span>{project.data.tags.map((tag) => <span>{tag}</span>)}</p>
+    <h1>{project.data.title}</h1>
+    <p>{project.data.summary}</p>
+    <Content />
+    {Object.keys(project.data.links).length > 0 && (
+      <ul>{Object.entries(project.data.links).map(([label, href]) => <li><a href={href}>{label}</a></li>)}</ul>
+    )}
+  </article>
+</SiteLayout>

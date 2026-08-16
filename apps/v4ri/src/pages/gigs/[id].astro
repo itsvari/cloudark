@@ -1,0 +1,38 @@
+---
+import { getEvent } from "@itsvari/content/astro";
+import { canonicalUrl, getEventPhase } from "@itsvari/content";
+import { formatDateTime } from "@itsvari/ui";
+import { render } from "astro:content";
+
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const id = Astro.params.id;
+const event = id ? await getEvent(id, "v4ri") : undefined;
+
+if (!event) return Astro.rewrite("/404");
+
+const now = new Date();
+const phase = getEventPhase(event.data, now);
+const { Content } = await render(event);
+---
+
+<SiteLayout canonical={canonicalUrl("event", event.id, event.data.canonicalSite)} description={event.data.summary} title={event.data.title}>
+  <article>
+    <p class="meta"><span>{phase}</span><span>{event.data.eventStatus}</span></p>
+    <h1>{event.data.title}</h1>
+    <p>
+      <time datetime={event.data.startsAt.toISOString()}>{formatDateTime(event.data.startsAt)}</time>
+      — <time datetime={event.data.endsAt.toISOString()}>{formatDateTime(event.data.endsAt)}</time>
+    </p>
+    <p>{event.data.venue.name}, {event.data.venue.city}, {event.data.venue.country}</p>
+    {event.data.ticketUrl && phase !== "past" && event.data.eventStatus === "scheduled" && <p><a href={event.data.ticketUrl}>Tickets</a></p>}
+    {event.data.recordingUrl && <p><a href={event.data.recordingUrl}>Listen to the recording</a></p>}
+    <Content />
+    {event.data.setlist.length > 0 && (
+      <section>
+        <h2>Setlist</h2>
+        <ol>{event.data.setlist.map((track) => <li>{track.artist} — {track.title}</li>)}</ol>
+      </section>
+    )}
+  </article>
+</SiteLayout>

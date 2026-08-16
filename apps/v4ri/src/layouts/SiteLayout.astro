@@ -2,11 +2,13 @@
 import "../styles/global.css";
 
 interface Props {
+  canonical?: URL | string;
   description: string;
   title: string;
 }
 
-const { description, title } = Astro.props;
+const { canonical = Astro.url, description, title } = Astro.props;
+const pageTitle = title === "v4ri.wav" ? title : `${title} · v4ri.wav`;
 ---
 
 <!doctype html>
@@ -15,11 +17,26 @@ const { description, title } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
-    <title>{title}</title>
+    <link rel="alternate" type="application/rss+xml" title="v4ri.wav RSS" href="/rss.xml" />
+    <link rel="canonical" href={canonical} />
+    <title>{pageTitle}</title>
   </head>
   <body>
+    <header>
+      <a class="brand" href="/">v4ri.wav</a>
+      <nav aria-label="Primary navigation">
+        <a href="/gigs">Gigs</a>
+        <a href="/releases">Releases</a>
+        <a href="/posts">Posts</a>
+        <a href="https://itsvari.com">itsvari.com</a>
+      </nav>
+    </header>
     <main>
       <slot />
     </main>
+    <footer>
+      <span>© {new Date().getFullYear()} v4ri</span>
+      <a href="/rss.xml">RSS</a>
+    </footer>
   </body>
 </html>
