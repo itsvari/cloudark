@@ -4,11 +4,10 @@
   "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-08-14",
   "compatibility_flags": ["nodejs_compat"],
-  "workers_dev": true,
+  "workers_dev": false,
   "assets": {
     "binding": "ASSETS",
-    "directory": "./dist/client",
-    "not_found_handling": "404-page"
+    "directory": "./dist/client"
   },
   "routes": [
     {
