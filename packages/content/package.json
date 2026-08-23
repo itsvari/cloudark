@@ -6,7 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./astro": "./src/astro.ts",
-    "./collections": "./src/collections.ts"
+    "./collections": "./src/collections.ts",
+    "./schemas": "./src/schemas.ts"
   },
   "peerDependencies": {
     "astro": "^7.2.2"

@@ -4,5 +4,6 @@
     "skipLibCheck": true,
     "types": ["vitest/globals"]
   },
-  "include": ["src/domain.ts", "src/domain.test.ts", "src/index.ts"]
+  "include": ["src/**/*.ts", "../../apps/itsvari/.astro/types.d.ts"],
+  "exclude": ["node_modules", "dist"]
 }

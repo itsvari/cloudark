@@ -3,7 +3,7 @@ import { getCollection, getEntry } from "astro:content";
 import {
   createActivityFeed,
   isPublished,
-  publishesTo,
+  sortProjects,
   type Site,
 } from "./domain";
 
@@ -36,9 +36,8 @@ export async function getPost(id: string, site: Site, now = new Date()) {
 }
 
 export async function getEvents(site: Site, now = new Date()) {
-  const entries = await getCollection(
-    "events",
-    ({ data }) => !data.draft && data.publishedAt <= now && publishesTo(data, site),
+  const entries = await getCollection("events", ({ data }) =>
+    isPublished(data, site, now),
   );
 
   return entries.sort(
@@ -51,6 +50,11 @@ export async function getEvent(id: string, site: Site, now = new Date()) {
   return entry && entry.data.canonicalSite === site && isPublished(entry.data, site, now)
     ? entry
     : undefined;
+}
+
+export async function getPage(id: string) {
+  const entry = await getEntry("pages", id);
+  return entry && !entry.data.draft ? entry : undefined;
 }
 
 export async function getReleases(site: Site, now = new Date()) {
@@ -75,10 +79,7 @@ export async function getProjects(site: Site, now = new Date()) {
     isPublished(data, site, now),
   );
 
-  return entries.sort((left, right) => {
-    if (left.data.featured !== right.data.featured) return left.data.featured ? -1 : 1;
-    return right.data.publishedAt.getTime() - left.data.publishedAt.getTime();
-  });
+  return sortProjects(entries);
 }
 
 export async function getProject(id: string, site: Site, now = new Date()) {

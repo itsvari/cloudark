@@ -6,6 +6,7 @@ export const siteOrigins = {
 export type Site = keyof typeof siteOrigins;
 export type EventPhase = "upcoming" | "live" | "past";
 export type EditorialEventStatus = "scheduled" | "cancelled" | "postponed";
+export type EventDisplayPhase = EventPhase | Exclude<EditorialEventStatus, "scheduled">;
 
 export interface PublicationData {
   canonicalSite: Site;
@@ -24,7 +25,8 @@ export type ActivityKind = "event" | "post" | "project" | "release";
 export interface ActivityItem {
   canonicalSite: Site;
   date: Date;
-  eventPhase?: EventPhase;
+  eventPhase?: EventDisplayPhase;
+  eventStatus?: EditorialEventStatus;
   href: string;
   id: string;
   kind: ActivityKind;
@@ -32,21 +34,27 @@ export interface ActivityItem {
   title: string;
 }
 
-interface ActivityEntry<TData> {
+export interface ActivityEntry<TData> {
   data: TData;
   id: string;
 }
 
-interface PostData extends PublicationData {
+export interface PostData extends PublicationData {
   summary: string;
   title: string;
 }
 
-interface EventData extends PostData, EventTiming {}
+export interface EventData extends Omit<PostData, "canonicalSite">, EventTiming {
+  canonicalSite: "v4ri";
+  eventStatus: EditorialEventStatus;
+}
 
-interface ReleaseData extends PostData {}
+export type ReleaseData = Omit<PostData, "canonicalSite"> & { canonicalSite: "v4ri" };
 
-interface ProjectData extends PostData {}
+export interface ProjectData extends Omit<PostData, "canonicalSite"> {
+  canonicalSite: "itsvari";
+  featured: boolean;
+}
 
 export interface ActivitySources {
   events: ActivityEntry<EventData>[];
@@ -64,11 +72,28 @@ export function getEventPhase(
   return "past";
 }
 
+export function getEventDisplayPhase(
+  { endsAt, eventStatus, startsAt }: Pick<EventData, "endsAt" | "eventStatus" | "startsAt">,
+  now = new Date(),
+): EventDisplayPhase {
+  return eventStatus === "scheduled" ? getEventPhase({ endsAt, startsAt }, now) : eventStatus;
+}
+
+export function isValidSyndication(
+  { canonicalSite, syndicateTo }: Pick<PublicationData, "canonicalSite" | "syndicateTo">,
+): boolean {
+  return (
+    new Set(syndicateTo).size === syndicateTo.length &&
+    !syndicateTo.includes(canonicalSite)
+  );
+}
+
 export function publishesTo(
   { canonicalSite, syndicateTo }: Pick<PublicationData, "canonicalSite" | "syndicateTo">,
   site: Site,
 ): boolean {
-  return canonicalSite === site || syndicateTo.includes(site);
+  return isValidSyndication({ canonicalSite, syndicateTo }) &&
+    (canonicalSite === site || syndicateTo.includes(site));
 }
 
 export function isPublished(
@@ -79,7 +104,38 @@ export function isPublished(
   return !data.draft && data.publishedAt <= now && publishesTo(data, site);
 }
 
-export function contentPath(kind: ActivityKind, id: string, site: Site): string {
+export function sortProjects<
+  T extends ActivityEntry<Pick<ProjectData, "featured" | "publishedAt">>,
+>(entries: T[]): T[] {
+  return [...entries].sort((left, right) => {
+    if (left.data.featured !== right.data.featured) return left.data.featured ? -1 : 1;
+    return right.data.publishedAt.getTime() - left.data.publishedAt.getTime();
+  });
+}
+
+export type CanonicalSiteForKind<K extends ActivityKind> = K extends "project"
+  ? "itsvari"
+  : K extends "event" | "release"
+    ? "v4ri"
+    : Site;
+
+export function isValidCanonicalPair(kind: ActivityKind, site: Site): boolean {
+  return (
+    kind === "post" ||
+    (kind === "project" && site === "itsvari") ||
+    ((kind === "event" || kind === "release") && site === "v4ri")
+  );
+}
+
+export function contentPath<K extends ActivityKind>(
+  kind: K,
+  id: string,
+  site: CanonicalSiteForKind<K>,
+): string {
+  if (!isValidCanonicalPair(kind, site)) {
+    throw new Error(`No canonical route exists for ${kind} content on ${site}`);
+  }
+
   switch (kind) {
     case "event":
       return `/gigs/${id}`;
@@ -92,8 +148,31 @@ export function contentPath(kind: ActivityKind, id: string, site: Site): string 
   }
 }
 
-export function canonicalUrl(kind: ActivityKind, id: string, site: Site): string {
+export function canonicalUrl<K extends ActivityKind>(
+  kind: K,
+  id: string,
+  site: CanonicalSiteForKind<K>,
+): string {
   return new URL(contentPath(kind, id, site), siteOrigins[site]).toString();
+}
+
+export function escapeXml(value: string): string {
+  return value.replace(/[<>&'"]/g, (character) => {
+    switch (character) {
+      case "&":
+        return "&amp;";
+      case "<":
+        return "&lt;";
+      case ">":
+        return "&gt;";
+      case "\"":
+        return "&quot;";
+      case "'":
+        return "&apos;";
+      default:
+        return character;
+    }
+  });
 }
 
 export function createActivityFeed(
@@ -101,8 +180,11 @@ export function createActivityFeed(
   site: Site,
   now = new Date(),
 ): ActivityItem[] {
-  const normalize = <TData extends PostData>(
-    kind: ActivityKind,
+  const normalize = <
+    K extends ActivityKind,
+    TData extends PostData & { canonicalSite: CanonicalSiteForKind<K> },
+  >(
+    kind: K,
     entries: ActivityEntry<TData>[],
   ): ActivityItem[] =>
     entries
@@ -115,14 +197,26 @@ export function createActivityFeed(
         kind,
         summary: data.summary,
         title: data.title,
-        ...(kind === "event"
-          ? { eventPhase: getEventPhase(data as unknown as EventData, now) }
-          : {}),
+      }));
+
+  const normalizeEvents = (entries: ActivityEntry<EventData>[]): ActivityItem[] =>
+    entries
+      .filter(({ data }) => isPublished(data, site, now))
+      .map(({ data, id }) => ({
+        canonicalSite: data.canonicalSite,
+        date: data.publishedAt,
+        eventPhase: getEventDisplayPhase(data, now),
+        eventStatus: data.eventStatus,
+        href: canonicalUrl("event", id, data.canonicalSite),
+        id,
+        kind: "event" as const,
+        summary: data.summary,
+        title: data.title,
       }));
 
   return [
     ...normalize("post", sources.posts),
-    ...normalize("event", sources.events),
+    ...normalizeEvents(sources.events),
     ...normalize("release", sources.releases),
     ...normalize("project", sources.projects),
   ].sort((left, right) => right.date.getTime() - left.date.getTime());
