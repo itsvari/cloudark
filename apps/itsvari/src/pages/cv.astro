@@ -1,12 +1,21 @@
 ---
+import { getPage } from "@itsvari/content/astro";
+import { render } from "astro:content";
+
 import SiteLayout from "../layouts/SiteLayout.astro";
 
 export const prerender = true;
+
+const page = await getPage("cv");
+
+if (!page) return Astro.rewrite("/404");
+
+const { Content } = await render(page);
 ---
 
-<SiteLayout description="CV for Ashe." title="CV">
+<SiteLayout description={page.data.summary} title={page.data.title}>
   <article>
-    <h1>CV</h1>
-    <p>This route is ready for an accessible HTML CV and an optional downloadable PDF.</p>
+    <h1>{page.data.title}</h1>
+    <Content />
   </article>
 </SiteLayout>

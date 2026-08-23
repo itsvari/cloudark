@@ -23,7 +23,6 @@ const canonical = canonicalUrl("post", post.id, post.data.canonicalSite);
     </p>
     <h1>{post.data.title}</h1>
     <p>{post.data.summary}</p>
-    {post.data.canonicalSite === "v4ri" && <p>Originally published on <a href={canonical}>v4ri.wav</a>.</p>}
     <Content />
   </article>
 </SiteLayout>

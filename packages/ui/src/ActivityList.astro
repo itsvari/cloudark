@@ -1,12 +1,13 @@
 ---
-import type { ActivityItem } from "@itsvari/content";
+import type { ActivityItem, Site } from "@itsvari/content";
 import { formatDate } from "./index";
 
 interface Props {
+  currentSite: Site;
   items: ActivityItem[];
 }
 
-const { items } = Astro.props;
+const { currentSite, items } = Astro.props;
 ---
 
 <ol class="activity-list">
@@ -19,7 +20,9 @@ const { items } = Astro.props;
       </div>
       <h3><a href={item.href}>{item.title}</a></h3>
       <p>{item.summary}</p>
-      {item.canonicalSite === "v4ri" && <small>From v4ri.wav</small>}
+      {item.canonicalSite !== currentSite && (
+        <small>From {item.canonicalSite === "itsvari" ? "itsvari.com" : "v4ri.wav"}</small>
+      )}
     </li>
   ))}
 </ol>

@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { siteOrigins } from "@itsvari/content";
 
 interface Props {
   canonical?: URL | string;
@@ -7,8 +8,9 @@ interface Props {
   title: string;
 }
 
-const { canonical = Astro.url, description, title } = Astro.props;
+const { canonical: canonicalProp, description, title } = Astro.props;
 const pageTitle = title === "itsvari" ? title : `${title} · itsvari`;
+const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? siteOrigins.itsvari).toString();
 ---
 
 <!doctype html>
@@ -17,6 +19,15 @@ const pageTitle = title === "itsvari" ? title : `${title} · itsvari`;
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content="itsvari" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="alternate" type="application/rss+xml" title="itsvari RSS" href="/rss.xml" />
     <link rel="canonical" href={canonical} />
     <title>{pageTitle}</title>

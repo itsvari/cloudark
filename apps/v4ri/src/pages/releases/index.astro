@@ -1,5 +1,6 @@
 ---
 import { getReleases } from "@itsvari/content/astro";
+import { canonicalUrl } from "@itsvari/content";
 import EmptyState from "@itsvari/ui/EmptyState.astro";
 import { formatDate } from "@itsvari/ui";
 
@@ -15,7 +16,7 @@ const releases = await getReleases("v4ri");
       {releases.map((release) => (
         <li>
           <p class="meta"><span>{release.data.type}</span><time datetime={release.data.releaseDate.toISOString()}>{formatDate(release.data.releaseDate)}</time></p>
-          <h2><a href={`/releases/${release.id}`}>{release.data.title}</a></h2>
+          <h2><a href={canonicalUrl("release", release.id, release.data.canonicalSite)}>{release.data.title}</a></h2>
           <p>{release.data.summary}</p>
         </li>
       ))}

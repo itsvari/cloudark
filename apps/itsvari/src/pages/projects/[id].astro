@@ -1,5 +1,6 @@
 ---
 import { getProject } from "@itsvari/content/astro";
+import { canonicalUrl } from "@itsvari/content";
 import { render } from "astro:content";
 
 import SiteLayout from "../../layouts/SiteLayout.astro";
@@ -12,7 +13,7 @@ if (!project) return Astro.rewrite("/404");
 const { Content } = await render(project);
 ---
 
-<SiteLayout description={project.data.summary} title={project.data.title}>
+<SiteLayout canonical={canonicalUrl("project", project.id, project.data.canonicalSite)} description={project.data.summary} title={project.data.title}>
   <article>
     <p class="meta"><span>{project.data.status}</span>{project.data.tags.map((tag) => <span>{tag}</span>)}</p>
     <h1>{project.data.title}</h1>

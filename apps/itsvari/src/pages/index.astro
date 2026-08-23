@@ -17,6 +17,6 @@ const activity = await getActivityFeed("itsvari");
 
   <section class="section">
     <h2>Recent activity</h2>
-    {activity.length > 0 ? <ActivityList items={activity} /> : <EmptyState />}
+    {activity.length > 0 ? <ActivityList currentSite="itsvari" items={activity} /> : <EmptyState />}
   </section>
 </SiteLayout>

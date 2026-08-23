@@ -1,6 +1,6 @@
 ---
 import { getEvent } from "@itsvari/content/astro";
-import { canonicalUrl, getEventPhase } from "@itsvari/content";
+import { canonicalUrl, getEventDisplayPhase } from "@itsvari/content";
 import { formatDateTime } from "@itsvari/ui";
 import { render } from "astro:content";
 
@@ -12,7 +12,7 @@ const event = id ? await getEvent(id, "v4ri") : undefined;
 if (!event) return Astro.rewrite("/404");
 
 const now = new Date();
-const phase = getEventPhase(event.data, now);
+const phase = getEventDisplayPhase(event.data, now);
 const { Content } = await render(event);
 ---
 

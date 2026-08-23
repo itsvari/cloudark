@@ -1,12 +1,21 @@
 ---
+import { getPage } from "@itsvari/content/astro";
+import { render } from "astro:content";
+
 import SiteLayout from "../layouts/SiteLayout.astro";
 
 export const prerender = true;
+
+const page = await getPage("about");
+
+if (!page) return Astro.rewrite("/404");
+
+const { Content } = await render(page);
 ---
 
-<SiteLayout description="About Ashe." title="About">
+<SiteLayout description={page.data.summary} title={page.data.title}>
   <article>
-    <h1>About</h1>
-    <p>This route is ready for the final biography during the content pass.</p>
+    <h1>{page.data.title}</h1>
+    <Content />
   </article>
 </SiteLayout>
