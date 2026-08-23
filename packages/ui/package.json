@@ -10,5 +10,8 @@
   },
   "dependencies": {
     "@itsvari/content": "workspace:*"
+  },
+  "scripts": {
+    "check": "tsc --noEmit -p tsconfig.json"
   }
 }

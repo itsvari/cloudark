@@ -25,9 +25,20 @@ syndicateTo:
 
 Syndicated feed items always link to the canonical domain. Detail routes only render entries canonically owned by that application.
 
-Event phase is derived at request time from `startsAt` and `endsAt`. `eventStatus` is reserved for editorial exceptions such as cancellation or postponement.
+The ownership contract is enforced in the collection schemas: projects are owned by `itsvari`,
+events and releases are owned by `v4ri`, and posts may be owned by either site. Syndication
+targets must be unique and cannot include the canonical site. This keeps every generated
+canonical URL backed by a real detail route.
 
-All sample entries are drafts so scaffolding content cannot be deployed accidentally.
+Event phase is derived at request time from `startsAt` and `endsAt` for scheduled events.
+`cancelled` and `postponed` are editorial display states that override the temporal phase.
+
+Content entries are intentionally flat `*.md` files at the root of each collection. The current
+single-segment detail routes depend on that flat-ID constraint; nested content requires migrating
+all detail routes together to rest parameters.
+
+Activity sample entries remain drafts so scaffolding content cannot be deployed accidentally.
+About and CV are the deliberately published pages used by the static routes.
 
 ## Storage
 

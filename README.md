@@ -25,10 +25,15 @@ The two development commands run independently. Astro uses Vite for development 
 ## Verification
 
 ```sh
+pnpm lint
 pnpm check
 pnpm test
+pnpm coverage
 pnpm build
 ```
+
+After a staging deployment, run the direct-navigation, header, feed, and 404 smoke checks with
+`ITSVARI_SMOKE_BASE_URL` and `V4RI_SMOKE_BASE_URL` set.
 
 See [`docs/architecture.md`](docs/architecture.md) for the content architecture and
 [`docs/deployment.md`](docs/deployment.md) for Workers Builds configuration.

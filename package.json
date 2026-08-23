@@ -11,18 +11,26 @@
     "build": "pnpm --filter './apps/*' build",
     "build:itsvari": "pnpm --filter @itsvari/web build",
     "build:v4ri": "pnpm --filter @itsvari/music build",
-    "check": "pnpm --filter './apps/*' check && tsc --noEmit -p packages/content/tsconfig.json",
+    "check": "pnpm --filter './apps/*' check && pnpm --filter @itsvari/ui check && tsc --noEmit -p packages/content/tsconfig.json",
     "dev:itsvari": "pnpm --filter @itsvari/web dev",
     "dev:v4ri": "pnpm --filter @itsvari/music dev",
+    "coverage": "vitest run --coverage",
+    "lint": "eslint . --max-warnings=0",
+    "smoke:deployed": "node scripts/smoke-deployed.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^24.3.0",
+    "@vitest/coverage-v8": "^4.1.11",
+    "eslint": "^10.9.0",
+    "eslint-plugin-astro": "^3.1.0",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.46.0",
     "vite": "^8.2.1",
-    "vitest": "^4.1.0",
+    "vitest": "^4.1.11",
     "wrangler": "^4.123.0"
   }
 }
