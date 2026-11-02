@@ -16,6 +16,9 @@ export default defineConfig({
   session: false,
   site: "https://itsvari.com",
   vite: {
+    define: {
+      "process.env.CLOUDFLARE_ENV": JSON.stringify(process.env.CLOUDFLARE_ENV ?? ""),
+    },
     server: {
       fs: {
         allow: [searchForWorkspaceRoot(process.cwd())],

@@ -48,6 +48,9 @@ const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? sit
     <link rel="alternate" type="application/rss+xml" title="itsvari RSS" href="/rss.xml" />
     <link rel="canonical" href={canonical} />
     <title>{pageTitle}</title>
+    {import.meta.env.PROD && process.env.CLOUDFLARE_ENV !== "staging" && (
+      <script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"a1997520d1b8485f98a9a5ada2d8c3c8"}'></script>
+    )}
     <FontFaces />
     <slot name="head" />
   </head>

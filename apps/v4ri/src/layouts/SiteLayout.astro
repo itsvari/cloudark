@@ -45,6 +45,9 @@ const drawerLinks = [...navigation.map((link) => ({ ...link, current: isCurrent(
     <FontFaces />
     <slot name="head" />
     <title>{pageTitle}</title>
+    {import.meta.env.PROD && process.env.CLOUDFLARE_ENV !== "staging" && (
+      <script is:inline type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token":"1e351cff8b4f415d8a7d629da502f055"}'></script>
+    )}
   </head>
   <body class:list={["page", "music-page", { "is-home": home }]}>
     <a class="skip-link" href="#main">Skip to content</a>
