@@ -1,0 +1,17 @@
+{
+  "name": "@itsvari/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*.astro": "./src/*.astro",
+    "./styles/*.css": "./src/styles/*.css"
+  },
+  "dependencies": {
+    "@itsvari/content": "workspace:*"
+  },
+  "scripts": {
+    "check": "tsc --noEmit -p tsconfig.json"
+  }
+}

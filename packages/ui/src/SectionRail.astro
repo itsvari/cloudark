@@ -1,0 +1,11 @@
+---
+interface Props { sections?: string[]; active?: string; }
+const { sections = ['00','01','02'], active = sections[0] } = Astro.props;
+---
+<aside class="section-rail" aria-hidden="true">{sections.map((section, index) => <>{index > 0 && <i></i>}<span class:list={{ active: section === active }}>{section}</span></>)}</aside>
+<style>
+  .section-rail { position: absolute; right: var(--s-2); top: 50%; transform: translateY(-50%); display: grid; gap: var(--s-2); justify-items: center; font: var(--t-2)/1 'Departure Mono', monospace; letter-spacing: .06em; color: var(--dim); }
+  i { width: 1px; height: 18px; background: var(--rule); display: block; }
+  .active { color: var(--red); }
+  @container page (max-width: 1023px) { .section-rail { display: none; } }
+</style>

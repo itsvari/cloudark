@@ -1,0 +1,35 @@
+---
+import { getPage, getFeaturedProjects, getFeaturedPosts, getProjects, getPosts } from "@itsvari/content/astro";
+import Card from "@itsvari/ui/Card.astro";
+import LeaderRow from "@itsvari/ui/LeaderRow.astro";
+import SectionHeading from "@itsvari/ui/SectionHeading.astro";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import WritingRow from "../components/WritingRow.astro";
+const [home, projects, posts, allProjects, allPosts] = await Promise.all([getPage("home"), getFeaturedProjects(2), getFeaturedPosts("itsvari", 2), getProjects("itsvari"), getPosts("itsvari")]);
+const intro = home?.data.intro ?? "Computer Science student at the National University of Singapore, based in Singapore. I build AI tools and web systems.";
+const [introStart, introEnd] = intro.split("help people do their best work");
+const words = (number: number) => number === 2 ? "two" : String(number);
+---
+<SiteLayout description={home?.data.summary ?? "Ashe Andromeda Low. Computer Science at NUS, AI tools, web systems and music."} title="itsvari" sections={["00", "01", "02"]}>
+  <h1 class="l-name">Ashe.</h1>
+  <p class="l-tag">{home?.data.tagline ?? "writes code, builds useful tools, DJs"}</p>
+  <p class="l-pronouns tag dim">she/it</p>
+  <p class="l-intro">{introEnd !== undefined ? <>{introStart}<em>help people do their best work</em>{introEnd}</> : intro}</p>
+  <div class="l-links tag">{home?.data.links.map(({ href, label }) => href === "/cv" ? <span class="cv-links" role="group" aria-label="Curriculum vitae">[ <a href="/cv" aria-label="View curriculum vitae">cv →</a> · <a href="/cv/ashe-andromeda-low-cv.pdf" download="ashe-andromeda-low-cv.pdf" aria-label="Download curriculum vitae as PDF">pdf ↓</a> ]</span> : <a href={href}>[ {label} <span class:list={{ red: href.startsWith("https:") }}>{href.startsWith("https:") ? "↗" : "→"}</span> ]</a>)}</div>
+  <div class="now" aria-label="What I'm doing now">{home?.data.now.map(({ label, value, href, state }) => <LeaderRow label={label} value={value} href={href} trailing={state} state={href?.startsWith("https:") ? "external" : undefined} />)}</div>
+  <section aria-labelledby="selected-work">
+    <SectionHeading title="Selected work" aside={`${words(projects.length)} of ${words(allProjects.length)}`} number="01" href="/projects" linkLabel="all projects" id="selected-work" />
+    {projects.length > 0 ? <div class="cards">{projects.map(({ id, data }, index) => <Card href={`/projects/${id}`} title={data.title} summary={data.summary} status={data.status} featured={data.featured} image={data.image} tags={data.tags} links={data.links} number={index + 1} />)}</div> : <EmptyState />}
+  </section>
+  <section aria-labelledby="selected-writing">
+    <SectionHeading title={posts.length > 0 ? "Selected writing" : "Writing"} aside={posts.length > 0 ? `${words(posts.length)} of ${words(allPosts.length)}` : undefined} number="02" href="/blog" linkLabel={posts.length > 0 ? "all writing" : "writing index"} id="selected-writing" />
+    {posts.length > 0 ? posts.map((post) => <WritingRow post={post} />) : <EmptyState message="No posts published yet." />}
+  </section>
+</SiteLayout>
+
+<style>
+  .l-tag { margin-bottom: var(--s-2); }
+  .l-pronouns { margin: 0 0 var(--s-4); }
+  .cv-links { white-space: nowrap; }
+</style>

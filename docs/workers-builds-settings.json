@@ -1,0 +1,54 @@
+{
+  "repository": "itsvari/cloudark",
+  "productionBranch": "main",
+  "buildCommand": "pnpm run build:cloudflare",
+  "buildCachingEnabled": true,
+  "pathIncludes": ["*"],
+  "pathExcludes": [],
+  "buildVariables": {
+    "NODE_VERSION": "26.13.0",
+    "PNPM_VERSION": "12.16.1",
+    "TX02_FONT_BASE_URL": "https://media.itsvari.com/fonts/tx-02/v1/",
+    "SKIP_DEPENDENCY_INSTALL": "true"
+  },
+  "projects": [
+    {
+      "workerName": "itsvari-com-website",
+      "rootDirectory": "apps/itsvari",
+      "environment": "production",
+      "deployCommand": "pnpm run deploy",
+      "branchIncludes": ["main"],
+      "branchExcludes": []
+    },
+    {
+      "workerName": "v4ri-music",
+      "rootDirectory": "apps/v4ri",
+      "environment": "production",
+      "deployCommand": "pnpm run deploy",
+      "branchIncludes": ["main"],
+      "branchExcludes": []
+    },
+    {
+      "workerName": "itsvari-com-website-staging",
+      "rootDirectory": "apps/itsvari",
+      "environment": "staging",
+      "deployCommand": "pnpm run deploy:staging",
+      "branchIncludes": ["*"],
+      "branchExcludes": ["main"],
+      "buildVariables": {
+        "CLOUDFLARE_ENV": "staging"
+      }
+    },
+    {
+      "workerName": "v4ri-music-staging",
+      "rootDirectory": "apps/v4ri",
+      "environment": "staging",
+      "deployCommand": "pnpm run deploy:staging",
+      "branchIncludes": ["*"],
+      "branchExcludes": ["main"],
+      "buildVariables": {
+        "CLOUDFLARE_ENV": "staging"
+      }
+    }
+  ]
+}

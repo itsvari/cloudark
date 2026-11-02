@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { canonicalUrl } from "@itsvari/content";
+import PhotoFill from "@itsvari/ui/PhotoFill.astro";
+interface Props { post: CollectionEntry<"posts"> }
+const { post } = Astro.props;
+const date = new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "2-digit", year: "2-digit", timeZone: "Asia/Singapore" }).format(post.data.publishedAt).replaceAll("/", ".");
+const href = post.data.canonicalSite === "itsvari" ? `/blog/${post.id}` : canonicalUrl("post", post.id, post.data.canonicalSite);
+const wordCount = post.body?.split(/\s+/).length ?? 0;
+const wordsPerMinute = 200;
+const readingMinutes = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
+---
+<a class:list={["writing-row", { hasbg: Boolean(post.data.image) }]} href={href} data-photo-row={post.data.image ? "" : undefined} data-photo-link={post.data.image ? "" : undefined}>
+  {post.data.image && <PhotoFill image={post.data.image} />}
+  <time class="writing-date" datetime={post.data.publishedAt.toISOString()}>{date}</time>
+  <span class="writing-title" data-photo-text>{post.data.title}</span>
+  <span class="writing-kind tag">[ {post.data.kind} · {readingMinutes} min ]</span><span class:list={["writing-arrow", { red: post.data.canonicalSite !== "itsvari" }]} aria-hidden="true">{post.data.canonicalSite === "itsvari" ? "→" : "↗"}</span>
+</a>

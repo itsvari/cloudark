@@ -1,0 +1,26 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+allowBuilds:
+  esbuild: true
+  sharp: true
+  workerd: true
+
+overrides:
+  'minimatch@>=10 <11.0.1': '^11.0.4'
+
+minimumReleaseAgeExclude:
+  - '@cloudflare/vite-plugin@1.67.0'
+  - '@shikijs/core@4.6.0'
+  - '@shikijs/engine-javascript@4.6.0'
+  - '@shikijs/engine-oniguruma@4.6.0'
+  - '@shikijs/langs@4.6.0'
+  - '@shikijs/primitive@4.6.0'
+  - '@shikijs/themes@4.6.0'
+  - '@shikijs/types@4.6.0'
+  - 'miniflare@5.20261101.0-beta'
+  - 'minimatch@11.0.4'
+  - 'shiki@4.6.0'
+  - 'tinybench@6.2.3'
+  - 'wrangler@4.156.1'

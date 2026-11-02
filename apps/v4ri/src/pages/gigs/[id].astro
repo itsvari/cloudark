@@ -1,0 +1,85 @@
+---
+import { getEvent, getReleases } from "@itsvari/content/astro";
+import { canonicalUrl, getEventDisplayPhase } from "@itsvari/content";
+import YouTubeEmbed from "@itsvari/ui/YouTubeEmbed.astro";
+import Tag from "@itsvari/ui/Tag.astro";
+import { render } from "astro:content";
+import ReadingArticle from "../../components/ReadingArticle.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const id = Astro.params.id;
+const event = id ? await getEvent(id, "v4ri") : undefined;
+if (!event) return Astro.rewrite("/404");
+const phase = getEventDisplayPhase(event.data);
+const ticketLabel = phase === "upcoming" || phase === "live" ? "event & tickets" : "original ticket listing";
+const minimal = event.data.disclosure === "minimal";
+const recordings = minimal ? [] : await getReleases("v4ri");
+const recording = recordings.find(({ data }) => data.eventId === event.id);
+const renderedArticle = minimal ? undefined : await render(event);
+const Content = renderedArticle?.Content;
+const headings = renderedArticle?.headings ?? [];
+const hasOrganiserDescription = !minimal && Boolean(event.body?.trim());
+const formatDate = (date: Date): string => new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" }).format(date);
+const formatTime = (date: Date): string => new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Singapore" }).format(date);
+const articleHeadings = minimal ? [] : [
+  ...(event.data.lineup.length > 0 ? [{ depth: 2, slug: "event-lineup", text: "Lineup" }] : []),
+  ...(hasOrganiserDescription ? [{ depth: 2, slug: "event-description", text: "Description" }] : []),
+  ...headings,
+  ...(event.data.recordingUrl ? [{ depth: 2, slug: "recording", text: "The recording" }] : []),
+  ...(event.data.setlist.length > 0 ? [{ depth: 2, slug: "setlist", text: "Selected records" }] : []),
+];
+---
+
+<SiteLayout canonical={canonicalUrl("event", event.id, event.data.canonicalSite)} description={event.data.summary} title={event.data.title}>
+  {minimal ? <article class="minimal-event">
+    <h1>{event.data.title}</h1>
+    <p class="minimal-summary">{event.data.summary}</p>
+    <div class="page-rule" aria-hidden="true"></div>
+    <p class="tag"><span>{event.data.timeKind === "set" ? "Set time" : "Event time"} · SGT</span><br /><time datetime={event.data.startsAt.toISOString()}>{formatDate(event.data.startsAt)} · {formatTime(event.data.startsAt)}</time>{event.data.endsAt && <>–<time datetime={event.data.endsAt.toISOString()}>{formatTime(event.data.endsAt)}</time></>}</p>
+  </article> : <ReadingArticle title={event.data.title} summary={event.data.summary} showSummary={!hasOrganiserDescription} headings={articleHeadings}>
+    <Fragment slot="meta"><a href="/gigs">[ gigs → ]</a><Tag state={phase}>{phase === "live" ? "● live" : phase}</Tag>{event.data.genres.map((genre) => <span>[ {genre} ]</span>)}</Fragment>
+    <div slot="details" class:list={["event-details", { "with-photo": Boolean(event.data.image) }]}>
+      <div>
+        <dl class="event-facts">
+          <div><dt class="lbl">{event.data.timeKind === "set" ? "Set time" : "Event time"} · SGT</dt><dd><time datetime={event.data.startsAt.toISOString()}>{formatDate(event.data.startsAt)} · {formatTime(event.data.startsAt)}</time>{event.data.endsAt ? <><br />until <time datetime={event.data.endsAt.toISOString()}>{formatDate(event.data.endsAt)} · {formatTime(event.data.endsAt)}</time></> : event.data.timeNote && <> · {event.data.timeNote}</>}{event.data.endsAt && event.data.timeNote && <small class="time-note">{event.data.timeNote}</small>}</dd></div>
+          {event.data.venue && <div><dt class="lbl">Where</dt><dd>{event.data.venue.name}<br />{event.data.venue.address && <>{event.data.venue.address}<br /></>}{event.data.venue.city}, {event.data.venue.country}</dd></div>}
+        </dl>
+        {event.data.ticketUrl && <a class="ticket-link tag" href={event.data.ticketUrl}>[ {ticketLabel} <span class="red">↗</span> ]</a>}
+        <div class="detail-links tag">{event.data.sourceUrl && event.data.sourceUrl !== event.data.ticketUrl && <a href={event.data.sourceUrl}>[ event details <span class="red">↗</span> ]</a>}{event.data.recordingUrl && <a href="#recording">[ watch the recording ↓ ]</a>}</div>
+      </div>
+      {event.data.image && <figure class="event-photo"><a href={event.data.image.src} aria-label={`View full poster for ${event.data.title}`}><img src={event.data.image.src} alt={event.data.image.alt} loading="lazy" decoding="async" /></a>{event.data.image.exif && <figcaption class="lbl">{event.data.image.exif}</figcaption>}</figure>}
+    </div>
+    {event.data.lineup.length > 0 && <section><h2 id="event-lineup">Lineup</h2><ul class="event-lineup">{event.data.lineup.map((performer) => <li>{performer}</li>)}</ul></section>}
+    {Content && hasOrganiserDescription && <section><h2 id="event-description">Description</h2><Content /></section>}
+    {event.data.recordingUrl && <section><h2 id="recording">The recording</h2><YouTubeEmbed url={event.data.recordingUrl} title={`${event.data.title} recording`} />{recording && <p class="tag"><a href={`/releases/${recording.id}`}>[ recording page → ]</a></p>}</section>}
+    {event.data.setlist.length > 0 && <section><h2 id="setlist">Selected records</h2><ol>{event.data.setlist.map((track) => <li>{track.artist} — {track.title}</li>)}</ol></section>}
+    <a class="back-link tag" href="/gigs">[ all gigs → ]</a>
+  </ReadingArticle>}
+</SiteLayout>
+
+<style>
+  .minimal-event { max-width: 65ch; margin-inline: auto; }
+  .minimal-event h1 { font: 400 var(--t6)/1.1 "Redaction", Georgia, serif; margin-bottom: var(--s-5); }
+  .minimal-summary { font-size: var(--t1); margin-bottom: var(--s-5); }
+  .minimal-event > .tag { margin-top: var(--s-5); line-height: 1.8; }
+  .ticket-link { display: inline-flex; align-items: center; justify-content: space-between; gap: var(--s-5); min-height: var(--s-7); padding: var(--s-4) var(--s-5); border: 1px solid var(--fg); color: var(--red); background: transparent; }
+  .ticket-link:hover, .ticket-link:focus-visible { border-color: var(--red); background: transparent; }
+  .event-lineup { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3) var(--s-6); list-style: none; padding: 0; }
+  .event-lineup li { border-bottom: 1px solid var(--rule); padding: var(--s-2) 0; }
+  .event-details { margin-top: var(--s-5); }
+  .event-details.with-photo { display: grid; grid-template-columns: minmax(0, 1fr) var(--reading-rail, 220px); gap: var(--reading-gap, var(--s-8)); align-items: start; }
+  .event-facts { margin-top: 0; border-top: 0; padding-top: 0; }
+  .time-note { display: block; margin-top: var(--s-3); color: var(--dim); line-height: 1.5; }
+  .event-photo { margin: 0; }
+  .event-photo a { display: block; }
+  .event-photo img { display: block; width: 100%; height: auto; filter: grayscale(1); transition: filter .35s; }
+  .event-photo:hover img { filter: none; }
+  .event-photo figcaption { margin-top: var(--s-2); color: var(--dim); overflow-wrap: anywhere; }
+  @container page (max-width: 639px) {
+    .event-lineup { grid-template-columns: minmax(0, 1fr); }
+    .ticket-link { max-width: 100%; gap: var(--s-3); padding-inline: var(--s-4); }
+  }
+  @container page (max-width: 1023px) {
+    .event-details.with-photo { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); }
+  }
+</style>

@@ -1,0 +1,25 @@
+---
+import CalibrationSwatches from "@itsvari/ui/CalibrationSwatches.astro";
+import TickStrip from "@itsvari/ui/TickStrip.astro";
+interface Props { section?: string; compact?: boolean }
+const { section = "00", compact = false } = Astro.props;
+---
+<footer class:list={["site-footer lbl", { compact }]}>
+  <TickStrip />
+  <span class="calibration"><CalibrationSwatches /><span>cal. · rev. 2026.11.02</span></span>
+  <span>© {new Date().getFullYear()} Ashe · all rights reserved</span>
+  <span class="footer-links tag"><a href="/rss.xml">[ rss ]</a> <a href="/sitemap.xml">[ sitemap ]</a> <a href="/contact">[ contact ]</a></span>
+  <span>01.3521°N 103.8198°E · UTC+8</span>
+  <span class="footer-links tag"><a href="/activity">[ activity → ]</a></span>
+  <span>§{section} · p. 1/1</span>
+</footer>
+<style>
+  .site-footer { margin-top: auto; display: grid; gap: var(--s-1); color: var(--dim); }
+  .calibration { display: flex; align-items: center; gap: var(--s-2); }
+  .footer-links { display: flex; gap: var(--s-2); flex-wrap: wrap; color: var(--fg); margin: var(--s-1) 0; text-transform: none; }
+  .compact { display: none; }
+  @container page (max-width: 1023px) {
+    .site-footer:not(.compact) { display: none; }
+    .compact { display: grid; margin-top: var(--section); border-top: 1px solid var(--rule); padding-top: var(--s-4); }
+  }
+</style>

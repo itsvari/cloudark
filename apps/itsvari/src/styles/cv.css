@@ -1,0 +1,64 @@
+.cv-actions { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; margin: var(--s-5) 0; }
+.cv-actions button { min-height: 44px; padding: var(--s-3) var(--s-4); }
+.cv-resume > p:first-child { margin-bottom: var(--s-6); }
+.cv-resume h2 { padding-bottom: var(--s-3); border-bottom: 2px solid var(--red); }
+.cv-resume h3 + p:has(> strong) { font: var(--t-1)/1.6 "Departure Mono", monospace; color: var(--dim); margin-top: var(--s-3); }
+.cv-resume h3 + p:has(> strong) strong { color: var(--fg); font-weight: 400; }
+.cv-resume li + li { margin-top: var(--s-2); }
+.cv-resume h3 { margin-top: var(--s-6); }
+.cv-resume p, .cv-resume ul { margin-top: var(--s-3); }
+
+@page { size: A4; margin: 15mm 16mm; }
+
+@media print {
+  html, body {
+    color-scheme: light !important;
+    background: #fff !important;
+    color: #000 !important;
+    --bg: #fff;
+    --fg: #000;
+    --dim: #444;
+    --rule: #aaa;
+    --red: #000;
+    --cv-body-size: 10pt;
+    --cv-label-size: 9.25pt;
+    --cv-section-size: 15pt;
+    --cv-employer-size: 12pt;
+    --cv-name-size: 26pt;
+    font: var(--cv-body-size)/1.45 ui-monospace, monospace;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  *, *::before, *::after { animation: none !important; transition: none !important; text-shadow: none !important; box-shadow: none !important; }
+  .i-side, .i-meta, .site-footer, .marks, .section-rail, .skip-link, .cv-actions, .contents, .reading-links { display: none !important; }
+  .site-page, .i-wrap, .i-main, .cv-document, .reading-article, .reading-grid, .numbered-prose, .cv-resume {
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    min-height: 0 !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    container-type: normal !important;
+    overflow: visible !important;
+  }
+  .cv-document .page-meta, .cv-document .page-lede, .cv-document .rule { display: none !important; }
+  .cv-document .page-title { margin: 0 0 6pt !important; font: 400 var(--cv-name-size)/1.05 "Redaction", Georgia, serif !important; color: #000; overflow-wrap: normal; }
+  .cv-document .prose { font: var(--cv-body-size)/1.45 ui-monospace, monospace !important; color: #000; }
+  .cv-document .numbered-prose h2::before, .cv-document .numbered-prose h3::before { display: none !important; content: none !important; }
+  .cv-resume > p:first-child { margin: 0 0 14pt !important; font-size: var(--cv-label-size); line-height: 1.5; }
+  .cv-resume h2 { margin: 13pt 0 7pt !important; padding: 0 0 3pt; border-bottom: .6pt solid #999; font: 400 var(--cv-section-size)/1.1 "Redaction", Georgia, serif !important; color: #000; break-after: avoid; }
+  .cv-resume h3 { margin: 10pt 0 3pt !important; font: 400 var(--cv-employer-size)/1.2 "Redaction", Georgia, serif !important; color: #000; break-after: avoid; }
+  .cv-resume h3 + p:has(> strong) { margin: 0 0 6pt !important; font: var(--cv-label-size)/1.45 "Departure Mono", monospace !important; color: #333; break-after: avoid; }
+  .cv-resume h3 + p:has(> strong) strong { color: #000; font-weight: 400; }
+  .cv-resume p { margin: 0 0 6pt !important; widows: 3; orphans: 3; }
+  .cv-resume ul { margin: 4pt 0 8pt !important; padding-left: 15pt; break-inside: avoid; }
+  .cv-resume li { padding-left: 1pt; }
+  .cv-resume li + li { margin-top: 4pt; }
+  .cv-resume strong { font-weight: 500; }
+  .cv-resume a { color: #000 !important; text-decoration: none; }
+  .cv-resume a[href^="/projects"] { display: none; }
+  .cv-resume p:has(> a[href^="/projects"]:only-child) { display: none; }
+  .cv-resume #leadership-experience { break-before: page; margin-top: 0 !important; }
+}

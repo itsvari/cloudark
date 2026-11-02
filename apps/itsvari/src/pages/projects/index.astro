@@ -1,0 +1,14 @@
+---
+import { getProjects } from "@itsvari/content/astro";
+import Card from "@itsvari/ui/Card.astro";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+const projects = await getProjects("itsvari");
+---
+<SiteLayout description="Selected software, systems and small tools by Ashe." title="Projects">
+  <div class="page-meta tag">§ 01 — projects · {String(projects.length).padStart(2, "0")} entries</div>
+  <h1 class="page-title">Projects <em>&amp; experiments</em></h1>
+  <p class="page-lede">Things I've built, things I'm still working on, and a few useful detours.</p>
+  <div class="rule" aria-hidden="true"></div>
+  {projects.length > 0 ? <div class="cards">{projects.map(({ id, data }, index) => <Card href={`/projects/${id}`} title={data.title} summary={data.summary} status={data.status} featured={data.featured} image={data.image} tags={data.tags} links={data.links} number={index + 1} />)}</div> : <EmptyState />}
+</SiteLayout>

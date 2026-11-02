@@ -1,0 +1,355 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Direction D rev. 4 — Signal + Ledger, responsive</title><style>
+/* self-hosted woff2 first so Firefox stops falling back; local() kept as a fast path */
+@font-face{font-family:"Departure Mono";src:url("fonts/departure-mono-regular.woff2") format("woff2"),local("Departure Mono Regular"),local("DepartureMono-Regular")}
+@font-face{font-family:"TX-02";font-weight:400;src:url("fonts/tx-02-regular.woff2") format("woff2"),local("TX-02 Regular"),local("TX-02-Regular")}
+@font-face{font-family:"TX-02";font-weight:500;src:url("fonts/tx-02-medium.woff2") format("woff2"),local("TX-02 Medium"),local("TX-02-Medium")}
+@font-face{font-family:"Redaction";font-weight:400;src:url("fonts/redaction-regular.woff2") format("woff2"),local("Redaction"),local("Redaction-Regular")}
+@font-face{font-family:"Redaction 35";font-weight:400;font-style:italic;src:url("fonts/redaction-35-italic.woff2") format("woff2"),local("Redaction 35 Italic"),local("Redaction35-Italic")}
+@font-face{font-family:"Redaction 50";font-weight:400;src:url("fonts/redaction-50-regular.woff2") format("woff2"),local("Redaction 50"),local("Redaction50-Regular")}
+@font-face{font-family:"Redaction 50";font-weight:400;font-style:italic;src:url("fonts/redaction-50-italic.woff2") format("woff2"),local("Redaction 50 Italic"),local("Redaction50-Italic")}
+:root{--foreground:#e6e6e6;--muted-foreground:#8a8a8a;--border:#2a2a2a;--card:#111;--radius:8px;--font-sans:system-ui,sans-serif;--font-mono:ui-monospace,Menlo,monospace;
+--grain:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.22 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+body{margin:0;padding:48px 0 80px;background:#0b0b0b;color:var(--foreground);font-family:var(--font-sans)}
+.board{display:grid;gap:40px;width:1280px;margin:0 auto}
+.hd{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;border-bottom:1px solid var(--border);padding-bottom:12px}
+.hd h1{font-size:18px;font-weight:600;margin:0}
+.hd p{font-size:13px;line-height:1.5;color:var(--muted-foreground);margin:6px 0 0;max-width:900px}
+.hd small{font-family:var(--font-mono);font-size:11px;color:var(--muted-foreground);white-space:nowrap;text-align:right;line-height:1.5}
+.hd nav{display:flex;gap:14px;font:11px var(--font-mono);margin-top:8px}.hd nav a{color:var(--muted-foreground)}.hd nav a.on{color:#fff}
+.cap{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:12px;color:var(--muted-foreground);margin-bottom:8px;gap:8px}
+.chrome{height:26px;border:1px solid var(--border);border-bottom:0;border-radius:6px 6px 0 0;background:var(--card);display:flex;align-items:center;gap:5px;padding:0 12px;font-family:var(--font-mono);font-size:11px;color:var(--muted-foreground);white-space:nowrap;overflow:hidden}
+.chrome i{width:8px;height:8px;border-radius:50%;background:var(--border);display:inline-block;flex:none}.chrome span{margin-left:10px}
+.vp{overflow:hidden;border:1px solid var(--border);border-radius:0 0 6px 6px;background:#000;position:relative}
+.pair{display:flex;gap:24px;align-items:flex-start}
+.sys{background:#000;color:#fff;border-radius:var(--radius);padding:28px 32px;display:grid;gap:24px;--red:#DC2626;--dim:rgba(255,255,255,.55)}
+.sys .lbl{font:11px/1.4 "Departure Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.lock{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:center;border-bottom:1px solid rgba(255,255,255,.15);padding-bottom:20px}
+.lock .brand{display:flex;align-items:center;gap:20px}.lock .brand svg{width:72px;height:72px}
+.lock .brand .w{font:italic 80px/1 "Redaction 50",Georgia,serif}.lock .brand .i{font:400 60px/1 "Redaction 50",Georgia,serif;margin-left:16px}
+.sw{display:flex;gap:10px;justify-content:flex-end}.sw b{width:44px;height:44px;border:1px solid rgba(255,255,255,.25);display:block;box-sizing:border-box}
+.sw small{display:block;font:10px/1.3 "Departure Mono",monospace;color:var(--dim);margin-top:4px;letter-spacing:.04em;white-space:nowrap}
+.ramp{display:grid;grid-template-columns:60px 130px 230px 1fr;column-gap:20px;font:12px/1.3 "Departure Mono",monospace;letter-spacing:.03em}
+.ramp>span{padding:8px 0;border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:baseline;min-height:16px;gap:12px}
+.ramp .h{color:var(--dim);border-top:0;font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+.ramp .n{color:var(--dim)}.ramp .r{color:rgba(255,255,255,.8);font-family:"TX-02",monospace;font-size:12px}
+.ramp .sp{font-family:"Redaction",serif;line-height:1;white-space:nowrap;overflow:hidden}
+.ramp .sp.m{font-family:"TX-02",monospace}.ramp .sp.d{font-family:"Departure Mono",monospace}.ramp .sp.i35{font-family:"Redaction 35",serif;font-style:italic}
+.ramp .sp small{font:10px "Departure Mono",monospace;color:var(--dim)}
+.ramp .sp .inl{font-family:"Redaction 35",serif;font-style:italic;font-size:1.12em}
+.kit{display:flex;flex-wrap:wrap;gap:14px 28px;align-items:center;border-top:1px solid rgba(255,255,255,.15);padding-top:16px}
+.kit>div{display:flex;flex-direction:column;gap:8px}
+.kit .k{font:10px/1 "Departure Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--dim)}
+.kit .v{font:11px/1 "Departure Mono",monospace;letter-spacing:.06em;color:rgba(255,255,255,.8);display:flex;align-items:center;gap:8px;min-height:16px}
+.smark{position:relative;width:14px;height:14px;display:inline-block}.smark::before{content:"";position:absolute;left:6.5px;top:0;width:1px;height:100%;background:#fff}.smark::after{content:"";position:absolute;top:6.5px;left:0;height:1px;width:100%;background:#fff}.smark i{position:absolute;left:4px;top:4px;width:6px;height:6px;background:#000;z-index:1}
+.sruler{width:160px;height:9px;background:linear-gradient(rgba(255,255,255,.4),rgba(255,255,255,.4)) top/100% 1px no-repeat,repeating-linear-gradient(90deg,rgba(255,255,255,.7) 0 1px,transparent 1px 40px) top/100% 9px no-repeat,repeating-linear-gradient(90deg,rgba(255,255,255,.3) 0 1px,transparent 1px 8px) top/100% 5px no-repeat}
+.srail{display:inline-flex;gap:6px;align-items:center}.srail i{width:1px;height:10px;background:rgba(255,255,255,.3);display:block}.srail b{font-weight:400;color:#DC2626}
+.sp2{display:grid;grid-template-columns:1fr 1fr;gap:32px;border-top:1px solid rgba(255,255,255,.15);padding-top:20px}
+.bars{display:flex;align-items:flex-end;gap:8px;height:100px;margin-top:8px}.bars i{display:block;width:100%;background:#fff;opacity:.9}
+.bars div{display:flex;flex-direction:column;justify-content:flex-end;flex:1;height:100%}
+.bars small{font:10px/1.8 "Departure Mono",monospace;color:var(--dim);text-align:center}
+.bp{font:12px/2 "Departure Mono",monospace;color:rgba(255,255,255,.85)}.bp b{color:var(--dim);font-weight:400;display:inline-block;width:100px}
+/* frames: one markup, container queries do the rest */
+.frame{position:relative;overflow:hidden;background:#000;color:#fff;transform:scale(var(--s,1));transform-origin:0 0;container-type:size;container-name:page;--red:#DC2626;--rule:rgba(255,255,255,.22);--dim:rgba(255,255,255,.55);--dot:rgba(255,255,255,.4);--s-1:4px;--s-2:8px;--s-3:12px;--s-4:16px;--s-5:24px;--s-6:32px;--s-7:48px;--s-8:64px;--s-9:96px;--content-max:1280px;--wide-max:1536px;--measure:65ch}
+.pg{position:relative;min-height:100%;font-family:"TX-02",ui-monospace,monospace;font-size:var(--t0);line-height:1.5;color:#fff;
+--fl:calc((100cqi - 390px) / 1050);
+--t-2:10.5px;--t-1:clamp(12.5px,calc(12.5px + .3 * var(--fl)),12.8px);--t0:clamp(15px,calc(15px + 1 * var(--fl)),16px);--t1:clamp(18px,calc(18px + 2 * var(--fl)),20px);--t2:clamp(21.6px,calc(21.6px + 3.4 * var(--fl)),25px);--t3:clamp(25.9px,calc(25.9px + 5.35 * var(--fl)),31.25px);--t4:clamp(31.1px,calc(31.1px + 8 * var(--fl)),39.1px);--t5:clamp(37.3px,calc(37.3px + 11.5 * var(--fl)),48.8px);--t6:clamp(44.8px,calc(44.8px + 16.2 * var(--fl)),61px);--t7:clamp(53.7px,calc(53.7px + 22.6 * var(--fl)),76.3px);--t8:clamp(64.5px,calc(64.5px + 30.9 * var(--fl)),95.4px);--t9:clamp(77.4px,calc(77.4px + 41.8 * var(--fl)),119.2px);--t10:clamp(92.9px,calc(92.9px + 56.1 * var(--fl)),149px);
+--gutter:clamp(16px,calc(16px + 32 * var(--fl)),48px);--section:clamp(32px,calc(32px + 32 * var(--fl)),64px);--edge:clamp(10px,calc(10px + 6 * var(--fl)),16px);--safe:clamp(44px,calc(44px + 20 * var(--fl)),64px)}
+.dm{font-family:"Departure Mono",monospace}.rd{font-family:"Redaction",Georgia,serif}.r50{font-family:"Redaction 50",Georgia,serif}.it{font-style:italic}
+.lbl{font:var(--t-2)/1.4 "Departure Mono",monospace;letter-spacing:.08em;text-transform:uppercase}
+.tag{font:var(--t-1)/1.4 "Departure Mono",monospace;letter-spacing:.04em}
+.dim{color:var(--dim)}.red{color:var(--red)}.abs{position:absolute;inset:0}
+.photo{position:absolute;inset:0;background:#000}
+.photo::after{content:"";position:absolute;inset:0;background-image:var(--grain);mix-blend-mode:overlay;opacity:.9}
+.p1{background:radial-gradient(ellipse 42% 34% at 18% 28%,rgba(220,38,38,.8),transparent 70%),radial-gradient(ellipse 22% 18% at 78% 58%,rgba(255,255,255,.38),transparent 70%),radial-gradient(ellipse 70% 40% at 60% 100%,rgba(220,38,38,.35),transparent 70%),linear-gradient(180deg,#070707,#000)}
+.p2{background:linear-gradient(112deg,transparent 38%,rgba(255,255,255,.22) 44%,transparent 46%,transparent 58%,rgba(255,255,255,.12) 61%,transparent 63%),radial-gradient(ellipse 60% 50% at 70% 90%,rgba(220,38,38,.7),transparent 70%),linear-gradient(180deg,#050505,#000)}
+.p3{background:radial-gradient(ellipse 30% 26% at 52% 22%,rgba(255,255,255,.55),transparent 70%),radial-gradient(ellipse 90% 60% at 50% 70%,rgba(220,38,38,.45),transparent 70%),linear-gradient(180deg,#000,#080000)}
+.p4{background:repeating-linear-gradient(176deg,transparent 0 84px,rgba(255,255,255,.14) 84px 86px),radial-gradient(ellipse 40% 60% at 10% 60%,rgba(220,38,38,.55),transparent 70%),linear-gradient(180deg,#040404,#000)}
+.p5{background:radial-gradient(ellipse 55% 70% at 0% 50%,rgba(220,38,38,.75),transparent 70%),radial-gradient(ellipse 20% 14% at 86% 30%,rgba(255,255,255,.3),transparent 70%),linear-gradient(180deg,#060606,#000)}
+@keyframes cyc{0%{opacity:0}4%{opacity:1}20%{opacity:1}26%{opacity:0}100%{opacity:0}}
+.cyc{opacity:0;animation:cyc 20s linear infinite}.d2{animation-delay:4s}.d3{animation-delay:8s}.d4{animation-delay:12s}.d5{animation-delay:16s}
+.shade{background:linear-gradient(180deg,rgba(0,0,0,.45),transparent 28%,transparent 50%,rgba(0,0,0,.9))}
+.scan{background:repeating-linear-gradient(0deg,rgba(0,0,0,.22) 0 1px,transparent 1px 4px)}
+/* micrographics */
+.mark{position:absolute;width:14px;height:14px;opacity:.75}.mark::before{content:"";position:absolute;left:6.5px;top:0;width:1px;height:100%;background:#fff}.mark::after{content:"";position:absolute;top:6.5px;left:0;height:1px;width:100%;background:#fff}.mark i{position:absolute;left:4px;top:4px;width:6px;height:6px;background:#000;z-index:1}
+.mark.tl{top:var(--edge);left:var(--edge)}.mark.tr{top:var(--edge);right:var(--edge)}.mark.bl{bottom:var(--edge);left:var(--edge)}.mark.br{bottom:var(--edge);right:var(--edge)}
+.cal{display:inline-flex;gap:3px;vertical-align:middle;margin-right:var(--s-2)}.cal i{width:8px;height:8px;border:1px solid rgba(255,255,255,.35);box-sizing:border-box;display:block}.cal i:nth-child(1){background:#000}.cal i:nth-child(2){background:#DC2626;border-color:#DC2626}.cal i:nth-child(3){background:#fff}
+.ticks{position:relative;height:10px;margin-bottom:var(--s-3)}.ticks::before{content:"";position:absolute;left:0;right:0;top:5px;bottom:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.35) 0 1px,transparent 1px 6px)}.ticks::after{content:"";position:absolute;left:0;right:0;top:0;bottom:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.8) 0 1px,transparent 1px 30px)}
+/* optional photo fill: bayer-dither fade under the text, translucent black overall, greyscale until interaction */
+.hasbg{position:relative;isolation:isolate}
+.bg{position:absolute;inset:0 0 1px;z-index:-1;filter:grayscale(1);transition:filter .35s;mask-image:var(--dither);mask-size:100% auto;mask-repeat:repeat-y;-webkit-mask-image:var(--dither);-webkit-mask-size:100% auto;-webkit-mask-repeat:repeat-y}
+.bg::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.45)}
+.card .bg{inset:1px}
+.hasbg:hover .bg,.hasbg:active .bg,.hasbg.hov .bg{filter:none}
+.sfill{position:relative;width:200px;height:18px;overflow:hidden;isolation:isolate;border-bottom:1px solid rgba(255,255,255,.22)}
+.sfill i{position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse 55% 70% at 70% 50%,rgba(220,38,38,.9),transparent 70%),linear-gradient(90deg,#222,#444);mask-image:var(--dither);mask-size:100% auto;mask-repeat:repeat-y;-webkit-mask-image:var(--dither);-webkit-mask-size:100% auto;-webkit-mask-repeat:repeat-y;filter:grayscale(1)}
+.sfill i.c{filter:none}.sfill span{position:absolute;left:0;top:3px;font:10px "TX-02",monospace;color:#fff}
+.lead{flex:1;border-bottom:2px dotted var(--dot);transform:translateY(-5px);min-width:16px}
+.rule{height:2px;background:var(--red);margin:var(--s-3) 0 var(--s-2)}
+.sech{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-4);margin-top:var(--section);flex-wrap:wrap}
+.sech h2{font:400 var(--t3)/1.1 "Redaction",serif;margin:0}.sech h2 em{font-family:"Redaction 35",serif;font-style:italic;color:var(--dim);font-size:var(--t2);margin-left:.4em}
+.sech .tag{color:var(--dim)}.sech .tag b{color:#fff;font-weight:400}
+.live{color:var(--red)}.live i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);margin:0 7px 0 2px;vertical-align:middle}
+.logo{display:inline-flex;align-items:center;gap:var(--s-2);color:#fff;text-decoration:none}.logo svg{width:26px;height:26px;display:block}.logo span{font:var(--t-1) "Departure Mono",monospace;letter-spacing:.14em}
+/* V4RI home */
+.v-wrap{position:absolute;inset:0;max-width:var(--wide-max);margin-inline:auto}
+.v-top{position:absolute;top:var(--safe);left:var(--gutter);right:var(--gutter);display:flex;justify-content:space-between;align-items:center;gap:var(--s-5)}
+.v-nav{display:flex;gap:var(--s-5)}.v-nav .on{color:var(--red)}
+.v-menu{display:none}
+.v-rail{position:absolute;left:calc(var(--gutter) - 20px);top:calc(var(--safe) + 80px);bottom:calc(var(--safe) + 170px);writing-mode:vertical-rl;transform:rotate(180deg);display:flex;justify-content:space-between;align-items:center}
+.v-hero{position:absolute;left:calc(var(--gutter) + 44px);bottom:calc(var(--safe) + var(--hero-b,170px));max-width:72%}
+.v-hero h1{font:italic var(--t10)/.9 "Redaction 50",Georgia,serif;margin:0 0 var(--s-2);letter-spacing:-.01em}
+.v-hero .tl{font:italic var(--t5)/1.1 "Redaction 35",serif;color:rgba(255,255,255,.85);margin:0 0 var(--s-4)}
+.v-cap{position:absolute;right:var(--gutter);bottom:calc(var(--safe) + 150px);color:rgba(255,255,255,.45)}
+.v-spec{position:absolute;left:var(--gutter);right:var(--gutter);bottom:var(--safe);padding-top:calc(var(--s-4) + 8px);display:grid;grid-template-columns:1.3fr 1.2fr 1.2fr .7fr auto;gap:var(--s-5)}
+.v-spec::before{content:"";position:absolute;left:0;right:0;top:0;height:9px;background:linear-gradient(var(--rule),var(--rule)) top/100% 1px no-repeat,repeating-linear-gradient(90deg,rgba(255,255,255,.6) 0 1px,transparent 1px 80px) top/100% 9px no-repeat,repeating-linear-gradient(90deg,rgba(255,255,255,.28) 0 1px,transparent 1px 8px) top/100% 5px no-repeat}
+.v-spec .lbl{color:var(--dim);margin-bottom:var(--s-1)}.v-spec b{font-weight:500;font-size:var(--t0);display:block}
+.v-idx{text-align:right;align-self:end}.v-idx .dm{font-size:var(--t-1);display:block;margin-bottom:var(--s-2)}
+.v-idx i{display:inline-block;width:34px;height:2px;background:rgba(255,255,255,.3);margin-left:6px;vertical-align:middle}.v-idx i.on{background:var(--red)}
+@container page (max-width:1023px){.v-sub,.v-rail,.v-cap{display:none}.v-spec{grid-template-columns:1fr 1fr}.v-idx{grid-column:1/-1;text-align:left;display:flex;justify-content:space-between;align-items:center}.v-idx .dm{margin:0}.v-hero{left:var(--gutter);right:var(--gutter);max-width:none;--hero-b:220px}}
+@container page (max-width:639px){.v-nav{display:none}.v-menu{display:inline}.v-spec{grid-template-columns:1fr;gap:var(--s-3)}.v-hero{--hero-b:290px}}
+/* V4RI gigs */
+.v-flow{position:relative;max-width:var(--wide-max);margin-inline:auto;min-height:100cqb;box-sizing:border-box;padding:var(--safe) var(--gutter);display:flex;flex-direction:column}
+.v-flow .v-top{position:static;margin-bottom:var(--s-8)}
+.v-head{display:grid;grid-template-columns:1fr auto;align-items:end;gap:var(--s-6)}
+.v-head h1{font:400 var(--t6)/1 "Redaction",serif;margin:var(--s-1) 0 0}.v-head h1 em{font-family:"Redaction 35",serif;font-style:italic;color:var(--dim)}
+.v-head p{margin:0 0 var(--s-2);color:var(--dim);text-align:right}
+.filters{display:flex;gap:var(--s-3);justify-content:flex-end;color:var(--dim);flex-wrap:wrap}.filters .on{color:#fff}
+.tbl .tr{display:grid;grid-template-columns:110px 124px 1fr 260px 150px 30px;column-gap:var(--s-4);padding:var(--s-3) 0;border-bottom:1px solid var(--rule);align-items:center}
+.tbl .th{color:var(--dim);padding:var(--s-2) 0}
+.tbl .grp{padding:var(--s-4) 0 var(--s-1);color:var(--dim)}
+.tbl .t{font-weight:500}.tbl .v{color:rgba(255,255,255,.7)}.tbl .d{font:var(--t-1) "Departure Mono",monospace}
+.tbl .arr{text-align:right;font-family:"Departure Mono",monospace}
+.v-foot{margin-top:auto;padding-top:var(--s-7);display:flex;justify-content:space-between;align-items:center;color:var(--dim);gap:var(--s-4);flex-wrap:wrap}
+@container page (max-width:1023px){.v-flow .v-top{margin-bottom:var(--s-7)}.v-head{grid-template-columns:1fr}.v-head p{text-align:left}.filters{justify-content:flex-start}.tbl .th{display:none}.tbl .tr{grid-template-columns:110px 1fr 150px 24px;grid-template-areas:"date title status arr" "date venue status arr";row-gap:2px}.tbl .time{display:none}.tbl .date{grid-area:date}.tbl .t{grid-area:title}.tbl .v{grid-area:venue}.tbl .s{grid-area:status}.tbl .arr{grid-area:arr}}
+@container page (max-width:639px){.tbl .tr{grid-template-columns:1fr auto;grid-template-areas:"date status" "title title" "venue arr"}}
+/* itsvari shell */
+.i-wrap{min-height:100cqb;max-width:var(--content-max);margin-inline:auto;display:grid;grid-template-columns:clamp(240px,24cqi,300px) 1fr;box-sizing:border-box}
+.i-side{border-right:1px solid var(--rule);padding:var(--safe) var(--s-5);display:flex;flex-direction:column;box-sizing:border-box;position:sticky;top:0;height:100cqb;overflow:hidden}
+.i-brand{display:flex;flex-direction:column;gap:var(--s-1);margin-bottom:var(--s-7)}
+.i-brand .dm{font-size:var(--t-1);letter-spacing:.04em}
+.i-nav{display:grid}.i-nav a{display:flex;gap:var(--s-3);padding:var(--s-3) 0;border-top:1px solid var(--rule);font:var(--t-1)/1.4 "Departure Mono",monospace;letter-spacing:.04em;color:#fff;text-decoration:none}
+.i-nav a:last-child{border-bottom:1px solid var(--rule)}.i-nav i{color:var(--dim);font-style:normal;width:22px}.i-nav a.on,.i-nav a.on i{color:var(--red)}
+.i-menu{display:none}
+.i-foot{margin-top:auto;display:grid;gap:var(--s-1);color:var(--dim)}
+.i-foot .tag,.i-main-foot .tag{color:#fff;margin:var(--s-1) 0;text-transform:none}
+.i-foot .row2{display:flex;align-items:center}.i-foot b{font-weight:400;color:#fff}
+.i-main{padding:var(--safe) var(--gutter);position:relative;min-width:0}
+.i-meta{position:absolute;right:var(--gutter);top:var(--safe);color:var(--dim);display:flex;gap:var(--s-3)}
+.i-rail{position:absolute;right:var(--s-2);top:50%;transform:translateY(-50%);display:grid;gap:var(--s-2);justify-items:center;font:var(--t-2)/1 "Departure Mono",monospace;letter-spacing:.06em;color:var(--dim)}
+.i-rail i{width:1px;height:18px;background:var(--rule);display:block}.i-rail .on{color:var(--red)}
+.i-main-foot{display:none}
+@container page (min-width:1400px){.i-wrap{border-inline:1px solid var(--rule)}}
+@container page (max-width:1023px){.i-wrap{grid-template-columns:1fr}.i-side{position:static;height:auto;border-right:0;border-bottom:1px solid var(--rule);flex-direction:row;align-items:center;justify-content:space-between;padding:var(--safe) var(--gutter) var(--s-4)}.i-brand{margin:0}.i-brand .lbl{display:none}.i-nav{display:flex;gap:var(--s-4);flex-wrap:wrap;justify-content:flex-end}.i-nav a{border:0!important;padding:0}.i-nav i{display:none}.i-foot,.i-meta,.i-rail{display:none}.i-main{padding-top:var(--s-6)}.i-main-foot{display:grid;gap:var(--s-1);margin-top:var(--section);border-top:1px solid var(--rule);padding-top:var(--s-4);color:var(--dim)}}
+@container page (max-width:639px){.i-nav{display:none}.i-menu{display:inline}}
+/* itsvari home */
+.l-name{font:400 var(--t9)/.85 "Redaction 50",Georgia,serif;margin:var(--s-7) 0 var(--s-4)}
+.l-tag{font:italic var(--t4)/1.1 "Redaction 35",serif;margin:0 0 var(--s-4);color:rgba(255,255,255,.9)}
+.l-intro{font-size:var(--t1);line-height:1.5;max-width:var(--measure);margin:0 0 var(--s-4)}
+.l-intro em{font-family:"Redaction 35",serif;font-style:italic;font-size:1.12em;color:rgba(255,255,255,.9)}
+.l-links{display:flex;gap:var(--s-4);flex-wrap:wrap}
+.now{margin-top:var(--s-6);border-top:1px solid var(--rule);padding-top:var(--s-2)}
+.now .row{display:flex;align-items:baseline;gap:var(--s-3);padding:var(--s-2) 0}
+.now .k{width:92px;flex:none;color:var(--dim);white-space:nowrap}.now .v{min-width:0}.now .src{color:var(--red)}
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:var(--s-4);margin-top:var(--s-4)}
+.card{border:1px solid var(--rule);padding:var(--s-4) var(--s-5);position:relative;display:flex;flex-direction:column;min-height:150px}
+.card.ft{border-color:#fff}.card.ft::before{content:"";position:absolute;left:-1px;top:-1px;width:3px;height:40px;background:var(--red)}
+.card .m{display:flex;justify-content:space-between;color:var(--dim);margin-bottom:var(--s-3);gap:var(--s-3)}
+.card h3{font:400 var(--t2)/1 "Redaction",serif;margin:0 0 var(--s-2)}.card p{margin:0 0 var(--s-3);font-size:var(--t0);line-height:1.5;color:rgba(255,255,255,.72)}
+.card .tg{margin-top:auto;display:flex;justify-content:space-between;gap:var(--s-3);color:var(--dim);flex-wrap:wrap}
+.wl .row{display:flex;align-items:baseline;gap:var(--s-3);padding:var(--s-2) 0}
+.wl .d{width:74px;flex:none;font:var(--t-1) "Departure Mono",monospace}.wl .t{font-weight:500}.wl .k{color:var(--dim)}.wl .arr{font-family:"Departure Mono",monospace}
+@container page (max-width:639px){.cards{grid-template-columns:1fr}.now .row{display:grid;grid-template-columns:1fr auto;column-gap:var(--s-3);row-gap:2px}.now .k{width:auto}.now .lead{display:none}.now .v{grid-column:1/-1;grid-row:2}.now .row>.tag:last-child{grid-column:2;grid-row:1;justify-self:end}.wl .k{display:none}}
+/* itsvari about */
+.ab-meta{display:flex;gap:var(--s-3);color:var(--dim);margin-top:var(--s-6);flex-wrap:wrap}
+.ab-h1{font:400 var(--t6)/1 "Redaction",serif;margin:var(--s-1) 0 0}.ab-h1 em{font-family:"Redaction 35",serif;font-style:italic;color:var(--dim)}
+.ab-grid{display:grid;grid-template-columns:minmax(0,1fr) 230px;gap:var(--s-7);margin-top:var(--s-2)}
+.ab-grid p{font-size:var(--t0);line-height:1.6;margin:0 0 var(--s-3);max-width:var(--measure)}
+.ab-grid p em{font-family:"Redaction 35",serif;font-style:italic;font-size:1.12em;color:rgba(255,255,255,.9)}
+.facts{border-top:1px solid var(--rule);padding-top:var(--s-1);align-self:start}
+.facts .row{display:flex;align-items:baseline;gap:var(--s-2);padding:var(--s-2) 0}
+.facts .k{color:var(--dim)}.facts .v{font-size:var(--t-1);text-align:right}
+.tl .row{display:flex;align-items:baseline;gap:var(--s-3);padding:var(--s-2) 0;flex-wrap:wrap}
+.tl .d{width:110px;flex:none;font:var(--t-1) "Departure Mono",monospace}.tl .t{font-weight:500}.tl .o{color:var(--dim);font-size:var(--t-1)}
+@container page (max-width:1023px){.ab-grid{grid-template-columns:1fr;gap:var(--s-4)}.facts{max-width:var(--measure)}}
+</style></head><body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg"><symbol id="logo" viewBox="0 0 1900 1900"><path fill="#fff" d="M1733.64,1700l-711.76-720.01h711.76L950,157.52,166.51,980h711.52L166.51,1700h84.87l668.63-677.59v618.75h59.99v-618.74s669.03,677.16,669.03,677.16l84.62.42ZM920,920l-613.18-.59L920,275.07v644.93ZM980,275.07l613.8,644.92h-613.8V275.07Z"/><polygon fill="#DC2626" points="166.51 199.95 233.84 199.95 950 1565.91 1666.45 199.95 1733.62 199.95 950 1700 166.51 199.95"/></symbol></svg>
+
+<template id="tpl-side"><aside class="i-side">
+  <div class="i-brand"><span class="dm">itsvari</span><span class="lbl dim">v3.0 · rev. 2026.11</span></div>
+  <nav class="i-nav"><a data-nav="home"><i>00</i>[ home ]</a><a data-nav="projects"><i>01</i>[ projects ]</a><a data-nav="writing"><i>02</i>[ writing ]</a><a data-nav="about"><i>03</i>[ about ]</a><a data-nav="cv"><i>04</i>[ cv ]</a><a data-nav="contact"><i>05</i>[ contact ]</a><a><i>↗</i>V4RI</a></nav>
+  <span class="i-menu tag">[ menu ]</span>
+  <footer class="i-foot lbl"><div class="ticks"></div><span class="row2"><span class="cal"><i></i><i></i><i></i></span><span>cal. · rev. 2026.11.02</span></span><span>© 2026 Ashe · all rights reserved</span><span class="tag">[ rss ] &nbsp;[ sitemap ] &nbsp;[ contact ]</span><span>01.3521°N 103.8198°E · UTC+8</span><span>§<b class="sec">00</b> · p. 1/1</span></footer>
+</aside></template>
+
+<template id="tpl-v-home"><div class="pg">
+  <div class="photo p1"></div><div class="photo p2 cyc d2"></div><div class="photo p3 cyc d3"></div><div class="photo p4 cyc d4"></div><div class="photo p5 cyc d5"></div><div class="shade abs"></div><div class="scan abs"></div>
+  <span class="mark tl"><i></i></span><span class="mark tr"><i></i></span><span class="mark bl"><i></i></span><span class="mark br"><i></i></span>
+    <div class="v-wrap">
+    <header class="v-top"><a class="logo"><svg><use href="#logo"/></svg><span>V4RI</span></a><span class="v-sub tag dim">[ dj / producer — singapore ]</span><nav class="v-nav tag"><span>[ gigs ]</span><span>[ releases ]</span><span>[ posts ]</span><span class="dim">itsvari.com ↗</span></nav><span class="v-menu tag">[ menu ]</span></header>
+    <aside class="v-rail lbl dim"><span>SGT 23:41:08</span><span>01.3521°N 103.8198°E</span><span>◼ REC — 2026</span></aside>
+    <div class="v-hero"><h1>V4RI</h1><p class="tl">low light, long sets.</p><span class="tag live">[ <i></i>live now — Breaks Night 13 — Null Room, SG — until 03:00 ]</span></div>
+    <span class="v-cap lbl">img_0412 · 35mm · f/1.8 · 1/60 · iso 3200 · null room · 18.10.26</span>
+    <footer class="v-spec">
+      <div><div class="lbl">Next gig</div><b>Basement Transmission 04</b></div>
+      <div><div class="lbl">When</div><b>Sat 15 Nov · 23:00–04:00 SGT</b></div>
+      <div><div class="lbl">Where</div><b>Substation B2, Singapore</b></div>
+      <div><div class="lbl">Tickets</div><b class="red">→ ra.co</b></div>
+      <div class="v-idx"><span class="dm">01 / 05</span><span><i class="on"></i><i></i><i></i><i></i><i></i></span></div>
+    </footer>
+  </div>
+</div></template>
+
+<template id="tpl-v-gigs"><div class="pg">
+  <span class="mark tl"><i></i></span><span class="mark tr"><i></i></span><span class="mark bl"><i></i></span><span class="mark br"><i></i></span>
+    <div class="v-flow">
+    <header class="v-top"><a class="logo"><svg><use href="#logo"/></svg><span>V4RI</span></a><span class="v-sub tag dim">[ dj / producer — singapore ]</span><nav class="v-nav tag"><span class="on">[ gigs ]</span><span>[ releases ]</span><span>[ posts ]</span><span class="dim">itsvari.com ↗</span></nav><span class="v-menu tag">[ menu ]</span></header>
+    <div class="v-head"><div><div class="tag dim">§ 01 — gigs · 14 entries · 07 recorded</div><h1>Gigs <em>&amp; the archive</em></h1></div><div><p>Upcoming shows first. Recordings where they exist.</p><div class="filters tag"><span class="on">[ all ]</span><span>[ upcoming ]</span><span>[ past ]</span><span>[ recorded ]</span></div></div></div>
+    <div class="rule"></div>
+    <div class="tbl">
+      <div class="tr th lbl"><span class="date">Date</span><span class="time">Time (SGT)</span><span class="t">Event</span><span class="v">Venue</span><span class="s">Status</span><span></span></div>
+      <div class="tr hasbg hov"><div class="bg p1"></div><span class="d date">02.11.2026</span><span class="d time">22:00–03:00</span><span class="t">Breaks Night 13</span><span class="v">Null Room, Singapore</span><span class="s tag red">[ ● live ]</span><span class="arr">→</span></div>
+      <div class="grp tag">[ upcoming — 02 ]</div>
+      <div class="tr hasbg"><div class="bg p3"></div><span class="d date">15.11.2026</span><span class="d time">23:00–04:00</span><span class="t">Basement Transmission 04</span><span class="v">Substation B2, Singapore</span><span class="s tag">[ tickets <span class="red">↗</span> ]</span><span class="arr">→</span></div>
+      <div class="tr"><span class="d date">05.12.2026</span><span class="d time">22:00–06:00</span><span class="t">Open to Close</span><span class="v">Tunnel Vision, Kuala Lumpur</span><span class="s tag dim">[ announced ]</span><span class="arr">→</span></div>
+      <div class="grp tag">[ postponed — 01 ]</div>
+      <div class="tr"><span class="d date dim"><s>21.11.2026</s></span><span class="d time dim">—</span><span class="t dim">Rooftop Session II</span><span class="v">Hangar 7, Singapore</span><span class="s tag dim">[ postponed ]</span><span class="arr">→</span></div>
+      <div class="grp tag">[ earlier — 11 ]</div>
+      <div class="tr hasbg"><div class="bg p5"></div><span class="d date">18.10.2026</span><span class="d time">23:00–04:00</span><span class="t">Breaks Night 12</span><span class="v">Null Room, Singapore</span><span class="s tag">[ rec <span class="red">↗</span> ]</span><span class="arr">→</span></div>
+      <div class="tr hasbg"><div class="bg p2"></div><span class="d date">27.09.2026</span><span class="d time">17:00–22:00</span><span class="t">Rooftop Session</span><span class="v">Hangar 7, Singapore</span><span class="s tag">[ rec <span class="red">↗</span> ]</span><span class="arr">→</span></div>
+    </div>
+    <footer class="v-foot tag"><span><span class="cal"><i></i><i></i><i></i></span>© 2026 V4RI · rev. 2026.11.02</span><span>[ rss ] &nbsp;[ sitemap ] &nbsp;[ itsvari.com ↗ ]</span></footer>
+  </div>
+</div></template>
+
+<template id="tpl-i-home"><div class="pg">
+  <span class="mark tl"><i></i></span><span class="mark tr"><i></i></span><span class="mark bl"><i></i></span><span class="mark br"><i></i></span>
+    <div class="i-wrap"><div data-side="home"></div>
+    <main class="i-main">
+      <span class="i-meta lbl"><span>index · 00 / 05</span><span>rev. 2026.11</span></span>
+      <div class="i-rail"><span class="on">00</span><i></i><span>01</span><i></i><span>02</span></div>
+      <h1 class="l-name">Ashe.</h1>
+      <p class="l-tag">writes code, shapes systems, plays records.</p>
+      <p class="l-intro">Software engineer in Singapore. I build systems that <em>stay understandable</em> once the people who built them have moved on. On weekends I play records; that half lives at V4RI.</p>
+      <div class="l-links tag"><span>[ more about me → ]</span><span>[ cv · pdf <span class="red">↗</span> ]</span><span>[ contact → ]</span></div>
+      <div class="now">
+        <div class="row"><span class="k tag">[ building ]</span><span class="v">Cloudark, the shared architecture behind both sites</span><span class="lead"></span><span class="tag dim">active</span></div>
+        <div class="row"><span class="k tag">[ writing ]</span><span class="v">Astro rearchitecture, part two</span><span class="lead"></span><span class="tag dim">draft</span></div>
+        <div class="row"><span class="k tag">[ next gig ]</span><span class="v">Basement Transmission 04 — Sat 15 Nov</span><span class="lead"></span><span class="tag src">↗ V4RI</span></div>
+      </div>
+      <div class="sech"><h2>Selected work<em>two of fourteen</em></h2><span class="tag">§ 01 — <b>[ all projects → ]</b></span></div><div class="rule"></div>
+      <div class="cards">
+        <div class="card ft hasbg hov"><div class="bg p2"></div><div class="m tag"><span>[ <span class="red">active</span> · featured ]</span><span class="lbl">fig. 001</span></div><h3>Cloudark</h3><p>The shared architecture behind itsvari.com and V4RI. One Git-backed content model, two Cloudflare Workers, no database.</p><div class="tg tag"><span>astro · cloudflare · typescript</span><span>github <span class="red">↗</span></span></div></div>
+        <div class="card hasbg"><div class="bg p3"></div><div class="m tag"><span>[ complete ]</span><span class="lbl">fig. 002</span></div><h3>quiet-hours</h3><p>A small CLI that silences notifications on a schedule you actually keep. Rust, one binary, no daemon.</p><div class="tg tag"><span>rust · cli</span><span>github <span class="red">↗</span></span></div></div>
+      </div>
+      <div class="sech"><h2>Selected writing<em>two of nine</em></h2><span class="tag">§ 02 — <b>[ all writing → ]</b></span></div><div class="rule"></div>
+      <div class="wl">
+        <div class="row hasbg"><div class="bg p5"></div><span class="d">28.10.26</span><span class="t">Astro rearchitecture</span><span class="lead"></span><span class="k tag">[ post · 9 min ]</span><span class="arr">→</span></div>
+        <div class="row"><span class="d">14.07.26</span><span class="t">Quiet hours, a year on</span><span class="lead"></span><span class="k tag">[ post · 6 min ]</span><span class="arr">→</span></div>
+      </div>
+      <footer class="i-main-foot lbl"><span class="tag">[ rss ] &nbsp;[ sitemap ] &nbsp;[ contact ] &nbsp;[ V4RI ↗ ]</span><span>© 2026 Ashe · 01.3521°N 103.8198°E · UTC+8 · rev. 2026.11.02</span></footer>
+    </main>
+  </div>
+</div></template>
+
+<template id="tpl-i-about"><div class="pg">
+  <span class="mark tl"><i></i></span><span class="mark tr"><i></i></span><span class="mark bl"><i></i></span><span class="mark br"><i></i></span>
+    <div class="i-wrap"><div data-side="about" data-sec="03"></div>
+    <main class="i-main">
+      <span class="i-meta lbl"><span>index · 03 / 05</span><span>rev. 2026.10</span></span>
+      <div class="i-rail"><span class="on">03</span><i></i><span>03.1</span></div>
+      <div class="ab-meta tag"><span>§ 03 — about</span><span>updated 28.10.2026</span><span>~900 words</span></div>
+      <h1 class="ab-h1">About <em>the long version</em></h1>
+      <div class="rule"></div>
+      <div class="ab-grid">
+        <div>
+          <p>I'm Ashe. I've spent the last decade building software for teams that needed it to keep working after the original authors left: content pipelines, small services, internal tooling and the documentation around them. <em>I care more about systems that explain themselves than systems that impress.</em></p>
+          <p>Most of my work is TypeScript and Rust, with a long-running habit of reaching for <em>plain Markdown and Git</em> before a database. Cloudark, the thing this site runs on, is that habit written down.</p>
+          <p>The other half of the week I DJ. Long sets, low light, the slower end of hard groove, breaks and trance. That work has its own domain as V4RI, and the two sites share one content model so nothing is written twice.</p>
+        </div>
+        <aside class="facts">
+          <div class="row"><span class="k tag">based</span><span class="lead"></span><span class="v">Singapore, GMT+8</span></div>
+          <div class="row"><span class="k tag">doing</span><span class="lead"></span><span class="v">Cloudark</span></div>
+          <div class="row"><span class="k tag">stack</span><span class="lead"></span><span class="v">TypeScript · Rust · Astro</span></div>
+          <div class="row"><span class="k tag">playing</span><span class="lead"></span><span class="v">breaks · hard groove</span></div>
+          <div class="row"><span class="k tag">status</span><span class="lead"></span><span class="v tag red">[ ● open ]</span></div>
+          <div class="row"><span class="k tag">cv</span><span class="lead"></span><span class="v tag">pdf <span class="red">↗</span></span></div>
+        </aside>
+      </div>
+      <div class="sech"><h2>Timeline<em>roles, in order</em></h2><span class="tag">§ 03.1 — <b>[ full cv → ]</b></span></div><div class="rule"></div>
+      <div class="tl">
+        <div class="row"><span class="d">2024 — now</span><span class="t">Staff engineer</span><span class="lead"></span><span class="o">platform tooling, Singapore</span></div>
+        <div class="row"><span class="d">2020 — 2024</span><span class="t">Senior engineer</span><span class="lead"></span><span class="o">content systems, remote</span></div>
+        <div class="row"><span class="d">2016 — 2020</span><span class="t">Engineer</span><span class="lead"></span><span class="o">web and infrastructure</span></div>
+      </div>
+      <footer class="i-main-foot lbl"><span class="tag">[ rss ] &nbsp;[ sitemap ] &nbsp;[ contact ] &nbsp;[ V4RI ↗ ]</span><span>© 2026 Ashe · 01.3521°N 103.8198°E · UTC+8 · rev. 2026.10.28</span></footer>
+    </main>
+  </div>
+</div></template>
+
+<div class="board">
+<div class="hd"><div><h1>Direction D, revision 4 — Signal + Ledger, responsive</h1><p>One set of markup and CSS per page, rendered here at 390, 768, 1280 and 2560 through container queries. Fluid type on a 1.2 → 1.25 modular scale between 390px and 1440px, an 8-point spacing scale, Tailwind-standard breakpoints, itsvari shell capped at 1280px, V4RI chrome capped at 1536px with the image bleeding. Registration crosshairs 10–16px from the edge at the document's start and end, content starting 44–64px in. Gig rows, writing rows and project cards take an optional photo fill: Bayer-dithered fade to black under the text, translucent black over the rest, greyscale until hover or tap. Upright Redaction stays intact, every italic is Redaction 35, wordmarks are Redaction 50. Accent is the logo red, #DC2626. Fonts are self-hosted woff2 in ./fonts (git-ignored; TX-02 is licensed).</p></div><small>rev. 4 · 2026-11-02</small></div>
+
+<div class="sys">
+  <div class="lock">
+    <div class="brand"><svg><use href="#logo"/></svg><span class="w">V4RI</span><span class="i">Ashe.</span></div>
+    <div class="sw"><div><b style="background:#000"></b><small>#000000<br>bg</small></div><div><b style="background:#fff"></b><small>#FFFFFF<br>text</small></div><div><b style="background:#DC2626;border-color:#DC2626"></b><small>#DC2626<br>state · logo</small></div><div><b style="background:rgba(255,255,255,.22)"></b><small>22% wht<br>rules</small></div><div><b style="background:#000;border:2px dotted rgba(255,255,255,.4)"></b><small>40% dotted<br>leaders</small></div></div>
+  </div>
+  <div>
+    <div class="lbl" style="margin-bottom:8px">Type scale — fluid between 390px (base 15, ratio 1.2) and 1440px (base 16, ratio 1.25) via clamp(); no breakpoint jumps</div>
+    <div class="ramp">
+      <span class="h">step</span><span class="h">390 → 1440</span><span class="h">role</span><span class="h">specimen</span>
+      <span class="n">10</span><span class="r">93 → 149</span><span class="r">V4RI wordmark · Redaction 50 It.</span><span class="sp" style="font-size:60px;font-family:'Redaction 50';font-style:italic">V4RI <small>shown at 60</small></span>
+      <span class="n">9</span><span class="r">77 → 119</span><span class="r">Ashe. hero · Redaction 50</span><span class="sp" style="font-size:60px;font-family:'Redaction 50'">Ashe. <small>shown at 60</small></span>
+      <span class="n">6</span><span class="r">45 → 61</span><span class="r">page h1 · Redaction + 35 It. aside</span><span class="sp" style="font-size:61px">Gigs <em class="i35" style="color:var(--dim);font-family:'Redaction 35'">&amp; the archive</em></span>
+      <span class="n">5</span><span class="r">37 → 49</span><span class="r">V4RI tagline · Redaction 35 It.</span><span class="sp i35" style="font-size:48.8px">low light, long sets.</span>
+      <span class="n">4</span><span class="r">31 → 39</span><span class="r">itsvari tagline · Redaction 35 It.</span><span class="sp i35" style="font-size:39px">writes code, shapes systems, plays records.</span>
+      <span class="n">3</span><span class="r">26 → 31</span><span class="r">section h2 · Redaction</span><span class="sp" style="font-size:31.25px">Selected work</span>
+      <span class="n">2</span><span class="r">22 → 25</span><span class="r">card h3 · aside</span><span class="sp" style="font-size:25px">Cloudark <em class="i35" style="color:var(--dim);font-family:'Redaction 35'">two of fourteen</em></span>
+      <span class="n">1</span><span class="r">18 → 20</span><span class="r">lede · intro</span><span class="sp m" style="font-size:20px">Software engineer in Singapore.</span>
+      <span class="n">0</span><span class="r">15 → 16</span><span class="r">body · inline flavour @ 1.12em</span><span class="sp m" style="font-size:16px">I build systems that <span class="inl">explain themselves</span> to the next team.</span>
+      <span class="n">-1</span><span class="r">12.5 → 12.8</span><span class="r">[ tags ] · nav · dates</span><span class="sp d" style="font-size:12.8px;letter-spacing:.04em">[ gigs ] &nbsp;<span style="color:var(--red)">[ ● live ]</span> &nbsp;02.11.2026 &nbsp;§ 01 — [ all projects → ]</span>
+      <span class="n">-2</span><span class="r">10.5 fixed</span><span class="r">micro labels</span><span class="sp d" style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase">NEXT GIG · WHEN · WHERE · 01.3521°N 103.8198°E · fig. 001 · rev. 2026.11 · v3.0</span>
+    </div>
+  </div>
+  <div><div class="lbl">Micrographics kit — all at step −2 (10.5px), 45–75% white, red only for state</div>
+    <div class="kit">
+      <div><span class="k">registration</span><span class="v"><span class="smark"><i></i></span> document start and end, 14px, 6px gap</span></div>
+      <div><span class="k">ruler</span><span class="v"><span class="sruler"></span> 8px ticks, 80px majors</span></div>
+      <div><span class="k">calibration</span><span class="v"><span class="cal"><i></i><i></i><i></i></span> cal.</span></div>
+      <div><span class="k">section rail</span><span class="v"><span class="srail">00<i></i><b>01</b><i></i>02</span></span></div>
+      <div><span class="k">numbering</span><span class="v">§ 01 · fig. 001 · p. 1/4 · index 00 / 05</span></div>
+      <div><span class="k">stamps</span><span class="v">rev. 2026.11.02 · v3.0 · updated 28.10</span></div>
+      <div><span class="k">exif caption</span><span class="v">img_0412 · 35mm · f/1.8 · 1/60 · iso 3200</span></div>
+      <div><span class="k">position</span><span class="v">01.3521°N 103.8198°E · UTC+8 · SGT 23:41:08</span></div>
+      <div><span class="k">tick strip</span><span class="v"><span class="sruler" style="width:90px"></span></span></div>
+      <div><span class="k">photo fill · rest / hover</span><span class="v"><span class="sfill"><i></i><span>Breaks Night 13</span></span><span class="sfill"><i class="c"></i><span>Breaks Night 13</span></span></span></div>
+      <div><span class="k">brackets</span><span class="v">[ gigs ] · [ ● live ] · [ rec ↗ ] · [ menu ]</span></div>
+    </div></div>
+  <div class="sp2">
+    <div><div class="lbl">Spacing — 8-point scale (4 8 12 16 24 32 48 64 96 128), rem in code</div><div class="bars"><div><i style="height:4px"></i><small>4</small></div><div><i style="height:8px"></i><small>8</small></div><div><i style="height:12px"></i><small>12</small></div><div><i style="height:16px"></i><small>16</small></div><div><i style="height:24px"></i><small>24</small></div><div><i style="height:32px"></i><small>32</small></div><div><i style="height:48px"></i><small>48</small></div><div><i style="height:64px"></i><small>64</small></div><div><i style="height:84px;opacity:.5"></i><small>96</small></div><div><i style="height:84px;opacity:.3"></i><small>128</small></div></div><div class="bp" style="margin-top:8px"><b>fluid</b>gutter 16 → 48 · section gap 32 → 64 · safe zone 44 → 64 · mark edge 10 → 16</div></div>
+    <div><div class="lbl">Breakpoints &amp; containers</div><div class="bp"><b>sm 640</b>spec strip 1 → 2 col · [ menu ] → nav · cards 1 → 2<br><b>md 768</b>table rows unstack<br><b>lg 1024</b>itsvari sidebar + sidebar footer · section rail · full table · about facts beside prose<br><b>xl 1280</b>itsvari shell caps here, centred with hairline edges above 1400<br><b>2xl 1536</b>V4RI chrome caps here; image still bleeds<br><b>measure</b>65ch for any prose</div></div>
+  </div>
+</div>
+
+<div><div class="cap"><span>V4RI — home · 1280 × 800 · carousel crossfades every 4s</span><span>D3/1</span></div><div class="chrome"><i></i><i></i><i></i><span>v4ri.xyz</span></div><div class="vp" style="width:1280px;height:800px"><div class="frame" data-page="tpl-v-home" style="width:1280px;height:800px"></div></div></div>
+<div><div class="cap"><span>V4RI — home · 2560 × 1080 ultrawide, shown at 50%</span><span>D3/2</span></div><div class="chrome"><i></i><i></i><i></i><span>v4ri.xyz</span></div><div class="vp" style="width:1280px;height:540px"><div class="frame" data-page="tpl-v-home" style="width:2560px;height:1080px;--s:.5"></div></div></div>
+<div><div class="cap"><span>V4RI — home · 768 × 1024 at 90% and 390 × 844 at 100%</span><span>D3/3</span></div><div class="pair"><div><div class="chrome"><i></i><i></i><i></i><span>768 × 1024</span></div><div class="vp" style="width:691px;height:922px"><div class="frame" data-page="tpl-v-home" style="width:768px;height:1024px;--s:.9"></div></div></div><div><div class="chrome"><i></i><i></i><i></i><span>390 × 844</span></div><div class="vp" style="width:390px;height:844px"><div class="frame" data-page="tpl-v-home" style="width:390px;height:844px"></div></div></div></div></div>
+
+<div><div class="cap"><span>itsvari.com — home · 1280 × 1000</span><span>D3/4</span></div><div class="chrome"><i></i><i></i><i></i><span>itsvari.com</span></div><div class="vp" style="width:1280px;height:1000px"><div class="frame" data-page="tpl-i-home" style="width:1280px;height:1000px"></div></div></div>
+<div><div class="cap"><span>itsvari.com — home · 2560 × 1080 at 50%</span><span>D3/5</span></div><div class="chrome"><i></i><i></i><i></i><span>itsvari.com</span></div><div class="vp" style="width:1280px;height:540px"><div class="frame" data-page="tpl-i-home" style="width:2560px;height:1080px;--s:.5"></div></div></div>
+<div><div class="cap"><span>itsvari.com — home · 768 at 90% and 390 at 100%</span><span>D3/6</span></div><div class="pair"><div><div class="chrome"><i></i><i></i><i></i><span>768 × 1024</span></div><div class="vp" style="width:691px;height:922px"><div class="frame" data-page="tpl-i-home" style="width:768px;height:1024px;--s:.9"></div></div></div><div><div class="chrome"><i></i><i></i><i></i><span>390 × 844</span></div><div class="vp" style="width:390px;height:844px"><div class="frame" data-page="tpl-i-home" style="width:390px;height:844px"></div></div></div></div></div>
+
+<div><div class="cap"><span>V4RI — /gigs · 1280 × 800</span><span>D3/7</span></div><div class="chrome"><i></i><i></i><i></i><span>v4ri.xyz/gigs</span></div><div class="vp" style="width:1280px;height:800px"><div class="frame" data-page="tpl-v-gigs" style="width:1280px;height:800px"></div></div></div>
+<div><div class="cap"><span>V4RI — /gigs · 768 at 90% and 390 at 100%</span><span>D3/8</span></div><div class="pair"><div><div class="chrome"><i></i><i></i><i></i><span>768 × 1024</span></div><div class="vp" style="width:691px;height:922px"><div class="frame" data-page="tpl-v-gigs" style="width:768px;height:1024px;--s:.9"></div></div></div><div><div class="chrome"><i></i><i></i><i></i><span>390 × 844</span></div><div class="vp" style="width:390px;height:844px"><div class="frame" data-page="tpl-v-gigs" style="width:390px;height:844px"></div></div></div></div></div>
+
+<div><div class="cap"><span>itsvari.com — /about · 1280 × 800</span><span>D3/9</span></div><div class="chrome"><i></i><i></i><i></i><span>itsvari.com/about</span></div><div class="vp" style="width:1280px;height:800px"><div class="frame" data-page="tpl-i-about" style="width:1280px;height:800px"></div></div></div>
+<div><div class="cap"><span>itsvari.com — /about · 768 at 90% and 390 at 100%</span><span>D3/10</span></div><div class="pair"><div><div class="chrome"><i></i><i></i><i></i><span>768 × 1024</span></div><div class="vp" style="width:691px;height:922px"><div class="frame" data-page="tpl-i-about" style="width:768px;height:1024px;--s:.9"></div></div></div><div><div class="chrome"><i></i><i></i><i></i><span>390 × 844</span></div><div class="vp" style="width:390px;height:844px"><div class="frame" data-page="tpl-i-about" style="width:390px;height:844px"></div></div></div></div></div>
+</div>
+<script>
+(function(){var b=[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]],d='';for(var L=1;L<=16;L++)for(var j=0;j<4;j++)for(var i=0;i<4;i++)if(b[j][i]<L)d+='M'+(64+(L-1)*4+i)+' '+j+'h1v1h-1z';d+='M128 0h32v4h-32z';var svg="<svg xmlns='http://www.w3.org/2000/svg' width='160' height='4' shape-rendering='crispEdges'><path d='"+d+"'/></svg>";document.documentElement.style.setProperty('--dither','url("data:image/svg+xml;utf8,'+encodeURIComponent(svg)+'")');})();
+var side=document.getElementById('tpl-side');
+document.querySelectorAll('.frame[data-page]').forEach(function(f){var t=document.getElementById(f.dataset.page);if(!t)return;f.appendChild(t.content.cloneNode(true));
+f.querySelectorAll('[data-side]').forEach(function(slot){var s=side.content.cloneNode(true);var a=s.querySelector('[data-nav="'+slot.dataset.side+'"]');if(a)a.classList.add('on');var sec=s.querySelector('.sec');if(sec&&slot.dataset.sec)sec.textContent=slot.dataset.sec;slot.replaceWith(s);});
+});
+</script>
+</body></html>

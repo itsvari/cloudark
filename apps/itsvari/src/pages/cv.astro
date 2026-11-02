@@ -1,0 +1,23 @@
+---
+import { getPage } from "@itsvari/content/astro";
+import { render } from "astro:content";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import ReadingArticle from "../components/ReadingArticle.astro";
+import DownloadCv from "../components/DownloadCv.astro";
+import "../styles/cv.css";
+export const prerender = true;
+const page = await getPage("cv");
+if (!page) return Astro.rewrite("/404");
+const { Content, headings } = await render(page);
+---
+<SiteLayout description={page.data.summary} title="Ashe Andromeda Low · CV">
+  <Fragment slot="head"><meta name="author" content="Ashe Andromeda Low" /></Fragment>
+  <div class="cv-document">
+    <ReadingArticle title="Ashe Andromeda Low" summary={page.data.summary} headings={headings} labels={["§ 04 — cv", "experience & education"]}>
+      <div class="cv-actions" slot="actions"><DownloadCv /><button class="tag" type="button" id="print-cv">[ print cv ]</button></div>
+      <div class="cv-resume"><Content /></div>
+    </ReadingArticle>
+    <div class="reading-links tag"><a href="/contact">[ get in touch → ]</a></div>
+  </div>
+</SiteLayout>
+<script>document.querySelector("#print-cv")?.addEventListener("click", () => window.print());</script>

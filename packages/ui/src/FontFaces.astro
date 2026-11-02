@@ -1,0 +1,21 @@
+---
+const configuredBase: unknown = import.meta.env.TX02_FONT_BASE_URL;
+function licensedFontFaces(value: unknown): string {
+  if (typeof value !== 'string' || !value) return '';
+  let base: URL;
+  try {
+    base = new URL(value.endsWith('/') ? value : `${value}/`);
+  } catch {
+    throw new Error('TX02_FONT_BASE_URL must be an absolute HTTP(S) URL');
+  }
+  if (!['https:', 'http:'].includes(base.protocol)) {
+    throw new Error('TX02_FONT_BASE_URL must be an absolute HTTP(S) URL');
+  }
+  return [
+    { file: 'regular', weight: 400, local: 'TX-02 Regular' },
+    { file: 'medium', weight: 500, local: 'TX-02 Medium' },
+  ].map((face) => `@font-face{font-family:"TX-02";font-weight:${face.weight};src:url(${JSON.stringify(new URL(`tx-02-${face.file}.woff2`, base).href)}) format("woff2"),local(${JSON.stringify(face.local)});font-display:swap}`).join('\n');
+}
+const faces = licensedFontFaces(configuredBase);
+---
+{faces && <style is:inline set:html={faces} />}

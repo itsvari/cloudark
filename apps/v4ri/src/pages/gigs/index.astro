@@ -1,0 +1,38 @@
+---
+import { getEvents } from "@itsvari/content/astro";
+import { getEventDisplayPhase, type EventDisplayPhase } from "@itsvari/content";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+import LedgerTable from "@itsvari/ui/LedgerTable.astro";
+import LedgerRow from "@itsvari/ui/LedgerRow.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const now = new Date();
+const events = await getEvents("v4ri", now);
+const filterParameter = Astro.url.searchParams.get("filter");
+const filter = filterParameter === "upcoming" || filterParameter === "past" || filterParameter === "recorded" ? filterParameter : "all";
+const filteredEvents = events.filter(({ data }) => {
+  const phase = getEventDisplayPhase(data, now);
+  if (filter === "upcoming") return phase === "upcoming" || phase === "live";
+  if (filter === "past") return phase === "past";
+  if (filter === "recorded") return Boolean(data.recordingUrl);
+  return true;
+});
+const groupOrder: readonly { phase: EventDisplayPhase; label: string }[] = [{ phase: "live", label: "live now" }, { phase: "upcoming", label: "upcoming" }, { phase: "postponed", label: "postponed" }, { phase: "cancelled", label: "cancelled" }, { phase: "past", label: "earlier" }];
+const groups = groupOrder.map(({ phase, label }) => ({ phase, label, entries: filteredEvents.filter(({ data }) => getEventDisplayPhase(data, now) === phase).sort((left, right) => phase === "past" ? right.data.startsAt.getTime() - left.data.startsAt.getTime() : left.data.startsAt.getTime() - right.data.startsAt.getTime()) }));
+const formatTime = (date: Date): string => new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Singapore" }).format(date);
+const recordedCount = events.filter(({ data }) => data.recordingUrl).length;
+---
+
+<SiteLayout description="Upcoming shows and the V4RI gig archive. Recordings where they exist." title="Gigs">
+  <header class="v-head">
+    <div><div class="tag dim">§ 01 — gigs · {String(events.length).padStart(2, "0")} entries · {String(recordedCount).padStart(2, "0")} recorded</div><h1>Gigs <em>&amp; the archive</em></h1></div>
+    <div><p>Upcoming shows first. Recordings where they exist.</p><nav class="filters tag" aria-label="Filter gigs">{["all", "upcoming", "past", "recorded"].map((value) => <a href={value === "all" ? "/gigs" : `/gigs?filter=${value}`} class:list={[{ on: filter === value }]} aria-current={filter === value ? "page" : undefined}>[ {value} ]</a>)}</nav></div>
+  </header>
+  <div class="page-rule" aria-hidden="true"></div>
+  {filteredEvents.length === 0 ? <EmptyState message="No gigs match this filter." /> : <LedgerTable variant="events">
+    {groups.map(({ phase, label, entries }) => entries.length > 0 && <>
+      <h2 class="group-label tag">[ {label} — {String(entries.length).padStart(2, "0")} ]</h2>
+      {entries.map((event) => <LedgerRow href={`/gigs/${event.id}`} title={event.data.title} date={event.data.startsAt} time={`${formatTime(event.data.startsAt)}${event.data.endsAt ? `–${formatTime(event.data.endsAt)}` : event.data.timeNote && event.data.disclosure === "public" ? ` · ${event.data.timeNote}` : ""}`} venue={event.data.venue ? `${event.data.venue.name}, ${event.data.venue.city}` : undefined} phase={phase} ticketUrl={event.data.ticketUrl} recordingUrl={event.data.recordingUrl} image={event.data.image} />)}
+    </>)}
+  </LedgerTable>}
+</SiteLayout>

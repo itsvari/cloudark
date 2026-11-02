@@ -1,0 +1,15 @@
+---
+import { getProject } from "@itsvari/content/astro";
+import { canonicalUrl } from "@itsvari/content";
+import { render } from "astro:content";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import ReadingArticle from "../../components/ReadingArticle.astro";
+const id = Astro.params.id;
+const project = id ? await getProject(id, "itsvari") : undefined;
+if (!project) return Astro.rewrite("/404");
+const { Content, headings } = await render(project);
+---
+<SiteLayout canonical={canonicalUrl("project", project.id, project.data.canonicalSite)} description={project.data.summary} title={project.data.title}>
+  <ReadingArticle title={project.data.title} summary={project.data.summary} headings={headings} labels={[project.data.status, ...project.data.tags]} links={project.data.links}><Content /></ReadingArticle>
+  <div class="reading-links tag"><a href="/projects">[ ← all projects ]</a></div>
+</SiteLayout>

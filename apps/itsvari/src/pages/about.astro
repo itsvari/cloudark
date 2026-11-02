@@ -1,0 +1,24 @@
+---
+import { getPage } from "@itsvari/content/astro";
+import { render } from "astro:content";
+import SectionHeading from "@itsvari/ui/SectionHeading.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+export const prerender = true;
+const page = await getPage("about");
+if (!page) return Astro.rewrite("/404");
+const { Content } = await render(page);
+const updated = page.data.updatedAt ? new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "2-digit", year: "numeric", timeZone: "Asia/Singapore" }).format(page.data.updatedAt).replaceAll("/", ".") : undefined;
+const wordCount = page.body?.split(/\s+/).length ?? 0;
+---
+<SiteLayout description={page.data.summary} title={page.data.title} sections={["03", "03.1"]}>
+  <div class="page-meta tag"><span>§ 03 — about</span>{updated && <span>updated {updated}</span>}<span>~{wordCount} words</span></div>
+  <h1 class="page-title">About <em>&amp; a little context</em></h1>
+  <div class="rule" aria-hidden="true"></div>
+  <div class="ab-grid">
+    <div class="prose"><Content /></div>
+    <aside class="facts" aria-label="Facts">{page.data.facts.map(({ label, value, href }) => <div class="row"><span class="key tag">[ {label} ]</span><span class="lead" aria-hidden="true"></span>{href ? <a class="value" href={href}>{value}</a> : <span class="value">{value}</span>}</div>)}</aside>
+  </div>
+  <section aria-labelledby="timeline"><SectionHeading title="A short timeline" aside="so far" number="03.1" id="timeline" />
+    <div class="timeline">{page.data.timeline.map(({ from, to, role, org }) => <div class="row"><span class="date">{from}–{to}</span><span class="role">{role}</span><span class="lead" aria-hidden="true"></span><span class="organisation">{org}</span></div>)}</div>
+  </section>
+</SiteLayout>

@@ -1,0 +1,15 @@
+---
+interface Props { position?: 'top' | 'bottom' | 'all'; }
+const { position = 'all' } = Astro.props;
+const positions = position === 'all' ? ['top', 'bottom'] : [position];
+---
+{positions.map((edge) => <div class:list={['marks', edge]} aria-hidden="true"><span class="mark"><i></i></span><span class="mark"><i></i></span></div>)}
+<style>
+  .marks { position: absolute; left: var(--edge); right: var(--edge); height: 14px; z-index: 10; pointer-events: none; display: flex; justify-content: space-between; }
+  .top { top: var(--edge); }
+  .bottom { bottom: var(--edge); }
+  .mark { position: relative; display: block; width: 14px; height: 14px; opacity: .75; }
+  .mark::before { content: ''; position: absolute; left: 6.5px; top: 0; width: 1px; height: 100%; background: #fff; }
+  .mark::after { content: ''; position: absolute; top: 6.5px; left: 0; height: 1px; width: 100%; background: #fff; }
+  .mark i { position: absolute; left: 4px; top: 4px; width: 6px; height: 6px; background: #000; z-index: 1; }
+</style>

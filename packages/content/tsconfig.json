@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "types": ["vitest/globals"]
+  },
+  "include": ["src/**/*.ts", "../../apps/itsvari/.astro/types.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}

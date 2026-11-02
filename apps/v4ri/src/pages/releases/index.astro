@@ -1,0 +1,17 @@
+---
+import { getReleases } from "@itsvari/content/astro";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+import LedgerTable from "@itsvari/ui/LedgerTable.astro";
+import LedgerRow from "@itsvari/ui/LedgerRow.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const recordings = await getReleases("v4ri");
+---
+
+<SiteLayout description="Watch V4RI's recorded sets from Tuff Club, Enclavebar and Headquarters." title="Recordings">
+  <header class="v-head"><div><div class="tag dim">§ 02 — recordings · {String(recordings.length).padStart(2, "0")} sets</div><h1>Recordings <em>from the booth</em></h1></div><div><p>Dates show when each set was recorded.</p><a class="tag" href="/gigs?filter=recorded">[ recorded gigs → ]</a></div></header>
+  <div class="page-rule" aria-hidden="true"></div>
+  {recordings.length > 0 ? <LedgerTable variant="content" titleLabel="Recording" dateLabel="Recorded">
+    {recordings.map((recording) => <LedgerRow href={`/releases/${recording.id}`} title={recording.data.title} date={recording.data.releaseDate} kind="live set" links={recording.data.links} image={recording.data.image} />)}
+  </LedgerTable> : <EmptyState message="No recordings published." />}
+</SiteLayout>

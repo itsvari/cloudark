@@ -1,0 +1,10 @@
+---
+import { navigation } from "../navigation";
+import { siteOrigins } from "@itsvari/content";
+interface Props { currentHref?: string }
+const { currentHref } = Astro.props;
+---
+<nav class="i-nav" aria-label="Primary navigation">
+  {navigation.map(({ href, label, number }) => <a href={href} class:list={{ on: currentHref === href }} aria-current={currentHref === href ? "page" : undefined}><span class="nav-number">{number}</span>[ {label} ]</a>)}
+  <a href={siteOrigins.v4ri}><span class="nav-number red">↗</span>V4RI</a>
+</nav>

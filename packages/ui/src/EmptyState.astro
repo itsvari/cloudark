@@ -1,0 +1,5 @@
+---
+interface Props { message?: string; }
+const { message = 'Nothing has been published here yet.' } = Astro.props;
+---
+<p class="tag dim" role="status">[ {message} ]</p>

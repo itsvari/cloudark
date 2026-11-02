@@ -1,0 +1,10 @@
+---
+import { youtubeVideoId } from './youtube';
+interface Props { url: string; title: string; }
+const { url, title } = Astro.props;
+const videoId = youtubeVideoId(url);
+---
+{videoId ? <iframe src={`https://www.youtube-nocookie.com/embed/${videoId}`} title={title} loading="lazy" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe> : <p class="tag dim">[ recording unavailable ]</p>}
+<style>
+  iframe { display: block; width: 100%; aspect-ratio: 16 / 9; border: 1px solid var(--rule); margin-block: var(--s-6); }
+</style>

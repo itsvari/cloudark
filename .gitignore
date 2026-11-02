@@ -1,27 +1,23 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+**/node_modules/
 
 # testing
 /coverage
 
-# next.js
-/.next/
-/out/
+# generated Lighthouse reports can contain embedded screenshot binaries
+/docs/design/qa/*.json
 
-# cloudflare
-/.open-next/
+# framework and Cloudflare output
+**/.astro/
+**/.next/
+**/.open-next/
+**/.wrangler/
+**/dist/
 
 # production
-/build
+**/build/
 
 # misc
 .DS_Store
@@ -36,9 +32,33 @@ yarn-error.log*
 # env files (can opt-in for committing if needed)
 .env*
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# generated Cloudflare types
+worker-configuration.d.ts
+
+# licensed webfonts for local design mockups (TX-02 is not redistributable)
+/docs/design/mockups/fonts/
+
+# TX-02 web use is licensed; font binaries stay outside the public repository.
+**/TX-02_webfonts/
+**/[Tt][Xx]-02*.woff*
+**/[Tt][Xx]-02*.otf
+**/[Tt][Xx]-02*.ttf
+**/BerkeleyMono*.woff*
+**/BerkeleyMono*.otf
+**/BerkeleyMono*.ttf
+
+# photo originals, delivery binaries, and generated review images stay outside Git.
+/apps/v4ri/src/assets/press/originals/
+/apps/v4ri/src/assets/press/optimised/
+/apps/*/public/photos/
+/docs/design/qa/**/*.png
+/docs/design/qa/**/*.jpg
+/docs/design/qa/**/*.jpeg
+/docs/design/qa/**/*.webp
+/docs/design/qa/**/*.avif
+/docs/design/qa/**/*.gif
+/output/

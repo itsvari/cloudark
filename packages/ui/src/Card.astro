@@ -1,0 +1,24 @@
+---
+import type { ContentImage } from '@itsvari/content';
+import PhotoFill from './PhotoFill.astro';
+interface Props { href: string; title: string; summary: string; status?: string; featured?: boolean; image?: ContentImage; tags?: string[]; links?: Record<string,string>; number?: number; }
+const { href, title, summary, status = 'active', featured = false, image, tags = [], links = {}, number = 1 } = Astro.props;
+---
+<article class:list={['card', { featured, hasbg: image }]} data-photo-row={image ? '' : undefined}>
+  {image && <PhotoFill image={image} />}
+  <div class="meta tag"><span>[ <span class:list={{ red: status === 'active' }}>{status}</span>{featured && ' · featured'} ]</span><span class="lbl dim">fig. {String(number).padStart(3, '0')}</span></div>
+  <h3><a href={href} data-photo-link data-photo-text>{title}</a></h3><p data-photo-text>{summary}</p>
+  <div class="bottom tag"><span>{tags.join(' · ')}</span><span class="links">{Object.entries(links).map(([label, link]) => <a href={link}>{label} <span class="red">↗</span></a>)}</span></div>
+</article>
+<style>
+  .card { position: relative; border: 1px solid var(--rule); padding: var(--s-4) var(--s-5); min-height: 150px; display: flex; flex-direction: column; }
+  .featured { border-color: #fff; }
+  .featured::before { content: ''; position: absolute; left: -1px; top: -1px; width: 3px; height: 40px; background: var(--red); }
+  .meta { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); margin-bottom: var(--s-3); color: var(--dim); }
+  h3 { font: 400 var(--t2)/1 'Redaction', Georgia, serif; margin-bottom: var(--s-2); }
+  h3 a::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+  p { color: rgba(255,255,255,.72); font-size: var(--t0); line-height: 1.5; margin: 0 0 var(--s-3); }
+  .bottom { display: flex; justify-content: space-between; gap: var(--s-3); color: var(--dim); flex-wrap: wrap; margin-top: auto; }
+  .links { display: flex; gap: var(--s-3); }
+  .links a { position: relative; z-index: 2; }
+</style>

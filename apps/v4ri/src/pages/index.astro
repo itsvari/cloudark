@@ -1,0 +1,181 @@
+---
+import { getEvents, getHomeImages, getReleases } from "@itsvari/content/astro";
+import { getEventDisplayPhase } from "@itsvari/content";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { responsivePressPhotograph } from "../press-media";
+
+const now = new Date();
+const [events, homeImages, recordings] = await Promise.all([getEvents("v4ri", now), getHomeImages(), getReleases("v4ri", now)]);
+const latestRecording = recordings[0];
+const images = homeImages.map((image) => responsivePressPhotograph(image));
+const liveEvent = events.find(({ data }) => getEventDisplayPhase(data, now) === "live");
+const nextEvent = events.find(({ data }) => getEventDisplayPhase(data, now) === "upcoming");
+const pastEvents = events.filter(({ data }) => getEventDisplayPhase(data, now) === "past");
+const latestEvent = pastEvents.at(-1);
+const firstImage = images[0];
+const formatTime = (date: Date): string => new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Singapore" }).format(date);
+const formatDate = (date: Date): string => new Intl.DateTimeFormat("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "Asia/Singapore" }).format(date);
+const eventTime = (data: typeof events[number]["data"]): string => `${formatTime(data.startsAt)}${data.endsAt ? `–${formatTime(data.endsAt)}` : data.timeNote && data.disclosure === "public" ? ` · ${data.timeNote}` : ""} SGT`;
+const staticTime = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Asia/Singapore" }).format(now);
+---
+
+<SiteLayout description="V4RI, Singapore-based producer and DJ. Dark techno, EBM, industrial and recorded live sets." title="V4RI" home>
+  {firstImage && <link slot="head" rel="preload" as="image" href={firstImage.src} imagesrcset={firstImage.srcset} imagesizes="100vw" fetchpriority="high" />}
+  <div slot="background" class="carousel" aria-hidden="true" data-carousel>
+    {images.map((image, index) => <img class:list={["carousel-photo", { "is-current": index === 0 }]} data-photo-caption={image.exif ?? "singapore · after dark"} src={image.src} srcset={image.srcset} sizes="100vw" alt="" width={image.width} height={image.height} loading={index === 0 ? "eager" : "lazy"} fetchpriority={index === 0 ? "high" : "low"} decoding="async" />)}
+    <div class="veil"></div><div class="shade"></div><div class="scan"></div>
+  </div>
+  <aside class="v-rail lbl dim" aria-hidden="true"><span>SGT <span data-local-time>{staticTime}</span></span><span>01.3521°N 103.8198°E</span><span>◼ REC — {now.getFullYear()}</span></aside>
+  <section class="v-hero" aria-label="V4RI">
+    <h1>V4RI</h1>
+    <p class="tagline">dark techno, EBM &amp; industrial.</p>
+    {liveEvent ? <a class="tag live-line" href={`/gigs/${liveEvent.id}`}>[ <i aria-hidden="true"></i> live now — {liveEvent.data.title}{liveEvent.data.venue && ` — ${liveEvent.data.venue.name}, ${liveEvent.data.venue.city}`}{liveEvent.data.endsAt && ` — until ${formatTime(liveEvent.data.endsAt)}`} ]</a> : <a class="tag dim" href="/gigs">[ gig archive → ]</a>}
+    <nav class="hero-links tag" aria-label="Connect with V4RI"><a href="/releases">[ recordings → ]</a><a href="/about">[ about → ]</a><a href="/socials">[ socials → ]</a><a href="/contact">[ contact → ]</a></nav>
+  </section>
+  <span class="v-cap lbl" data-caption>{firstImage?.exif ?? "singapore · after dark"}</span>
+  <footer class="v-spec">
+    {nextEvent ? <>
+      <div><div class="lbl">Next gig</div><a href={`/gigs/${nextEvent.id}`}>{nextEvent.data.title}</a></div>
+      <div><div class="lbl">When</div><span>{formatDate(nextEvent.data.startsAt)} · {eventTime(nextEvent.data)}</span></div>
+      {nextEvent.data.venue && <div><div class="lbl">Where</div><span>{nextEvent.data.venue.name}, {nextEvent.data.venue.city}</span></div>}
+      <div><div class="lbl">{nextEvent.data.ticketUrl ? "Tickets" : "Event details"}</div>{nextEvent.data.ticketUrl ? <a class="red" href={nextEvent.data.ticketUrl}>→ {new URL(nextEvent.data.ticketUrl).hostname}</a> : <a href={`/gigs/${nextEvent.id}`}>[ view gig → ]</a>}</div>
+    </> : <>
+      <div><div class="lbl">Gig archive</div><a href="/gigs">{pastEvents.length} {pastEvents.length === 1 ? "show" : "shows"} · view archive →</a></div>
+      {latestEvent && <>
+        <div><div class="lbl">Latest show</div><a href={`/gigs/${latestEvent.id}`}>{latestEvent.data.title}</a></div>
+        <div><div class="lbl">When</div><span>{formatDate(latestEvent.data.startsAt)} · {eventTime(latestEvent.data)}</span></div>
+        {latestRecording && <div><div class="lbl">Latest recording</div><a href={`/releases/${latestRecording.id}`}>{latestRecording.data.title} →</a></div>}
+      </>}
+    </>}
+    <div class="v-idx">
+      <span class="index-label"><span data-carousel-index>{images.length > 0 ? "01" : "00"}</span> / {String(images.length).padStart(2, "0")}</span>
+      <div class="carousel-controls" role="group" aria-label="Photo carousel controls. Use left and right arrow keys to change photograph." data-carousel-controls hidden>
+        <div class="index-bars">{images.map((_, index) => <button class:list={["slide-control", { on: index === 0 }]} type="button" data-slide-index={index} aria-label={`Show photograph ${index + 1} of ${images.length}`} aria-pressed={index === 0}><i aria-hidden="true"><span class="slide-progress" data-slide-progress></span></i></button>)}</div>
+      </div>
+    </div>
+  </footer>
+</SiteLayout>
+
+<style>
+  :global(.home-shell) { min-height: max(720px, 100svh); }
+  .carousel { position: absolute; inset: 0; overflow: hidden; background: var(--bg); }
+  .carousel-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity var(--motion-entry, 480ms) var(--motion-ease, ease); }
+  .carousel-photo.is-current { opacity: 1; }
+  .veil, .shade, .scan { position: absolute; inset: 0; pointer-events: none; }
+  .veil { background: rgba(0,0,0,.42); }
+  .shade { background: linear-gradient(180deg, rgba(0,0,0,.25), transparent 28%, transparent 50%, rgba(0,0,0,.78)); }
+  .scan { background: repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 4px); }
+  .v-rail { position: absolute; left: calc(var(--gutter) - 20px); top: calc(var(--safe) + 80px); bottom: calc(var(--safe) + 170px); writing-mode: vertical-rl; transform: rotate(180deg); display: flex; justify-content: space-between; align-items: center; }
+  .v-hero { position: absolute; left: calc(var(--gutter) + 44px); bottom: calc(var(--safe) + var(--hero-b, 170px)); max-width: 72%; }
+  .v-hero h1 { font: italic var(--t10)/.9 "Redaction 50", Georgia, serif; margin: 0 0 var(--s-2); letter-spacing: -.01em; }
+  .tagline { font: italic var(--t5)/1.1 "Redaction 35", serif; color: rgba(255,255,255,.85); margin: 0 0 var(--s-4); }
+  .live-line { color: var(--red); background: rgba(0,0,0,.92); padding: var(--s-1) var(--s-2); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  .live-line i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--red); box-shadow: 0 0 10px var(--red); margin: 0 7px 0 2px; vertical-align: middle; }
+  .hero-links { display: flex; flex-wrap: wrap; gap: var(--s-5); margin-top: var(--s-5); }
+  .v-cap { position: absolute; right: var(--gutter); bottom: calc(var(--safe) + 150px); color: rgba(255,255,255,.72); }
+  .v-spec { position: absolute; left: var(--gutter); right: var(--gutter); bottom: var(--safe); padding-top: calc(var(--s-4) + 8px); display: grid; grid-template-columns: 1.3fr 1.2fr 1.2fr .7fr auto; gap: var(--s-5); }
+  .v-spec::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 9px; background: linear-gradient(var(--rule), var(--rule)) top / 100% 1px no-repeat, repeating-linear-gradient(90deg, rgba(255,255,255,.6) 0 1px, transparent 1px 80px) top / 100% 9px no-repeat, repeating-linear-gradient(90deg, rgba(255,255,255,.28) 0 1px, transparent 1px 8px) top / 100% 5px no-repeat; }
+  .v-spec .lbl { color: rgba(255,255,255,.72); margin-bottom: var(--s-1); }
+  .v-spec > div > a, .v-spec > div > span:not(.index-label) { font-weight: 500; font-size: var(--t0); display: block; }
+  .v-idx { text-align: right; align-self: end; min-height: 62px; }
+  .index-label { font: var(--t-1) "Departure Mono", monospace; display: block; }
+  .carousel-controls { display: grid; justify-items: end; }
+  .carousel-controls[hidden] { display: none; }
+  .index-bars { display: flex; gap: var(--s-1); }
+  .slide-control { display: grid; place-items: center; width: 34px; min-height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; }
+  .slide-control i { position: relative; display: block; width: 100%; height: 2px; overflow: hidden; background: rgba(255,255,255,.3); }
+  .slide-progress { position: absolute; inset: 0; background: var(--red); transform: scaleX(0); transform-origin: left; }
+  .slide-control.on .slide-progress { transform: scaleX(1); }
+  .slide-control:hover, .slide-control:focus-visible, .slide-control:active { background: transparent; border: 0; transform: none; }
+  .slide-control:hover i, .slide-control:focus-visible i { background: rgba(255,255,255,.55); }
+  .slide-control:focus-visible { outline: 1px solid var(--fg); outline-offset: -4px; }
+  @container page (max-width: 1023px) {
+    :global(.home-shell main) { display: flex; flex-direction: column; justify-content: flex-end; flex: 1; gap: var(--s-6); }
+    .v-hero, .v-spec { position: static; }
+    .v-rail, .v-cap { display: none; }
+    .v-spec { grid-template-columns: 1fr 1fr; }
+    .v-idx { grid-column: 1 / -1; min-height: 44px; text-align: left; display: flex; justify-content: space-between; align-items: center; gap: var(--s-3); }
+    .carousel-controls { display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: center; gap: var(--s-4); }
+    .v-hero { left: var(--gutter); right: var(--gutter); max-width: none; --hero-b: 220px; }
+  }
+  @container page (max-width: 639px) {
+    .v-spec { grid-template-columns: 1fr; gap: var(--s-3); }
+    .v-idx { align-items: center; min-height: 44px; }
+    .index-label { white-space: nowrap; }
+    .carousel-controls { gap: 0; }
+    .index-bars { width: 100%; justify-content: flex-end; }
+    .slide-control { width: 30px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .carousel-photo { transition: none; }
+  }
+</style>
+
+<script>
+  const clock = document.querySelector("[data-local-time]");
+  const timeFormatter = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Asia/Singapore" });
+  const clockIntervalMs = 1000;
+  const slideDurationMs = 4000;
+  const updateClock = (): void => { if (clock) clock.textContent = timeFormatter.format(new Date()); };
+  updateClock();
+  window.setInterval(updateClock, clockIntervalMs);
+  const indexLabel = document.querySelector("[data-carousel-index]");
+  const caption = document.querySelector("[data-caption]");
+  const controls = document.querySelector("[data-carousel-controls]");
+  const photos = [...document.querySelectorAll(".carousel-photo")];
+  const slideButtons = [...document.querySelectorAll("[data-slide-index]")];
+  const progressLines = [...document.querySelectorAll("[data-slide-progress]")];
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let activeIndex = 0;
+  let progressAnimation: Animation | undefined;
+
+  const renderCurrentPhoto = (): void => {
+    photos.forEach((photo, index) => photo.classList.toggle("is-current", index === activeIndex));
+    slideButtons.forEach((button, index) => {
+      button.classList.toggle("on", index === activeIndex);
+      button.setAttribute("aria-pressed", String(index === activeIndex));
+    });
+    if (indexLabel) indexLabel.textContent = String(photos.length > 0 ? activeIndex + 1 : 0).padStart(2, "0");
+    const currentCaption = photos[activeIndex]?.getAttribute("data-photo-caption");
+    if (caption && currentCaption) caption.textContent = currentCaption;
+  };
+
+  const startProgress = (): void => {
+    if (progressAnimation) {
+      progressAnimation.onfinish = null;
+      progressAnimation.cancel();
+      progressAnimation = undefined;
+    }
+    const currentProgress = progressLines[activeIndex];
+    if (!currentProgress || reducedMotion.matches || photos.length < 2) return;
+    progressAnimation = currentProgress.animate(
+      [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }],
+      { duration: slideDurationMs, easing: "linear", fill: "forwards" },
+    );
+    progressAnimation.onfinish = () => selectPhoto(activeIndex + 1);
+    if (document.hidden) progressAnimation.pause();
+  };
+
+  const selectPhoto = (nextIndex: number): void => {
+    if (photos.length === 0) return;
+    activeIndex = (nextIndex + photos.length) % photos.length;
+    renderCurrentPhoto();
+    startProgress();
+  };
+
+  if (photos.length > 1 && controls instanceof HTMLElement) controls.hidden = false;
+  slideButtons.forEach((button, index) => button.addEventListener("click", () => selectPhoto(index)));
+  controls?.addEventListener("keydown", (event) => {
+    if (!(event instanceof KeyboardEvent) || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+    event.preventDefault();
+    selectPhoto(activeIndex + (event.key === "ArrowRight" ? 1 : -1));
+  });
+  reducedMotion.addEventListener("change", startProgress);
+  document.addEventListener("visibilitychange", () => {
+    if (!progressAnimation) return;
+    if (document.hidden) progressAnimation.pause();
+    else progressAnimation.play();
+  });
+  renderCurrentPhoto();
+  startProgress();
+</script>

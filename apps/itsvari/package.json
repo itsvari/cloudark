@@ -1,0 +1,27 @@
+{
+  "name": "@itsvari/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.16.1",
+  "scripts": {
+    "build": "astro build",
+    "build:cloudflare": "pnpm --dir ../.. run build:cloudflare",
+    "cf-typegen": "wrangler types",
+    "check": "astro check",
+    "deploy": "wrangler deploy",
+    "dev": "astro dev",
+    "preview": "astro build && astro preview",
+    "upload": "wrangler versions upload",
+    "build:staging": "CLOUDFLARE_ENV=staging astro build",
+    "deploy:staging": "wrangler deploy --env staging"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.4.3",
+    "@astrojs/markdown-satteri": "^0.4.6",
+    "@astrojs/rss": "^4.0.19",
+    "@itsvari/content": "workspace:*",
+    "@itsvari/ui": "workspace:*",
+    "astro": "^7.4.4"
+  }
+}

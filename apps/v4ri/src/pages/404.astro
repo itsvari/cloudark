@@ -1,0 +1,8 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+Astro.response.status = 404;
+---
+
+<SiteLayout description="This frequency is quiet. Page not found." title="Not found">
+  <section class="error-page"><span class="tag dim">[ 404 · no signal ]</span><h1>Nothing on this frequency.</h1><div class="page-rule" aria-hidden="true"></div><p>The page may have moved, or the link had a bad night.</p><a class="tag" href="/">[ back to V4RI → ]</a></section>
+</SiteLayout>

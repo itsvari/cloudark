@@ -1,0 +1,14 @@
+---
+import { getPosts } from "@itsvari/content/astro";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import WritingRow from "../../components/WritingRow.astro";
+const posts = await getPosts("itsvari");
+---
+<SiteLayout description={posts.length > 0 ? "Writing by Ashe Andromeda Low." : "Writing by Ashe Andromeda Low. No posts published yet."} title="Writing">
+  <div class="page-meta tag">§ 02 — writing{posts.length > 0 && <> · {String(posts.length).padStart(2, "0")} entries</>}</div>
+  <h1 class="page-title">Writing{posts.length > 0 && <em>&amp; working notes</em>}</h1>
+  {posts.length > 0 && <p class="page-lede">Writing by Ashe Andromeda Low.</p>}
+  <div class="rule" aria-hidden="true"></div>
+  {posts.length > 0 ? posts.map((post) => <WritingRow post={post} />) : <EmptyState message="No posts published yet." />}
+</SiteLayout>

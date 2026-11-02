@@ -1,0 +1,26 @@
+---
+import { getEvent, getRelease } from "@itsvari/content/astro";
+import { canonicalUrl } from "@itsvari/content";
+import { formatDate } from "@itsvari/ui";
+import YouTubeEmbed from "@itsvari/ui/YouTubeEmbed.astro";
+import { render } from "astro:content";
+import ReadingArticle from "../../components/ReadingArticle.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+
+const id = Astro.params.id;
+const recording = id ? await getRelease(id, "v4ri") : undefined;
+if (!recording) return Astro.rewrite("/404");
+const event = recording.data.eventId ? await getEvent(recording.data.eventId, "v4ri") : undefined;
+const { Content, headings } = await render(recording);
+const youtubeUrl = recording.data.links.youtube;
+---
+
+<SiteLayout canonical={canonicalUrl("release", recording.id, recording.data.canonicalSite)} description={recording.data.summary} title={recording.data.title}>
+  <ReadingArticle title={recording.data.title} summary={recording.data.summary} headings={headings}>
+    <Fragment slot="meta"><a href="/releases">[ recordings → ]</a><span>[ live set ]</span><span>recorded <time datetime={recording.data.releaseDate.toISOString()}>{formatDate(recording.data.releaseDate)}</time></span></Fragment>
+    <div slot="details" class="detail-links tag">{event && <a href={`/gigs/${event.id}`}>[ gig details → ]</a>}{youtubeUrl && <a href={youtubeUrl}>[ watch on YouTube <span class="red">↗</span> ]</a>}</div>
+    {youtubeUrl && <YouTubeEmbed url={youtubeUrl} title={`${recording.data.title} · V4RI recorded set`} />}
+    <Content />
+    <a class="back-link tag" href="/releases">[ all recordings → ]</a>
+  </ReadingArticle>
+</SiteLayout>

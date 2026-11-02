@@ -1,0 +1,8 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import ComponentGallery from "@itsvari/ui/ComponentGallery.astro";
+if (!import.meta.env.DEV) return Astro.rewrite("/404");
+---
+<SiteLayout description="Development-only type and component samples." title="Design system">
+  <ComponentGallery />
+</SiteLayout>
