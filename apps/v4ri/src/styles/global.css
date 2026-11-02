@@ -21,11 +21,7 @@
 .logo svg { flex-shrink: 0; width: 26px; height: 26px; display: block; }
 .logo span { font: var(--t-1) "Departure Mono", monospace; letter-spacing: .14em; }
 .v-nav { display: flex; gap: var(--s-4); align-items: center; white-space: nowrap; }
-.v-nav .on, .v-menu .on { color: var(--red); }
-.v-menu { display: none; }
-.v-menu summary { cursor: pointer; list-style: none; }
-.v-menu summary::-webkit-details-marker { display: none; }
-.v-menu nav { position: absolute; top: 100%; right: 0; display: grid; gap: var(--s-4); background: var(--bg); border: 1px solid var(--rule); padding: var(--s-5); white-space: nowrap; }
+.v-nav .on { color: var(--red); }
 .v-foot { margin-top: auto; padding-top: var(--s-7); display: flex; justify-content: space-between; align-items: center; color: var(--dim); gap: var(--s-4); flex-wrap: wrap; }
 .footer-stamp, .footer-links { display: inline-flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; }
 .footer-links { gap: var(--s-4); }
@@ -94,7 +90,6 @@
 
 @container page (max-width: 1023px) {
   .v-nav { display: none; }
-  .v-menu { display: block; }
 }
 
 @container page (max-width: 639px) {

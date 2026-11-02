@@ -2,7 +2,7 @@
 
 This is the single source of truth for how the two sites look and behave. It is written for people and for coding agents. When this guide and an existing implementation disagree, the guide wins; when the guide and the mockup (`mockups/d-signal-ledger.html`) disagree, the mockup wins and the guide should be corrected.
 
-The refinements below include the approved adaptive dither, numbered reading sections, motion, sticky V4RI header and manual full-colour carousel. These updates supersede the corresponding behaviour in the original mockup.
+The refinements below include the approved adaptive dither, numbered reading sections, motion, sticky V4RI header, manual full-colour carousel, single-tap photo links and full-page mobile navigation drawers. These updates supersede the corresponding behaviour in the original mockup.
 
 The direction is called **Signal + Ledger**: a HUD-like frame (full-bleed image, registration marks, spec strip, ledger tables, fixed index column) carrying an editorial type system (Redaction for titles, bracketed Departure Mono labels, dotted leaders, numbered sections, one red rule per section). Influences: ANTIREAL, Prime Intellect, Dragonfly, Nous Research, micrographics. Blend: minimal 45, neo-brutalist 30, Y2K 25.
 
@@ -100,7 +100,7 @@ Tailwind defaults: `sm 640`, `md 768`, `lg 1024`, `xl 1280`, `2xl 1536`. Prefer 
 
 | Width | itsvari.com | V4RI |
 |---|---|---|
-| < 640 | nav collapses to `[ menu ]`; cards one column; now-rows become a two-row grid; table rows stack to `date / status`, `title`, `venue / arrow` | nav collapses to `[ menu ]`; spec strip one column; carousel index below |
+| < 640 | nav uses a full-page drawer opened by `[ menu ]`; cards one column; now-rows become a two-row grid; table rows stack to `date / status`, `title`, `venue / arrow` | nav uses a full-page drawer opened by `[ menu ]`; spec strip one column; carousel index below |
 | 640–1023 | header layout (brand left, inline nav right); footer moves to page end; about facts stack under prose | spec strip two columns; time column dropped from tables, venue moves under title |
 | ≥ 1024 | sidebar appears, sticky, full viewport height, footer pinned to its bottom; full table; section rail | rail, sub-label and EXIF caption appear; full table |
 | ≥ 1280 | shell capped at 1280px and centred | — |
@@ -115,6 +115,8 @@ Prose measure is `65ch`. Sidebar width is `clamp(240px, 24cqi, 300px)`.
 Two columns at `lg+`: sidebar + main. Sidebar: brand (`itsvari` in Departure Mono `--t-1`, `.04em`) with a micro stamp beneath (`v3.0 · rev. 2026.11`), numbered nav (`00 [ home ]` … `05 [ contact ]`, then `↗ V4RI`), 1px rules between items, active item red including its number. Footer pinned to the bottom of the sidebar, in order: tick strip, calibration swatches + `cal. · rev. date`, copyright line, `[ rss ] [ sitemap ] [ contact ]`, position line `01.3521°N 103.8198°E · UTC+8`, `§nn · p. 1/1`. No technology, stack or font credits anywhere in the chrome.
 
 Main column: `index · 00 / 05 · rev. yyyy.mm` micro label top right; a vertical section rail at the right edge listing section numbers with the current one red (desktop only).
+
+Below 640px on itsvari and 1024px on V4RI, `[ menu ]` opens an opaque black, full-viewport navigation drawer. Use Departure Mono bracketed links with generous spacing, full-width targets at least 48px high, hairline separators and the current page in red. The menu and close controls also have at least 48px touch targets. Respect device safe areas; on short screens the links scroll inside the drawer. Keep keyboard focus inside the open drawer, restore it to the opener on close, support Escape, and prevent background scrolling. Returning to the desktop breakpoint closes the drawer. Keep navigation reachable when JavaScript is unavailable.
 
 ### 5.2 itsvari.com home
 `Ashe.` (Redaction 50, `--t9`), tagline (Redaction 35 Italic, `--t4`), one two-sentence intro (`--t1`, 65ch, one inline flavour phrase), three bracketed links, a "now" block of three leader rows (`[ building ]`, `[ writing ]`, `[ next gig ]`), `§ 01 Selected work` with two cards, `§ 02 Selected writing` with two leader rows. No activity feed on the home page; it is one link in the footer.
@@ -136,7 +138,7 @@ Any ledger row, writing row or project card may carry an image. Rules:
 - The image fills the row at the row's existing height; the row never grows.
 - Use a generated 4×4 Bayer mask with fixed 2px cells and an 8px repeating strip. Measure the rendered text in `data-photo-text` elements, then start the fade 16px after its right edge, bounded between 12% and 60% of the photo width. Finish by 84% to retain a visible photograph on the right. Recalculate after resizing and font loading. Without JavaScript, use a smooth fade as the fallback.
 - Keep the `rgba(0,0,0,.45)` image overlay. Add a separate `rgba(0,0,0,.18)` layer between the image and the copy so text stays legible throughout the fade.
-- `filter: grayscale(1)` at rest; `filter: none` on `:hover`, `:active`, `:focus-within`. Transition 350ms. On touch devices the first tap reveals colour, the second follows the link.
+- `filter: grayscale(1)` at rest; `filter: none` on hover-capable `:hover`, `:active` and `:focus-within`. Transition 350ms for hover and focus. A touch press reveals colour immediately and its first tap follows the link through normal browser navigation. Never cancel a click or require another tap to reveal an image.
 - Row borders stay visible: inset the image 1px at the bottom for rows and 1px all round for cards.
 
 ### 5.8 V4RI home

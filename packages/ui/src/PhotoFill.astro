@@ -70,15 +70,21 @@ const { image, placeholder = 'p1' } = Astro.props;
   document.fonts.addEventListener('loadingdone', schedulePhotoMasks);
   window.addEventListener('resize', schedulePhotoMasks, { passive: true });
 
-  document.addEventListener('click', (event) => {
-    if (!(event instanceof PointerEvent) || event.pointerType !== 'touch') return;
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    const link = target.closest('a[data-photo-link]');
-    const row = link?.closest('[data-photo-row]');
-    if (!row || row.classList.contains('is-active')) return;
-    event.preventDefault();
-    document.querySelectorAll('[data-photo-row].is-active').forEach((activeRow) => activeRow.classList.remove('is-active'));
-    row.classList.add('is-active');
-  });
+  let pressedPhotoRow: HTMLElement | undefined;
+  function clearPhotoPress(): void {
+    pressedPhotoRow?.removeAttribute('data-photo-pressed');
+    pressedPhotoRow = undefined;
+  }
+
+  document.addEventListener('pointerdown', (event) => {
+    if (event.pointerType !== 'touch' || !(event.target instanceof Element)) return;
+    const photoRow = event.target.closest('[data-photo-row], .hasbg');
+    if (!(photoRow instanceof HTMLElement)) return;
+    clearPhotoPress();
+    pressedPhotoRow = photoRow;
+    photoRow.setAttribute('data-photo-pressed', '');
+  }, { passive: true });
+  document.addEventListener('pointerup', clearPhotoPress, { passive: true });
+  document.addEventListener('pointercancel', clearPhotoPress, { passive: true });
+  window.addEventListener('pagehide', clearPhotoPress);
 </script>

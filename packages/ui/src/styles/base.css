@@ -54,7 +54,14 @@ h1, h2, h3, h4 { font-weight: 400; }
 .skip-link { position: absolute; z-index: 100; top: var(--edge); left: var(--gutter); padding: var(--s-2); background: var(--bg); transform: translateY(-200%); }
 .skip-link:focus { transform: none; }
 .hasbg { position: relative; isolation: isolate; }
-.hasbg:hover .photo-fill, .hasbg:active .photo-fill, .hasbg:focus-within .photo-fill, .hasbg.is-active .photo-fill { filter: none; }
+.hasbg:active .photo-fill, .hasbg:focus-within .photo-fill { filter: none; }
+.hasbg[data-photo-pressed] .photo-fill { filter: none; transition: none; }
+@media (hover: hover) {
+  .hasbg:hover .photo-fill { filter: none; }
+}
+@media (hover: none) {
+  .hasbg:active .photo-fill { transition: none; }
+}
 .card .photo-fill { inset: 1px; }
 .p1 { background: radial-gradient(ellipse 42% 34% at 18% 28%,rgba(220,38,38,.8),transparent 70%),radial-gradient(ellipse 22% 18% at 78% 58%,rgba(255,255,255,.38),transparent 70%),radial-gradient(ellipse 70% 40% at 60% 100%,rgba(220,38,38,.35),transparent 70%),linear-gradient(180deg,#070707,#000); }
 .p2 { background: linear-gradient(112deg,transparent 38%,rgba(255,255,255,.22) 44%,transparent 46%,transparent 58%,rgba(255,255,255,.12) 61%,transparent 63%),radial-gradient(ellipse 60% 50% at 70% 90%,rgba(220,38,38,.7),transparent 70%),linear-gradient(180deg,#050505,#000); }
@@ -93,12 +100,12 @@ button, .control {
   letter-spacing: .04em;
 }
 summary { cursor: pointer; }
-:where(a.tag, .tag a, .l-links a, .reading-links a, .footer-links a, .i-nav a, .v-nav a, .v-menu summary, .site-menu summary) {
+:where(a.tag, .tag a, .l-links a, .reading-links a, .footer-links a, .i-nav a, .v-nav a) {
   text-decoration: underline;
   text-decoration-color: var(--rule);
   text-underline-offset: 5px;
 }
-:where(a.tag, .tag a, .l-links a, .reading-links a, .footer-links a, .i-nav a, .v-nav a, .v-menu summary, .site-menu summary):is(:hover, :focus-visible) {
+:where(a.tag, .tag a, .l-links a, .reading-links a, .footer-links a, .i-nav a, .v-nav a):is(:hover, :focus-visible) {
   text-decoration-color: currentColor;
   background-color: rgba(255,255,255,.08);
 }

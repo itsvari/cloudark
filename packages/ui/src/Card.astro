@@ -7,7 +7,7 @@ const { href, title, summary, status = 'active', featured = false, image, tags =
 <article class:list={['card', { featured, hasbg: image }]} data-photo-row={image ? '' : undefined}>
   {image && <PhotoFill image={image} />}
   <div class="meta tag"><span>[ <span class:list={{ red: status === 'active' }}>{status}</span>{featured && ' · featured'} ]</span><span class="lbl dim">fig. {String(number).padStart(3, '0')}</span></div>
-  <h3><a href={href} data-photo-link data-photo-text>{title}</a></h3><p data-photo-text>{summary}</p>
+  <h3><a href={href} data-photo-text>{title}</a></h3><p data-photo-text>{summary}</p>
   <div class="bottom tag"><span>{tags.join(' · ')}</span><span class="links">{Object.entries(links).map(([label, link]) => <a href={link}>{label} <span class="red">↗</span></a>)}</span></div>
 </article>
 <style>

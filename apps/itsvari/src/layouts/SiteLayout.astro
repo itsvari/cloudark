@@ -6,6 +6,7 @@ import { siteOrigins } from "@itsvari/content";
 import FontFaces from "@itsvari/ui/FontFaces.astro";
 import RegistrationMarks from "@itsvari/ui/RegistrationMarks.astro";
 import SectionRail from "@itsvari/ui/SectionRail.astro";
+import NavigationDrawer from "@itsvari/ui/NavigationDrawer.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import PrimaryNavigation from "../components/PrimaryNavigation.astro";
 import { navigation } from "../navigation";
@@ -20,6 +21,7 @@ interface Props {
 const { canonical: canonicalProp, description, title, sections, section } = Astro.props;
 const activePath = Astro.url.pathname.replace(/\/$/, "") || "/";
 const currentNavigation = navigation.find(({ href }) => href === "/" ? activePath === "/" : activePath.startsWith(href));
+const drawerLinks = [...navigation.map((link) => ({ ...link, current: currentNavigation?.href === link.href })), { href: siteOrigins.v4ri, label: "V4RI", external: true }];
 const pageIndex = section ?? currentNavigation?.number ?? "00";
 const pageTitle = title === "itsvari" ? title : `${title} · itsvari`;
 const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? siteOrigins.itsvari).toString();
@@ -57,10 +59,7 @@ const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? sit
         <aside class="i-side">
           <a class="i-brand" href="/" aria-label="itsvari home"><span class="brand-name">itsvari</span><span class="lbl dim">v3.0 · rev. 2026.11</span></a>
           <div class="desktop-navigation"><PrimaryNavigation currentHref={currentNavigation?.href} /></div>
-          <details class="site-menu">
-            <summary class="tag">[ menu ]</summary>
-            <PrimaryNavigation currentHref={currentNavigation?.href} />
-          </details>
+          <NavigationDrawer id="itsvari-navigation" brand="itsvari" links={drawerLinks} collapseAtPx={640} />
           <SiteFooter section={pageIndex} />
         </aside>
         <main class="i-main" id="main" tabindex="-1">

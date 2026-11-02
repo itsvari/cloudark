@@ -42,7 +42,7 @@ const formatTime = (date: Date): string => new Intl.DateTimeFormat('en-GB', { ho
   <LedgerTable>{recentEvents.map((event) => <LedgerRow href={canonicalUrl('event', event.id, 'v4ri')} title={event.data.title} date={event.data.startsAt} time={`${formatTime(event.data.startsAt)}${event.data.endsAt ? `–${formatTime(event.data.endsAt)}` : event.data.timeNote ? ` · ${event.data.timeNote}` : ''}`} venue={event.data.venue ? `${event.data.venue.name}, ${event.data.venue.city}` : undefined} phase={getEventDisplayPhase(event.data, now)} image={event.data.image} recordingUrl={event.data.recordingUrl} ticketUrl={event.data.ticketUrl} />)}</LedgerTable>
   {posterEvent?.data.image && <>
     <SectionHeading title="Photo fill" aside="event poster" number="05" />
-    <a class="sample-fill hasbg" href={canonicalUrl('event', posterEvent.id, 'v4ri')} data-photo-row data-photo-link><PhotoFill image={posterEvent.data.image} /><span class="tag" data-photo-text>{posterEvent.data.title}</span></a>
+    <a class="sample-fill hasbg" href={canonicalUrl('event', posterEvent.id, 'v4ri')} data-photo-row><PhotoFill image={posterEvent.data.image} /><span class="tag" data-photo-text>{posterEvent.data.title}</span></a>
     <SectionHeading title="Spec strip" number="06" />
     <SpecStrip total={posterCount} items={[{label:'Event archive',value:posterEvent.data.title,href:canonicalUrl('event', posterEvent.id, 'v4ri')},{label:'Date',value:formatLedgerDate(posterEvent.data.startsAt)},...(posterEvent.data.venue ? [{label:'Where',value:`${posterEvent.data.venue.name}, ${posterEvent.data.venue.city}`}] : []),{label:'Source',value:posterEvent.data.sourceUrl ? 'event listing ↗' : 'event poster',href:posterEvent.data.sourceUrl}]} />
   </>}

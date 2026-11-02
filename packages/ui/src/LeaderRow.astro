@@ -6,7 +6,7 @@ interface Props { label: string; value: string; href?: string; trailing?: string
 const { label, value, href, trailing, state, image, date, arrow = false } = Astro.props;
 const Element = href ? 'a' : 'div';
 ---
-<Element class:list={['leader-row', { hasbg: image, writing: date }]} href={href} data-photo-row={image ? '' : undefined} data-photo-link={image ? '' : undefined}>
+<Element class:list={['leader-row', { hasbg: image, writing: date }]} href={href} data-photo-row={image ? '' : undefined}>
   {image && <PhotoFill image={image} />}
   <span class="key tag">{date ? <time datetime={date.toISOString()}>{formatLedgerDate(date, true)}</time> : <>[ {label} ]</>}</span>
   <span class="value" data-photo-text>{value}</span><span class="lead" aria-hidden="true"></span>

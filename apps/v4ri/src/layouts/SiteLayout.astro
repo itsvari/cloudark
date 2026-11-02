@@ -6,6 +6,7 @@ import { siteOrigins } from "@itsvari/content";
 import RegistrationMarks from "@itsvari/ui/RegistrationMarks.astro";
 import FontFaces from "@itsvari/ui/FontFaces.astro";
 import CalibrationSwatches from "@itsvari/ui/CalibrationSwatches.astro";
+import NavigationDrawer from "@itsvari/ui/NavigationDrawer.astro";
 
 interface Props {
   canonical?: URL | string;
@@ -19,6 +20,7 @@ const pageTitle = title === "V4RI" ? title : `${title} · V4RI`;
 const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? siteOrigins.v4ri).toString();
 const navigation = [{ href: "/gigs", label: "gigs" }, { href: "/releases", label: "recordings" }, { href: "/posts", label: "posts" }, { href: "/about", label: "about" }, { href: "/socials", label: "socials" }, { href: "/contact", label: "contact" }];
 const isCurrent = (href: string): boolean => Astro.url.pathname.startsWith(href);
+const drawerLinks = [...navigation.map((link) => ({ ...link, current: isCurrent(link.href) })), { href: siteOrigins.itsvari, label: "itsvari.com", external: true }];
 ---
 
 <!doctype html>
@@ -59,13 +61,7 @@ const isCurrent = (href: string): boolean => Astro.url.pathname.startsWith(href)
           {navigation.map(({ href, label }) => <a class:list={[{ on: isCurrent(href) }]} href={href} aria-current={isCurrent(href) ? "page" : undefined}>[ {label} ]</a>)}
           <a class="dim" href="https://itsvari.com">itsvari.com <span class="red">↗</span></a>
         </nav>
-        <details class="v-menu tag">
-          <summary>[ menu ]</summary>
-          <nav aria-label="Mobile navigation">
-            {navigation.map(({ href, label }) => <a class:list={[{ on: isCurrent(href) }]} href={href} aria-current={isCurrent(href) ? "page" : undefined}>[ {label} ]</a>)}
-            <a href="https://itsvari.com">itsvari.com <span class="red">↗</span></a>
-          </nav>
-        </details>
+        <NavigationDrawer id="v4ri-navigation" brand="V4RI" links={drawerLinks} collapseAtPx={1024} />
       </header>
       <main id="main" tabindex="-1"><slot /></main>
       {!home && <footer class="v-foot tag">

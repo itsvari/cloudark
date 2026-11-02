@@ -11,7 +11,7 @@ const statusLink = phase === 'upcoming' ? ticketUrl : phase === 'past' ? recordi
   {image && <PhotoFill image={image} />}
   <time class="date" datetime={date.toISOString()}>{formatLedgerDate(date)}</time>
   <span class="time dim tag">{phase ? time ?? '—' : kind ?? 'post'}</span>
-  <span class="title"><a href={href} data-photo-link data-photo-text>{title}</a></span>
+  <span class="title"><a href={href} data-photo-text>{title}</a></span>
   {phase && <span class="venue">{venue}</span>}
   <span class:list={['status', 'tag', { red: phase === 'live', dim: phase === 'postponed' || phase === 'cancelled' || phase === 'past' && !recordingUrl || phase === 'upcoming' && !ticketUrl }]}>
     {statusLink ? <a href={statusLink} aria-label={`${phase === 'past' ? 'Watch recording of' : 'Tickets for'} ${title}`}>[ {status} <span class="red">↗</span> ]</a> : status ? <>[ {status} ]</> : Object.entries(links).map(([label, link]) => <a href={link}>[ {label} <span class="red">↗</span> ]</a>)}

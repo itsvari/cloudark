@@ -10,7 +10,7 @@ const wordCount = post.body?.split(/\s+/).length ?? 0;
 const wordsPerMinute = 200;
 const readingMinutes = Math.max(1, Math.ceil(wordCount / wordsPerMinute));
 ---
-<a class:list={["writing-row", { hasbg: Boolean(post.data.image) }]} href={href} data-photo-row={post.data.image ? "" : undefined} data-photo-link={post.data.image ? "" : undefined}>
+<a class:list={["writing-row", { hasbg: Boolean(post.data.image) }]} href={href} data-photo-row={post.data.image ? "" : undefined}>
   {post.data.image && <PhotoFill image={post.data.image} />}
   <time class="writing-date" datetime={post.data.publishedAt.toISOString()}>{date}</time>
   <span class="writing-title" data-photo-text>{post.data.title}</span>

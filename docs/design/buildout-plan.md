@@ -58,7 +58,8 @@ Extend schemas, with tests in `schemas.test.ts`:
 
 ### Phase 6 — Behaviour and polish
 - Carousel: CSS crossfade with `prefers-reduced-motion` fallback; preload the first image, lazy-load the rest.
-- Photo fill touch handling: first tap on a row with an image toggles colour, second tap follows the link (small inline script, progressive enhancement).
+- Photo fill touch handling: reveal colour on press and follow the link on the first tap. Keep native link behaviour; do not intercept or cancel navigation.
+- Mobile navigation: full-page drawers on both sites, with at least 48px menu, close and link targets, focus containment, Escape dismissal and background scroll locking. Preserve the existing desktop navigation and provide a no-JavaScript fallback.
 - Local time in the V4RI rail from a tiny inline script; render the static SGT fallback on the server.
 - `aria-hidden` on all micrographics; skip link; visible focus per guide §7.
 - RSS, sitemap, `_headers` unchanged; add cache headers for fonts and `dither.svg`.
@@ -110,7 +111,9 @@ Photo fill CSS (from the mockup):
 }
 .bg::after { content: ""; position: absolute; inset: 0; background: rgba(0,0,0,.45); }
 .card .bg { inset: 1px; }
-.hasbg:hover .bg, .hasbg:active .bg, .hasbg:focus-within .bg, .hasbg.is-active .bg { filter: none; }
+.hasbg:active .bg, .hasbg:focus-within .bg { filter: none; }
+@media (hover: hover) { .hasbg:hover .bg { filter: none; } }
+@media (hover: none) { .hasbg:active .bg { transition: none; } }
 ```
 
 Registration mark:

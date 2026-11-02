@@ -1,0 +1,147 @@
+---
+interface NavigationLink {
+  readonly href: string;
+  readonly label: string;
+  readonly number?: string;
+  readonly current?: boolean;
+  readonly external?: boolean;
+}
+interface Props {
+  id: string;
+  brand: string;
+  links: readonly NavigationLink[];
+  collapseAtPx: 640 | 1024;
+}
+const { id, brand, links, collapseAtPx } = Astro.props;
+---
+<div class="navigation-drawer" data-navigation-drawer data-collapse-at-px={collapseAtPx}>
+  <button class="drawer-trigger tag" type="button" aria-haspopup="dialog" aria-controls={id} aria-expanded="false" data-drawer-trigger hidden>[ menu ]</button>
+  <details class="drawer-fallback" data-drawer-fallback>
+    <summary class="drawer-trigger tag">[ menu ]</summary>
+    <nav class="drawer-links fallback-links tag" aria-label="Mobile navigation">
+      {links.map(({ href, label, number, current, external }) => <a href={href} aria-current={current ? 'page' : undefined}>{number && <span class="drawer-number" aria-hidden="true">{number}</span>}<span>[ {label}{external && <> <span class="red">↗</span></>} ]</span></a>)}
+    </nav>
+  </details>
+  <dialog class="drawer-dialog" id={id} aria-label={`${brand} navigation`} data-navigation-dialog>
+    <div class="drawer-panel">
+      <header class="drawer-header">
+        <a href="/" class="drawer-brand tag" aria-label={`${brand} home`}>{brand}</a>
+        <form method="dialog"><button class="drawer-close tag" autofocus>[ close ]</button></form>
+      </header>
+      <nav class="drawer-links tag" aria-label="Mobile navigation">
+        {links.map(({ href, label, number, current, external }) => <a href={href} aria-current={current ? 'page' : undefined}>{number && <span class="drawer-number" aria-hidden="true">{number}</span>}<span>[ {label}{external && <> <span class="red">↗</span></>} ]</span></a>)}
+      </nav>
+    </div>
+  </dialog>
+</div>
+<style>
+  .navigation-drawer { position: relative; flex-shrink: 0; }
+  .drawer-trigger, .drawer-close, .drawer-brand { display: inline-flex; align-items: center; justify-content: center; min-width: var(--s-7); min-height: var(--s-7); padding: var(--s-3); color: var(--fg); background: var(--bg); border: 0; border-radius: 0; text-decoration: none; cursor: pointer; }
+  .drawer-trigger { padding-inline: var(--s-2); background: transparent; }
+  .drawer-trigger[hidden], .drawer-fallback[hidden] { display: none; }
+  .drawer-fallback summary { list-style: none; }
+  .drawer-fallback summary::-webkit-details-marker { display: none; }
+  .drawer-dialog { position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: var(--bg); color: var(--fg); overflow: hidden; }
+  .drawer-dialog:not([open]) { display: none; }
+  .drawer-dialog::backdrop { background: var(--bg); }
+  .drawer-panel { display: flex; flex-direction: column; height: 100%; min-height: 0; padding: max(var(--safe), env(safe-area-inset-top)) max(var(--gutter), env(safe-area-inset-right)) max(var(--safe), env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left)); }
+  .drawer-header { display: flex; flex-shrink: 0; align-items: center; justify-content: space-between; gap: var(--s-4); margin-bottom: var(--s-5); }
+  .drawer-header form { margin: 0; }
+  .drawer-brand { justify-content: flex-start; padding-inline: 0; letter-spacing: .04em; }
+  .drawer-close { padding-right: 0; }
+  .drawer-links { display: flex; flex-direction: column; min-height: 0; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch; }
+  .drawer-links a { display: flex; flex-shrink: 0; align-items: center; gap: var(--s-4); width: 100%; min-height: var(--s-7); padding: var(--s-4) var(--s-1); border-top: 1px solid var(--rule); }
+  .drawer-links a:last-child { border-bottom: 1px solid var(--rule); }
+  .drawer-links a[aria-current='page'], .drawer-links a[aria-current='page'] .drawer-number { color: var(--red); }
+  .drawer-number { width: 2ch; flex-shrink: 0; color: var(--dim); font-variant-numeric: tabular-nums; }
+  .fallback-links { position: absolute; top: 100%; right: 0; width: min(calc(100vw - 2 * var(--gutter)), 24rem); max-height: calc(100svh - var(--safe) - 64px); border: 1px solid var(--rule); padding: var(--s-4); background: var(--bg); z-index: 30; }
+  @media (min-width: 640px) { .navigation-drawer[data-collapse-at-px='640'] { display: none; } }
+  @media (min-width: 1024px) { .navigation-drawer[data-collapse-at-px='1024'] { display: none; } }
+  @media print { .navigation-drawer { display: none; } }
+</style>
+<script>
+  interface ScrollPosition {
+    readonly horizontalPx: number;
+    readonly verticalPx: number;
+    readonly bodyPosition: string;
+    readonly bodyTop: string;
+    readonly bodyLeft: string;
+    readonly bodyWidth: string;
+    readonly bodyOverflow: string;
+    readonly rootOverflow: string;
+    readonly rootScrollBehavior: string;
+  }
+
+  function connectNavigationDrawer(root: HTMLElement): void {
+    const trigger = root.querySelector('[data-drawer-trigger]');
+    const fallback = root.querySelector('[data-drawer-fallback]');
+    const dialog = root.querySelector('[data-navigation-dialog]');
+    const collapseAtPx = Number(root.dataset.collapseAtPx);
+    if (typeof HTMLDialogElement === 'undefined') return;
+    if (!(trigger instanceof HTMLButtonElement) || !(fallback instanceof HTMLDetailsElement) || !(dialog instanceof HTMLDialogElement) || typeof dialog.showModal !== 'function') return;
+    if (collapseAtPx !== 640 && collapseAtPx !== 1024) return;
+    const desktop = window.matchMedia(`(min-width: ${collapseAtPx}px)`);
+    let scrollPosition: ScrollPosition | undefined;
+
+    function lockBackground(): void {
+      scrollPosition = {
+        horizontalPx: window.scrollX,
+        verticalPx: window.scrollY,
+        bodyPosition: document.body.style.position,
+        bodyTop: document.body.style.top,
+        bodyLeft: document.body.style.left,
+        bodyWidth: document.body.style.width,
+        bodyOverflow: document.body.style.overflow,
+        rootOverflow: document.documentElement.style.overflow,
+        rootScrollBehavior: document.documentElement.style.scrollBehavior,
+      };
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.top = `${-scrollPosition.verticalPx}px`;
+      document.body.style.left = `${-scrollPosition.horizontalPx}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = 'hidden';
+    }
+
+    function unlockBackground(): void {
+      if (!scrollPosition) return;
+      const previous = scrollPosition;
+      scrollPosition = undefined;
+      document.body.style.position = previous.bodyPosition;
+      document.body.style.top = previous.bodyTop;
+      document.body.style.left = previous.bodyLeft;
+      document.body.style.width = previous.bodyWidth;
+      document.body.style.overflow = previous.bodyOverflow;
+      document.documentElement.style.overflow = previous.rootOverflow;
+      document.documentElement.style.scrollBehavior = 'auto';
+      window.scrollTo(previous.horizontalPx, previous.verticalPx);
+      document.documentElement.style.scrollBehavior = previous.rootScrollBehavior;
+    }
+
+    trigger.addEventListener('click', () => {
+      if (desktop.matches || dialog.open) return;
+      lockBackground();
+      dialog.showModal();
+      trigger.setAttribute('aria-expanded', 'true');
+    });
+    dialog.addEventListener('close', () => {
+      unlockBackground();
+      trigger.setAttribute('aria-expanded', 'false');
+      const focusTarget = trigger.getClientRects().length ? trigger : document.querySelector('nav[aria-label="Primary navigation"] a[aria-current="page"], a[aria-label$="home"]');
+      if (focusTarget instanceof HTMLElement) focusTarget.focus({ preventScroll: true });
+    });
+    dialog.addEventListener('click', (event) => {
+      if (event.target instanceof Element && event.target.closest('a[href]')) dialog.close();
+    });
+    desktop.addEventListener('change', () => {
+      if (desktop.matches && dialog.open) dialog.close();
+    });
+    window.addEventListener('pagehide', () => {
+      if (dialog.open) dialog.close();
+      unlockBackground();
+    });
+    fallback.hidden = true;
+    trigger.hidden = false;
+  }
+  document.querySelectorAll<HTMLElement>('[data-navigation-drawer]').forEach(connectNavigationDrawer);
+</script>
