@@ -1,5 +1,8 @@
 # Dependency security review, 2 November 2026
 
+This is the historical 2 November audit. The subsequent dependency update and verification
+are recorded in [dependencies-2026-11-03.md](dependencies-2026-11-03.md).
+
 Verified at **2026-11-02 13:06:16 UTC** on Node.js **26.13.0**, using pnpm **12.16.1**. Both the full dependency audit and the production audit returned zero known vulnerabilities. Required peer dependencies resolved without warnings. Both audits were repeated on 3 November 2026 SGT after the real-content updates, with the same zero-vulnerability results and dependency counts.
 
 This report covers the two Astro applications, workspace packages, installed transitive and optional dependencies, declared peers, the package manager, and CI action versions. The results reflect the registry advisory data available at the verification time.
