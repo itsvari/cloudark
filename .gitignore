@@ -35,3 +35,6 @@ next-env.d.ts
 
 # generated Cloudflare types
 worker-configuration.d.ts
+
+# licensed webfonts for local design mockups (TX-02 is not redistributable)
+/docs/design/mockups/fonts/
