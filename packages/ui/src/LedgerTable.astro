@@ -1,0 +1,13 @@
+---
+interface Props { variant?: 'events' | 'content'; dateLabel?: string; titleLabel?: string; venueLabel?: string; }
+const { variant = 'events', dateLabel = 'Date', titleLabel = variant === 'events' ? 'Event' : 'Title', venueLabel = 'Venue' } = Astro.props;
+---
+<div class:list={['ledger', variant]}>
+  <div class="header lbl" aria-hidden="true"><span>{dateLabel}</span><span>{variant === 'events' ? 'Time (SGT)' : 'Type'}</span><span>{titleLabel}</span>{variant === 'events' && <span>{venueLabel}</span>}<span>{variant === 'events' ? 'Status' : 'Links'}</span><span></span></div>
+  <slot />
+</div>
+<style>
+  .header { display: grid; grid-template-columns: 110px 124px minmax(0, 1fr) 260px 150px 30px; column-gap: var(--s-4); padding: var(--s-2) 0; border-bottom: 1px solid var(--rule); color: var(--dim); }
+  .content .header { grid-template-columns: 110px 124px minmax(0, 1fr) 150px 30px; }
+  @container page (max-width: 1023px) { .header { display: none; } }
+</style>

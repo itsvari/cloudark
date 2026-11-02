@@ -1,0 +1,78 @@
+---
+import { numberArticleHeadings, type ArticleHeading } from './article-contents';
+interface Props {
+  headings: readonly ArticleHeading[];
+}
+const contents = numberArticleHeadings(Astro.props.headings);
+const numberWidthCharacters = Math.max(2, ...contents.map(({ number }) => number.length));
+---
+{contents.length > 0 && <nav class="contents table-of-contents tag" aria-label="Table of contents" data-article-contents style={`--contents-number-width:${numberWidthCharacters}ch`}>
+  <h2 class="lbl dim">On this page</h2>
+  <ol>{contents.map(({ slug, text, depth, number }, index) => <li class:list={{ subsection: depth === 3 }}><a href={`#${slug}`} data-contents-slug={slug} aria-current={index === 0 ? 'location' : undefined}><span class="contents-number" aria-hidden="true">{number}</span><span class="contents-label">{text}</span></a></li>)}</ol>
+</nav>}
+<style>
+  .table-of-contents { align-self: start; position: sticky; top: var(--contents-top, var(--s-9)); max-width: none; max-height: calc(100svh - var(--contents-top, var(--s-9)) - var(--s-6)); overflow-y: auto; overscroll-behavior: contain; }
+  .table-of-contents h2 { margin: 0 0 var(--s-3); color: var(--dim); }
+  .table-of-contents ol { margin: 0; padding: 0; list-style: none; }
+  .table-of-contents a { display: grid; grid-template-columns: var(--contents-number-width) minmax(0, 1fr); gap: var(--s-3); padding: var(--s-3) 0; border-top: 1px solid var(--rule); align-items: start; }
+  .contents-number { color: var(--fg); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .contents-label { color: var(--dim); overflow-wrap: anywhere; }
+  .table-of-contents a:hover .contents-label { color: var(--fg); }
+  .table-of-contents a[aria-current='location'] .contents-number, .table-of-contents a[aria-current='location'] .contents-label { color: var(--red); }
+  .table-of-contents .subsection { padding-left: var(--s-3); }
+  @container page (max-width: 1023px) { .table-of-contents { display: none; } }
+</style>
+<script>
+  import { activeArticleHeading } from './article-contents';
+
+  const maximumActivationViewportRatio = .4;
+  const minimumActivationOffsetPx = 24;
+
+  function connectArticleContents(navigation: HTMLElement): void {
+    const article = navigation.closest('[data-reading-article]');
+    if (!(article instanceof HTMLElement)) return;
+    const entries = [...navigation.querySelectorAll<HTMLAnchorElement>('a[data-contents-slug]')].flatMap((link) => {
+      const slug = link.dataset.contentsSlug;
+      if (!slug) return [];
+      const heading = document.getElementById(slug);
+      return heading instanceof HTMLElement && article.contains(heading) ? [{ link, heading, slug }] : [];
+    });
+    if (entries.length === 0) return;
+    let pendingFrame = 0;
+    function updateCurrentSection(): void {
+      const firstHeading = entries[0]?.heading;
+      if (!firstHeading) return;
+      const scrollMarginTopPx = Number.parseFloat(getComputedStyle(firstHeading).scrollMarginTop) || minimumActivationOffsetPx;
+      const activationOffsetPx = Math.min(window.innerHeight * maximumActivationViewportRatio, Math.max(minimumActivationOffsetPx, scrollMarginTopPx));
+      const activeSlug = activeArticleHeading({
+        headings: entries.map(({ heading, slug }) => ({ slug, topPx: heading.getBoundingClientRect().top + window.scrollY })),
+        scrollTopPx: window.scrollY,
+        viewportHeightPx: window.innerHeight,
+        documentHeightPx: document.documentElement.scrollHeight,
+        activationOffsetPx,
+      });
+      entries.forEach(({ link, slug }) => {
+        if (slug === activeSlug) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    }
+    function scheduleCurrentSection(): void {
+      if (pendingFrame) return;
+      pendingFrame = requestAnimationFrame(() => {
+        updateCurrentSection();
+        pendingFrame = 0;
+      });
+    }
+    window.addEventListener('scroll', scheduleCurrentSection, { passive: true });
+    window.addEventListener('resize', scheduleCurrentSection, { passive: true });
+    window.addEventListener('hashchange', scheduleCurrentSection);
+    window.addEventListener('popstate', scheduleCurrentSection);
+    window.addEventListener('pageshow', scheduleCurrentSection);
+    window.addEventListener('load', scheduleCurrentSection);
+    const articleObserver = new ResizeObserver(scheduleCurrentSection);
+    articleObserver.observe(article);
+    document.fonts.ready.then(scheduleCurrentSection);
+    scheduleCurrentSection();
+  }
+  document.querySelectorAll<HTMLElement>('[data-article-contents]').forEach(connectArticleContents);
+</script>

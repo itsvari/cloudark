@@ -2,6 +2,8 @@
 
 This is the single source of truth for how the two sites look and behave. It is written for people and for coding agents. When this guide and an existing implementation disagree, the guide wins; when the guide and the mockup (`mockups/d-signal-ledger.html`) disagree, the mockup wins and the guide should be corrected.
 
+The refinements below include the approved adaptive dither, numbered reading sections, motion, sticky V4RI header and manual full-colour carousel. These updates supersede the corresponding behaviour in the original mockup.
+
 The direction is called **Signal + Ledger**: a HUD-like frame (full-bleed image, registration marks, spec strip, ledger tables, fixed index column) carrying an editorial type system (Redaction for titles, bracketed Departure Mono labels, dotted leaders, numbered sections, one red rule per section). Influences: ANTIREAL, Prime Intellect, Dragonfly, Nous Research, micrographics. Blend: minimal 45, neo-brutalist 30, Y2K 25.
 
 ## 1. Principles
@@ -11,7 +13,7 @@ The direction is called **Signal + Ledger**: a HUD-like frame (full-bleed image,
 3. **Instrumentation at the edges, content in the middle.** Registration marks, rails and readouts live in the margins. Content never shares a row with them.
 4. **Same system, every width.** One set of markup per page. Container queries and fluid tokens handle 390px to 2560px. No per-breakpoint redesigns.
 5. **Red is a state, not a colour.** Live dot, active nav item, external arrow `↗`, featured corner. If something is red, the reader should be able to say why.
-6. **Images are greyscale until touched.** Photography sits behind scanlines on the V4RI home and behind a dither mask in rows and cards. Colour arrives on hover, press or focus.
+6. **Photo fills reveal colour on interaction.** Rows and cards are greyscale until hover, press or focus. The V4RI home carousel always displays full-colour photography beneath its shade and scanlines.
 
 ## 2. Colour
 
@@ -25,7 +27,7 @@ The direction is called **Signal + Ledger**: a HUD-like frame (full-bleed image,
 | `--dot` | `rgba(255,255,255,.4)` | dotted leaders |
 | text on photo | `rgba(255,255,255,.72)` | card summaries |
 
-There is no light mode. `color-scheme: dark` on `:root`.
+The websites have no light mode. `color-scheme: dark` on `:root`. The CV's print and downloadable PDF layouts are an approved exception: white paper, black text and greyscale rules, with no colour-dependent meaning.
 
 ## 3. Typography
 
@@ -121,7 +123,7 @@ Main column: `index · 00 / 05 · rev. yyyy.mm` micro label top right; a vertica
 Redaction `--t3` title, Redaction 35 Italic `--t2` dim aside with `.4em` gap, right-aligned `§ nn — [ link → ]` tag, then a 2px red rule with `--s-3` above and `--s-2` below. Section spacing is `--section`.
 
 ### 5.4 Leader row
-Flex row, baseline aligned, `--s-2` vertical padding: key (Departure Mono, fixed width), value (TX-02), `.lead` (flex 1, 2px dotted `--dot`, nudged up 5px), trailing tag. Below 640 the leader is hidden and the row becomes a grid: key and trailing tag on row one, value on row two.
+Baseline-aligned row, `--s-2` vertical padding: key (Departure Mono, minimum 14ch to accommodate brackets and letter spacing), value (TX-02), `.lead` (remaining space, 2px dotted `--dot`, nudged up 5px), trailing tag. Current home and contact values share a consistent left edge. Longer keys may expand naturally. Below 640 the leader is hidden and the row becomes a grid: key and trailing tag on row one, value on row two.
 
 ### 5.5 Card
 1px `--rule` border, `--s-4 --s-5` padding, min-height 150px, flex column. Top row: `[ state · featured ]` tag left, `fig. nnn` micro right. Title Redaction `--t2`. Summary TX-02 `--t0` at 72% white. Bottom row: tags left, `github ↗` right. Featured cards have a white border and a 3px × 40px red bar on the top-left edge.
@@ -132,22 +134,33 @@ Grid rows, 1px `--rule` between, `--s-3` vertical padding. Desktop columns `110p
 ### 5.7 Photo fill (rows and cards, optional)
 Any ledger row, writing row or project card may carry an image. Rules:
 - The image fills the row at the row's existing height; the row never grows.
-- It is masked with a 4×4 Bayer ordered-dither tile (`/dither.svg`, 160×4: columns 0–63 transparent, 64–127 sixteen coverage bands, 128–159 opaque) using `mask-size: 100% auto; mask-repeat: repeat-y`. Result: solid black under the leading 40% where the text sits, a stepped dither across the next 40%, full image on the trailing 20%. Pixel size scales with row width by design.
-- A `rgba(0,0,0,.45)` overlay sits on the image everywhere so trailing status text stays legible.
+- Use a generated 4×4 Bayer mask with fixed 2px cells and an 8px repeating strip. Measure the rendered text in `data-photo-text` elements, then start the fade 16px after its right edge, bounded between 12% and 60% of the photo width. Finish by 84% to retain a visible photograph on the right. Recalculate after resizing and font loading. Without JavaScript, use a smooth fade as the fallback.
+- Keep the `rgba(0,0,0,.45)` image overlay. Add a separate `rgba(0,0,0,.18)` layer between the image and the copy so text stays legible throughout the fade.
 - `filter: grayscale(1)` at rest; `filter: none` on `:hover`, `:active`, `:focus-within`. Transition 350ms. On touch devices the first tap reveals colour, the second follows the link.
 - Row borders stay visible: inset the image 1px at the bottom for rows and 1px all round for cards.
 
 ### 5.8 V4RI home
-Full-bleed photo carousel (crossfade, 20s cycle, 4s per image, 5 images) under a vertical shade and 1px/4px scanlines. Top bar at `--safe`: logo mark (26px) + `V4RI` text, centred `[ dj / producer — singapore ]`, nav `[ gigs ] [ releases ] [ posts ] itsvari.com ↗`. Left vertical rail (micro, dim): local time, coordinates, `◼ REC — year`. Hero bottom-left: `V4RI` in Redaction 50 Italic `--t10`, tagline Redaction 35 Italic `--t5`, live line `[ ● live now — … ]` in red when an event is live. EXIF-style caption above the strip on the right. Spec strip at `--safe` from the bottom: ticked ruler (1px rule, 8px minor ticks, 80px major ticks), five columns `NEXT GIG / WHEN / WHERE / TICKETS / 01 ⁄ 05 + five 34×2px bars`, active bar red. Below `lg` the strip is two columns with the index row full width; below `sm` one column.
+Full-colour, full-bleed photo carousel with a 480ms crossfade, 4s per image and five images, under a vertical shade and 1px/4px scanlines. Only thin, directly selectable lines control the carousel. The active line fills over four seconds; its animation clock also advances the photo, caption and readout. There are no arrow or pause buttons. Keyboard arrows work within the controls. Manual selection resets the progress clock. Hiding the page pauses the same clock; reduced motion keeps the active line static and allows manual selection. The top bar begins at `--safe`, sticks 16px from the viewport top and has a translucent black backing: logo mark (26px) + `V4RI` text, centred `[ dj / producer — singapore ]`, nav `[ gigs ] [ releases ] [ posts ] [ about ] [ socials ] [ contact ] itsvari.com ↗`. Collapse the extended navigation below 1024px and hide the sub-label below 1280px. Socials and contact currently link only to Instagram `@v4ri.wav`. A full-frame black veil at 42% opacity sits below all home-page text; the live-state line also has a local 92% black backing. Left vertical rail (micro, dim): local time, coordinates, `◼ REC — year`. Hero bottom-left: `V4RI` in Redaction 50 Italic `--t10`, tagline Redaction 35 Italic `--t5`, live line `[ ● live now — … ]` in red when an event is live. EXIF-style caption above the strip on the right. Spec strip at `--safe` from the bottom: ticked ruler (1px rule, 8px minor ticks, 80px major ticks), five columns `NEXT GIG / WHEN / WHERE / TICKETS / 01 ⁄ 05 + five 34×2px bars`, active bar red. Below `lg` the strip is two columns with the index row full width; below `sm` one column. Below `lg`, hero and strip stay in normal flow with a 32px gap so longer real event names cannot overlap the hero links.
+
+Itsvari page eyebrows and headings have a 16px gap. Short bracketed labels remain on one line; longer associated values may wrap. Writing rows use space between their text and trailing metadata instead of dotted leaders.
+
+Reading pages show sequential `§ 01` and `§ 01.1` markers above H2 and H3 headings. Contents links use a fixed number column beside a wrapping label. The section currently being read has a red contents link and `aria-current="location"`; the state follows scrolling and direct section links. V4RI reading pages use a centred, bounded body and contents layout; gig facts and photography form a balanced detail band above it.
+
+### 5.10 CV and print adaptation
+
+The web CV retains the dark reading-page system. Employer and section headings use intact Redaction. Position titles and duration metadata use Departure Mono. PDF download and print controls appear before the CV body, and a PDF link also appears on the personal home page.
+
+The print and downloadable PDF versions use a white background with black primary text, dark grey secondary text and greyscale rules. Preserve the typographic hierarchy and restrained spacing, with a single column sized for paper. Remove navigation, contents rails, registration marks, section-number ornaments, interactive controls and photographic fills. Keep the candidate name and contact details in the document body. Use standard section names, real selectable text, embedded fonts and a logical reading order. Do not use tables, text rendered as images or decorative text in headers and footers. Keep role headings with their first bullet and avoid splitting individual bullets across pages.
 
 ### 5.9 Micrographics kit
 Use freely in margins, never inside running text. Registration marks; ticked ruler; tick strip; calibration swatches (`#000`, `#DC2626`, `#fff`, 8px, 1px 35% white border); section rail; numbering (`§`, `fig.`, `p.`, `index`); stamps (`rev.`, `v`, `updated`); EXIF captions (`img_0412 · 35mm · f/1.8 · 1/60 · iso 3200 · venue · date`); position line. Everything at `--t-2`, 45–75% white. Not used: coordinates, viewport readouts, commit hashes, stack or font credits.
 
 ## 6. Motion
-- Carousel crossfade only; no pans or zooms.
+- Carousel crossfades only, with no pans or zooms. Manual controls remain available with reduced motion.
 - Photo fill: 350ms `filter` transition.
 - Live dot: static glow (`box-shadow: 0 0 10px var(--red)`), no pulse.
-- Respect `prefers-reduced-motion`: stop the carousel on the first image, drop transitions.
+- Control feedback uses 160ms transitions; cards use 260ms border and 2px lift feedback. Content enters over 480ms with a 4px rise. Bracketed links have visible underlines, and buttons have hairline borders with stronger hover and focus backgrounds.
+- Respect `prefers-reduced-motion`: disable automatic carousel advancement, entry animations and transitions. Manual image selection remains available.
 
 ## 7. Accessibility
 - All text meets WCAG AA on black; dim text (`.55`) is 7.6:1. Red on black is 4.7:1, acceptable for the `--t-1` tags it is used on; never set `--t-2` text in red.

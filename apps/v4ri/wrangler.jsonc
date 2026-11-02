@@ -3,19 +3,30 @@
   "name": "v4ri-music",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-08-14",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "workers_dev": false,
+  "preview_urls": true,
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist/client"
   },
   "routes": [
     {
-      "pattern": "v4ri.wav",
+      "pattern": "v4ri.xyz",
       "custom_domain": true
     }
   ],
   "observability": {
     "enabled": true
+  },
+  "env": {
+    "staging": {
+      "name": "v4ri-music-staging",
+      "routes": [],
+      "workers_dev": true,
+      "preview_urls": true
+    }
   }
 }

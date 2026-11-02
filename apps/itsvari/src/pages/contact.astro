@@ -1,13 +1,18 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
-
+import LeaderRow from "@itsvari/ui/LeaderRow.astro";
 export const prerender = true;
 ---
-
-<SiteLayout description="Contact Ashe." title="Contact">
-  <article>
-    <h1>Contact</h1>
-    <p><a href="mailto:contact@itsvari.com">contact@itsvari.com</a></p>
-    <p><a href="https://github.com/itsvari">GitHub</a></p>
-  </article>
+<SiteLayout description="Contact Ashe about software, projects or a set." title="Contact">
+  <div class="page-meta tag">§ 05 — contact</div>
+  <h1 class="page-title">Say hello<em>.</em></h1>
+  <p class="page-lede">For software, a project you have in mind, or a record I should hear.</p>
+  <div class="rule" aria-hidden="true"></div>
+  <div class="contact-list">
+    <LeaderRow label="email" value="contact@itsvari.com" href="mailto:contact@itsvari.com" trailing="write ↗" />
+    <LeaderRow label="linkedin" value="Ashe Andromeda Low" href="https://www.linkedin.com/in/itsvari/" trailing="profile ↗" />
+    <LeaderRow label="github" value="itsvari" href="https://github.com/itsvari" trailing="profile ↗" />
+    <LeaderRow label="music" value="V4RI · DJ & producer" href="https://v4ri.xyz" trailing="visit ↗" />
+    <LeaderRow label="based in" value="Singapore · UTC+8" trailing="SGT" />
+  </div>
 </SiteLayout>

@@ -14,6 +14,7 @@ export {
 } from "./domain";
 
 export { sitemapXml } from "./seo";
+export type { ContentImage } from "./schemas";
 
 export type {
   ActivityItem,
@@ -32,3 +33,5 @@ export type {
   ReleaseData,
   Site,
 } from "./domain";
+
+export { youtubeVideoId } from "./youtube";

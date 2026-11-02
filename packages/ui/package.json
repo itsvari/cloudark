@@ -5,8 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./ActivityList.astro": "./src/ActivityList.astro",
-    "./EmptyState.astro": "./src/EmptyState.astro"
+    "./*.astro": "./src/*.astro",
+    "./styles/*.css": "./src/styles/*.css"
   },
   "dependencies": {
     "@itsvari/content": "workspace:*"

@@ -1,0 +1,46 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { pressKitUrl, pressPortrait, responsivePressPhotograph } from "../press-media";
+export const prerender = true;
+const featureUrl = "https://www.ricemedia.co/from-meme-to-midnight-how-singapores-goths-threw-their-own-national-day-party/";
+const portraitWidthPx = 720;
+const portrait = responsivePressPhotograph(pressPortrait, portraitWidthPx);
+---
+
+<SiteLayout description="V4RI is a Singapore-based producer and DJ. Dark techno, EBM, industrial, darksynth and bass house." title="About">
+  <header class="v-head"><div><div class="tag dim">[ about V4RI ]</div><h1>About <em>behind the booth</em></h1></div><p>Producer / DJ · Singapore</p></header>
+  <div class="page-rule" aria-hidden="true"></div>
+  <div class="about-grid">
+    <section class="about-bio" aria-label="About V4RI">
+      <p class="introduction">V4RI is a Singapore-based producer and DJ crafting immersive, high-impact sets that move between dark techno, EBM, industrial, and darksynth, threaded with bass, speed, and electro house, metal-laced drum &amp; bass, and the occasional hyperpop or noise detour.</p>
+      <p>With cinematic sound design and punishing grooves, she shapes tech-noir atmospheres where human desire and machine logic intersect.</p>
+      <nav class="contact-actions tag" aria-label="More from V4RI"><a href="/gigs">[ gigs &amp; the archive → ]</a><a href="/contact">[ get in touch → ]</a><a href={pressKitUrl}>[ download press kit <span class="red">↗</span> ]</a></nav>
+    </section>
+    <figure class="portrait"><img src={portrait.src} srcset={portrait.srcset} sizes="(min-width: 1024px) 360px, (min-width: 640px) 420px, calc(100vw - 32px)" width={portrait.width} height={portrait.height} alt={portrait.alt} loading="eager" decoding="async" /><figcaption class="lbl dim">V4RI · 01.08.2025</figcaption></figure>
+    <aside class="feature" aria-labelledby="feature-heading">
+      <h2 class="lbl dim" id="feature-heading">Featured in</h2>
+      <p class="tag feature-date">RICE Media · <time datetime="2025-08-06">6 August 2025</time></p>
+      <a class="feature-title" href={featureUrl}>From Meme to Midnight: How Singapore's Goths Threw Their Own National Day Party <span class="red">↗</span></a>
+      <p class="feature-note dim">A look at Black Light Tribe's Happy Goth Birthday gathering at Enclave, and the community around it.</p>
+    </aside>
+  </div>
+</SiteLayout>
+
+<style>
+  .about-grid { display: grid; grid-template-columns: minmax(0, 65ch) minmax(240px, 1fr); grid-template-areas: "bio portrait" "feature portrait"; column-gap: var(--s-8); row-gap: var(--s-6); align-items: start; margin-top: var(--s-6); }
+  .about-bio { grid-area: bio; line-height: 1.6; }
+  .about-bio p + p { margin-top: var(--s-5); }
+  .introduction { font-size: var(--t1); }
+  .portrait { grid-area: portrait; margin: 0; width: 100%; max-width: 360px; justify-self: end; }
+  .portrait img { display: block; width: 100%; height: auto; }
+  .portrait figcaption { margin-top: var(--s-3); }
+  .feature { grid-area: feature; border-top: 1px solid var(--rule); padding-top: var(--s-4); }
+  .feature-date { margin-top: var(--s-4); }
+  .feature-title { display: block; font: 400 var(--t2)/1.2 "Redaction", Georgia, serif; margin-top: var(--s-4); }
+  .feature-title:hover, .feature-title:focus-visible { text-decoration: underline; text-underline-offset: 4px; }
+  .feature-note { margin-top: var(--s-4); }
+  @container page (max-width: 1023px) {
+    .about-grid { grid-template-columns: minmax(0, 65ch); grid-template-areas: "bio" "portrait" "feature"; gap: var(--s-7); }
+    .portrait { max-width: 420px; justify-self: center; }
+  }
+</style>

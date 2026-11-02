@@ -1,0 +1,319 @@
+{
+  "origin": "https://media.itsvari.com",
+  "bucketName": "cloudark-media",
+  "cacheControl": "public, max-age=31536000, immutable",
+  "objects": [
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_130_FHD-1024w.webp",
+      "objectKey": "cloudark/v1/press/20250801_130_FHD-1024w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 35144,
+      "sha256": "502d8b88d70d4c3e8bcb245d49965767df696b51f87e05b492ce32933ef9f244"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_130_FHD-1440w.webp",
+      "objectKey": "cloudark/v1/press/20250801_130_FHD-1440w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 52244,
+      "sha256": "72fe86f35408784ecc1e18f173adc136e93ea34f1bc04bbdfd870c85717c122d"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_130_FHD-480w.webp",
+      "objectKey": "cloudark/v1/press/20250801_130_FHD-480w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 13814,
+      "sha256": "4f55908dff1a353fab024392bd59f8afeb7d72f744355f843c8a9395d941b279"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_130_FHD-768w.webp",
+      "objectKey": "cloudark/v1/press/20250801_130_FHD-768w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 25050,
+      "sha256": "a95b62bc2c9f76e1ec3ad7c402c473d76a2be9e4ef2d954601a64531c1f75143"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_137_FHD-1024w.webp",
+      "objectKey": "cloudark/v1/press/20250801_137_FHD-1024w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 30816,
+      "sha256": "2b9fa5d0c94cb05d901173fea327a921c8675199f54ef7a66aa3faad6119ad25"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_137_FHD-1440w.webp",
+      "objectKey": "cloudark/v1/press/20250801_137_FHD-1440w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 47352,
+      "sha256": "10379236da2387069d999a02cb4419eab23245230bda12c07910bf4bd6229d3c"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_137_FHD-480w.webp",
+      "objectKey": "cloudark/v1/press/20250801_137_FHD-480w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 10166,
+      "sha256": "034a6513536cbbfe8664b6ff4c11da18c95117ed2aecd4cf8dfe607812b004ff"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_137_FHD-768w.webp",
+      "objectKey": "cloudark/v1/press/20250801_137_FHD-768w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 20392,
+      "sha256": "0d506709afb7598e6ff2924009af116871b95982d433bfce964fa1ba2c098a8b"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_165_FHD-1024w.webp",
+      "objectKey": "cloudark/v1/press/20250801_165_FHD-1024w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 53210,
+      "sha256": "6188098e5d4771f006951b6e877026e1ba44010133eecf3cb8a5574b094578e2"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_165_FHD-1440w.webp",
+      "objectKey": "cloudark/v1/press/20250801_165_FHD-1440w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 83010,
+      "sha256": "14a62e7ab4d43fb48c358d9cbd153225012790618a5b837925567892ef898611"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_165_FHD-480w.webp",
+      "objectKey": "cloudark/v1/press/20250801_165_FHD-480w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 17840,
+      "sha256": "4e507423d1dca996a01a55efbbd76c363fcab290d9d47cd6968d7417610f1b05"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_165_FHD-768w.webp",
+      "objectKey": "cloudark/v1/press/20250801_165_FHD-768w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 35824,
+      "sha256": "5145ce53f9c4e8f8416db1bfc60f4653b0804ab563ab159c9eef1efbcedf5559"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_7_FHD-1080w.webp",
+      "objectKey": "cloudark/v1/press/20250801_7_FHD-1080w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 59842,
+      "sha256": "252f14c44fac7c8501f55e73e2fe40e4fc2714a911d6f8a08dd5b4c3aa77adec"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_7_FHD-360w.webp",
+      "objectKey": "cloudark/v1/press/20250801_7_FHD-360w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 12380,
+      "sha256": "ec62390d2a8dce1707152c7011262849fc8bb06c5ecc3bbe0c240cdcd4487203"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_7_FHD-540w.webp",
+      "objectKey": "cloudark/v1/press/20250801_7_FHD-540w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 22250,
+      "sha256": "8b30610ef3d3f73a07b2d1b4c728453b1cf23c592c46dab2399bf112b7af1a0f"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250801_7_FHD-720w.webp",
+      "objectKey": "cloudark/v1/press/20250801_7_FHD-720w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 33010,
+      "sha256": "12e1183097add226146dae70a7c74eecfb4ca3d98be37332ec41b52b56608aa3"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_38_Fullres-1024w.webp",
+      "objectKey": "cloudark/v1/press/20250926_38_Fullres-1024w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 38788,
+      "sha256": "8d304b90a0c94223b60f3530d0f5cebfcd3346d4213c1fee3204c18000332785"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_38_Fullres-1440w.webp",
+      "objectKey": "cloudark/v1/press/20250926_38_Fullres-1440w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 58632,
+      "sha256": "457cee4f8259929d5ef20c97ace394585fa6caec80f7e6842f4d1502be832dcc"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_38_Fullres-1920w.webp",
+      "objectKey": "cloudark/v1/press/20250926_38_Fullres-1920w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 85310,
+      "sha256": "db8578db1f4583c672c96044cb4cd1ee61ffc2e42d27a331c0cf1d654741491b"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_38_Fullres-2560w.webp",
+      "objectKey": "cloudark/v1/press/20250926_38_Fullres-2560w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 124304,
+      "sha256": "e14f7d481123b55b3e7c8cec056be2f525e613f5c8ed6a9fbd0ad820bd1b12ef"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_38_Fullres-480w.webp",
+      "objectKey": "cloudark/v1/press/20250926_38_Fullres-480w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 14212,
+      "sha256": "0e2a6d22147544d21526b9042b457bc5505f0ec11522940a900b8630814482cd"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_38_Fullres-768w.webp",
+      "objectKey": "cloudark/v1/press/20250926_38_Fullres-768w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 25866,
+      "sha256": "1afc28b91a8be2a8a5a9e61ccd4f53f89ce3d5e4d3fa9786c2bc6e696fd54e46"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_64_Fullres-1024w.webp",
+      "objectKey": "cloudark/v1/press/20250926_64_Fullres-1024w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 35396,
+      "sha256": "09d45702afab40940b3382e10d9957655bcdbf8b5ca8edf2cf8e75fa4939aa44"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_64_Fullres-1440w.webp",
+      "objectKey": "cloudark/v1/press/20250926_64_Fullres-1440w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 54604,
+      "sha256": "1afebc6ae6b5470119acd81c89fb161418eeccfeea8762147c5cfb723c81f116"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_64_Fullres-1920w.webp",
+      "objectKey": "cloudark/v1/press/20250926_64_Fullres-1920w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 79466,
+      "sha256": "21586f3b25c8fd6cddbc409f650009e2229b2422a744b024fe24a1799b129387"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_64_Fullres-2560w.webp",
+      "objectKey": "cloudark/v1/press/20250926_64_Fullres-2560w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 114920,
+      "sha256": "575815b833def9ba84dc36592beb8e23c6c8618d303218cf1040e8808ccf8639"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_64_Fullres-480w.webp",
+      "objectKey": "cloudark/v1/press/20250926_64_Fullres-480w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 13056,
+      "sha256": "8f7f42a644cbce23f652eb4b5b1605b0e66a694108745058ebb53d5891da6d23"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/src/assets/press/optimised/20250926_64_Fullres-768w.webp",
+      "objectKey": "cloudark/v1/press/20250926_64_Fullres-768w.webp",
+      "contentType": "image/webp",
+      "sizeBytes": 24210,
+      "sha256": "70b1ae0a9910367f76f3b97c6c4e97cf652e925b4df9cf857474f9144d0c29ae"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/public/photos/gigs/3niti-x-blacklight-000.png",
+      "objectKey": "cloudark/v1/gigs/3niti-x-blacklight-000.png",
+      "contentType": "image/png",
+      "sizeBytes": 611349,
+      "sha256": "ae418342440d9fbefe8ddb1c2a61df06064d6f670eb5c041e1bf596834c7567a"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/public/photos/gigs/abyss-sonic-halloween-voyage.jpg",
+      "objectKey": "cloudark/v1/gigs/abyss-sonic-halloween-voyage.jpg",
+      "contentType": "image/jpeg",
+      "sizeBytes": 635057,
+      "sha256": "0d61f186b945bf9303e8d7925f685e3b525a97edd2f87f2ece05f4868846f2ef"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/public/photos/gigs/blacklight-national-60th-tuff.png",
+      "objectKey": "cloudark/v1/gigs/blacklight-national-60th-tuff.png",
+      "contentType": "image/png",
+      "sizeBytes": 431457,
+      "sha256": "a461820a312dbf986623f751595f14bfc13a6fb3255ab0580b67dbfefe5d0cdb"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/public/photos/gigs/blacklight-rave-xiii-ghorehouse.jpeg",
+      "objectKey": "cloudark/v1/gigs/blacklight-rave-xiii-ghorehouse.jpeg",
+      "contentType": "image/jpeg",
+      "sizeBytes": 63058,
+      "sha256": "e91a542836127c649f53d1cf0594229a256cd2f3da6668110988b0f35c0031e6"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/public/photos/gigs/blacklight-rave-xiv-cyb3r-3d3n.jpeg",
+      "objectKey": "cloudark/v1/gigs/blacklight-rave-xiv-cyb3r-3d3n.jpeg",
+      "contentType": "image/jpeg",
+      "sizeBytes": 64883,
+      "sha256": "55af15e486d1d30a94c9c8849eeea9c2d91b948beb6e28241274d87bd11e4455"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/public/photos/gigs/blacklight-rave-xvi-nosferavetu.png",
+      "objectKey": "cloudark/v1/gigs/blacklight-rave-xvi-nosferavetu.png",
+      "contentType": "image/png",
+      "sizeBytes": 274579,
+      "sha256": "4c1d1ee7c646237adc4a6c1b5ab8a9e33da9660316356d44ce6883f932014c29"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/public/photos/gigs/blacklight-sessions-02.jpg",
+      "objectKey": "cloudark/v1/gigs/blacklight-sessions-02.jpg",
+      "contentType": "image/jpeg",
+      "sizeBytes": 173462,
+      "sha256": "d1e53235e91eb5033822d58cc0f1def984e64ed5c04df403dcead039f3d702e0"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/public/photos/gigs/blacklight-sessions-03.jpeg",
+      "objectKey": "cloudark/v1/gigs/blacklight-sessions-03.jpeg",
+      "contentType": "image/jpeg",
+      "sizeBytes": 344058,
+      "sha256": "937f8f04e0f971309c4f367ca8142361c0a260ddac60645f7837b866d8f5f694"
+    },
+    {
+      "kind": "image",
+      "sourcePath": "apps/v4ri/public/photos/gigs/next-beats-on-the-rise.jpg",
+      "objectKey": "cloudark/v1/gigs/next-beats-on-the-rise.jpg",
+      "contentType": "image/jpeg",
+      "sizeBytes": 157886,
+      "sha256": "eeee67f678ca1fe22444b948b76ee7d57c86720b060d531d1baff330e83980f3"
+    },
+    {
+      "kind": "font",
+      "originalFilename": "BerkeleyMono-Regular.woff2",
+      "objectKey": "fonts/tx-02/v1/tx-02-regular.woff2",
+      "contentType": "font/woff2",
+      "sizeBytes": 29444,
+      "sha256": "ee69f2e221e5ae7cfcad3fac71a5dc72b3e377828fd38b5baea4e836b13fbdcb"
+    },
+    {
+      "kind": "font",
+      "originalFilename": "BerkeleyMono-Medium.woff2",
+      "objectKey": "fonts/tx-02/v1/tx-02-medium.woff2",
+      "contentType": "font/woff2",
+      "sizeBytes": 30740,
+      "sha256": "b90937fcfa387fdec9248909ee85634877cdbe7a663ab960609c58ddd964b359"
+    }
+  ]
+}

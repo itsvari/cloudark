@@ -3,8 +3,11 @@
   "name": "itsvari-com-website",
   "main": "@astrojs/cloudflare/entrypoints/server",
   "compatibility_date": "2026-08-14",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "workers_dev": false,
+  "preview_urls": true,
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist/client"
@@ -17,5 +20,13 @@
   ],
   "observability": {
     "enabled": true
+  },
+  "env": {
+    "staging": {
+      "name": "itsvari-com-website-staging",
+      "routes": [],
+      "workers_dev": true,
+      "preview_urls": true
+    }
   }
 }

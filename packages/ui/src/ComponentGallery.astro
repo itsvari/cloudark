@@ -1,0 +1,60 @@
+---
+import { canonicalUrl, getEventDisplayPhase } from '@itsvari/content';
+import { getEvents, getFeaturedProjects } from '@itsvari/content/astro';
+import CalibrationSwatches from './CalibrationSwatches.astro';
+import Card from './Card.astro';
+import LeaderRow from './LeaderRow.astro';
+import LedgerRow from './LedgerRow.astro';
+import LedgerTable from './LedgerTable.astro';
+import PhotoFill from './PhotoFill.astro';
+import RegistrationMarks from './RegistrationMarks.astro';
+import Ruler from './Ruler.astro';
+import SectionHeading from './SectionHeading.astro';
+import SectionRail from './SectionRail.astro';
+import SpecStrip from './SpecStrip.astro';
+import Tag from './Tag.astro';
+import TickStrip from './TickStrip.astro';
+import { formatLedgerDate } from './index';
+
+const typeSteps = ['t-2','t-1','t0','t1','t2','t3','t4','t5','t6','t7','t8','t9','t10'];
+const now = new Date();
+const [projects, events] = await Promise.all([getFeaturedProjects(2), getEvents('v4ri', now)]);
+const recentEvents = [...events].sort((left, right) => right.data.startsAt.getTime() - left.data.startsAt.getTime()).slice(0, 3);
+const posterEvent = recentEvents.find(({ data }) => data.image);
+const posterCount = recentEvents.filter(({ data }) => data.image).length;
+const formatTime = (date: Date): string => new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Singapore' }).format(date);
+---
+<div class="gallery">
+  <RegistrationMarks />
+  <SectionRail />
+  <p class="lbl dim">Signal + Ledger · component specimen</p>
+  <SectionHeading title="Type system" aside="fluid steps" number="00" />
+  <div class="ramp">{typeSteps.map((step) => <div class="type-row"><span class="lbl dim">--{step}</span><span style={`font-size:var(--${step})`} class:list={{ label: step === 't-2' || step === 't-1' }}>Signal / Ashe.</span></div>)}</div>
+  <SectionHeading title="Micrographics" number="01" />
+  <div class="kit"><Tag>projects</Tag><Tag state="active">active</Tag><CalibrationSwatches /></div>
+  <TickStrip /><Ruler />
+  <SectionHeading title="Leader rows" number="02" />
+  {projects.map((project) => <LeaderRow label="project" value={project.data.title} href={`/projects/${project.id}`} trailing={project.data.status} />)}
+  {posterEvent && <LeaderRow label="gig archive" value={posterEvent.data.title} trailing="↗ V4RI" state="external" href={canonicalUrl('event', posterEvent.id, 'v4ri')} />}
+  <SectionHeading title="Cards" aside="selected projects" number="03" />
+  <div class="cards">{projects.map((project, index) => <Card href={`/projects/${project.id}`} title={project.data.title} summary={project.data.summary} status={project.data.status} featured={project.data.featured} image={project.data.image} tags={project.data.tags} links={project.data.links} number={index + 1} />)}</div>
+  <SectionHeading title="Event ledger" number="04" />
+  <LedgerTable>{recentEvents.map((event) => <LedgerRow href={canonicalUrl('event', event.id, 'v4ri')} title={event.data.title} date={event.data.startsAt} time={`${formatTime(event.data.startsAt)}${event.data.endsAt ? `–${formatTime(event.data.endsAt)}` : event.data.timeNote ? ` · ${event.data.timeNote}` : ''}`} venue={event.data.venue ? `${event.data.venue.name}, ${event.data.venue.city}` : undefined} phase={getEventDisplayPhase(event.data, now)} image={event.data.image} recordingUrl={event.data.recordingUrl} ticketUrl={event.data.ticketUrl} />)}</LedgerTable>
+  {posterEvent?.data.image && <>
+    <SectionHeading title="Photo fill" aside="event poster" number="05" />
+    <a class="sample-fill hasbg" href={canonicalUrl('event', posterEvent.id, 'v4ri')} data-photo-row data-photo-link><PhotoFill image={posterEvent.data.image} /><span class="tag" data-photo-text>{posterEvent.data.title}</span></a>
+    <SectionHeading title="Spec strip" number="06" />
+    <SpecStrip total={posterCount} items={[{label:'Event archive',value:posterEvent.data.title,href:canonicalUrl('event', posterEvent.id, 'v4ri')},{label:'Date',value:formatLedgerDate(posterEvent.data.startsAt)},...(posterEvent.data.venue ? [{label:'Where',value:`${posterEvent.data.venue.name}, ${posterEvent.data.venue.city}`}] : []),{label:'Source',value:posterEvent.data.sourceUrl ? 'event listing ↗' : 'event poster',href:posterEvent.data.sourceUrl}]} />
+  </>}
+</div>
+<style>
+  .gallery { position: relative; padding-block: var(--s-6); }
+  .ramp { display: grid; gap: var(--s-3); overflow: hidden; }
+  .type-row { display: grid; grid-template-columns: 80px 1fr; gap: var(--s-5); align-items: baseline; border-bottom: 1px solid var(--rule); padding-block: var(--s-2); }
+  .type-row > span:last-child { font-family: 'Redaction', Georgia, serif; line-height: 1.1; }
+  .type-row > span.label { font-family: 'Departure Mono', monospace; }
+  .kit { display: flex; flex-wrap: wrap; gap: var(--s-5); align-items: center; padding-block: var(--s-5); }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); margin-top: var(--s-4); }
+  .sample-fill { display: block; padding: var(--s-5); margin-bottom: var(--s-5); }
+  @container page (max-width: 639px) { .cards { grid-template-columns: 1fr; } }
+</style>

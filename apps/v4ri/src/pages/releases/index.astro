@@ -1,25 +1,17 @@
 ---
 import { getReleases } from "@itsvari/content/astro";
-import { canonicalUrl } from "@itsvari/content";
 import EmptyState from "@itsvari/ui/EmptyState.astro";
-import { formatDate } from "@itsvari/ui";
-
+import LedgerTable from "@itsvari/ui/LedgerTable.astro";
+import LedgerRow from "@itsvari/ui/LedgerRow.astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 
-const releases = await getReleases("v4ri");
+const recordings = await getReleases("v4ri");
 ---
 
-<SiteLayout description="Music releases and recorded mixes from v4ri." title="Releases">
-  <h1>Releases</h1>
-  {releases.length > 0 ? (
-    <ol class="entry-list">
-      {releases.map((release) => (
-        <li>
-          <p class="meta"><span>{release.data.type}</span><time datetime={release.data.releaseDate.toISOString()}>{formatDate(release.data.releaseDate)}</time></p>
-          <h2><a href={canonicalUrl("release", release.id, release.data.canonicalSite)}>{release.data.title}</a></h2>
-          <p>{release.data.summary}</p>
-        </li>
-      ))}
-    </ol>
-  ) : <EmptyState message="No releases have been published yet." />}
+<SiteLayout description="Watch V4RI's recorded sets from Tuff Club, Enclavebar and Headquarters." title="Recordings">
+  <header class="v-head"><div><div class="tag dim">§ 02 — recordings · {String(recordings.length).padStart(2, "0")} sets</div><h1>Recordings <em>from the booth</em></h1></div><div><p>Dates show when each set was recorded.</p><a class="tag" href="/gigs?filter=recorded">[ recorded gigs → ]</a></div></header>
+  <div class="page-rule" aria-hidden="true"></div>
+  {recordings.length > 0 ? <LedgerTable variant="content" titleLabel="Recording" dateLabel="Recorded">
+    {recordings.map((recording) => <LedgerRow href={`/releases/${recording.id}`} title={recording.data.title} date={recording.data.releaseDate} kind="live set" links={recording.data.links} image={recording.data.image} />)}
+  </LedgerTable> : <EmptyState message="No recordings published." />}
 </SiteLayout>

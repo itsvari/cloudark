@@ -88,3 +88,20 @@ export async function getProject(id: string, site: Site, now = new Date()) {
     ? entry
     : undefined;
 }
+
+const featuredLimit = 2;
+
+export async function getFeaturedProjects(limit = featuredLimit, now = new Date()) {
+  const projects = await getProjects("itsvari", now);
+  return projects.filter(({ data }) => data.featured).slice(0, limit);
+}
+
+export async function getFeaturedPosts(site: Site, limit = featuredLimit, now = new Date()) {
+  const posts = await getPosts(site, now);
+  return posts.filter(({ data }) => data.canonicalSite === site && data.featured).slice(0, limit);
+}
+
+export async function getHomeImages() {
+  const home = await getPage("home");
+  return home?.data.images ?? [];
+}

@@ -1,0 +1,36 @@
+---
+import type { ContentImage } from '@itsvari/content';
+import PhotoFill from './PhotoFill.astro';
+import { formatLedgerDate } from './index';
+interface Props { label: string; value: string; href?: string; trailing?: string; state?: string; image?: ContentImage; date?: Date; arrow?: boolean; }
+const { label, value, href, trailing, state, image, date, arrow = false } = Astro.props;
+const Element = href ? 'a' : 'div';
+---
+<Element class:list={['leader-row', { hasbg: image, writing: date }]} href={href} data-photo-row={image ? '' : undefined} data-photo-link={image ? '' : undefined}>
+  {image && <PhotoFill image={image} />}
+  <span class="key tag">{date ? <time datetime={date.toISOString()}>{formatLedgerDate(date, true)}</time> : <>[ {label} ]</>}</span>
+  <span class="value" data-photo-text>{value}</span><span class="lead" aria-hidden="true"></span>
+  {(trailing || state) && <span class:list={['trailing', 'tag', { red: state === 'active' || state === 'live' || state === 'external', dim: !state || state === 'draft' }]}>{trailing ?? state}</span>}
+  {href && (arrow || date) && <span class="arrow" aria-hidden="true">{href.startsWith('http') ? <span class="red">↗</span> : '→'}</span>}
+</Element>
+<style>
+  .leader-row { display: grid; grid-template-columns: max-content minmax(0, auto) minmax(16px, 1fr) max-content max-content; align-items: baseline; gap: var(--s-3); padding: var(--s-2) 0; }
+  .key { min-width: 14ch; grid-column: 1; color: var(--dim); white-space: nowrap; }
+  .value { min-width: 0; grid-column: 2; overflow-wrap: anywhere; }
+  .lead { grid-column: 3; }
+  .trailing { grid-column: 4; }
+  .writing { display: flex; }
+  .writing .key { width: 74px; min-width: 74px; flex: none; }
+  .writing .value { font-weight: 500; }
+  .arrow { grid-column: 5; font-family: 'Departure Mono', monospace; }
+  @container page (max-width: 639px) {
+    .leader-row:not(.writing) { display: grid; grid-template-columns: 1fr auto; column-gap: var(--s-3); row-gap: 2px; }
+    .leader-row:not(.writing) .key { min-width: 0; }
+    .leader-row:not(.writing) .value { grid-column: 1 / -1; grid-row: 2; }
+    .leader-row:not(.writing) .trailing { grid-column: 2; grid-row: 1; justify-self: end; }
+    .leader-row:not(.writing) .arrow { display: none; }
+    .lead { display: none; }
+    .writing .trailing { display: none; }
+    .writing .value { flex: 1; }
+  }
+</style>

@@ -5,7 +5,7 @@
 The repository contains two independent Astro applications:
 
 - `apps/itsvari` serves `itsvari.com`.
-- `apps/v4ri` serves `v4ri.wav`.
+- `apps/v4ri` serves `v4ri.xyz`.
 
 Both applications use Astro's Cloudflare adapter with server output. Time-sensitive routes such as activity and gig listings are rendered by a Cloudflare Worker on request. Stable informational routes opt into prerendering.
 
@@ -37,9 +37,26 @@ Content entries are intentionally flat `*.md` files at the root of each collecti
 single-segment detail routes depend on that flat-ID constraint; nested content requires migrating
 all detail routes together to rest parameters.
 
-Activity sample entries remain drafts so scaffolding content cannot be deployed accidentally.
-About and CV are the deliberately published pages used by the static routes.
+The personal profile, CV and engineering portfolio use the supplied documents and verified GitHub
+repositories. Private projects have high-level descriptions without source links. The home page and
+project descriptions use this material as editorial copy. Neither site currently publishes blog posts.
+The gig archive uses verified real performances. V4RI's hero photographs and About portrait come
+from the supplied press kit, and its four set recordings use the supplied YouTube URLs.
+Asset sources and replacement instructions are in `design/media-assets.md`.
+
+Public gig descriptions preserve the organisers' original wording, with source provenance and
+copy checksums in `content/gig-sources.json`. Both apps explicitly configure Sätteri without
+smart punctuation so Markdown rendering does not change the quoted copy. Published lineups
+are separate structured fields. Minimal-disclosure events reject lineup data as well as venue,
+media and booking links.
+
+The CV uses the same Markdown source for the web page and the generated PDF. Its print stylesheet
+adapts the type hierarchy to a single-column, light paper layout. `scripts/generate-cv.mjs`
+exports tagged PDF through installed Chromium; `scripts/verify-cv.mjs` checks source text,
+contact details, section order, pagination and embedded Unicode fonts with Poppler.
 
 ## Storage
 
 Git-backed Markdown remains the content store. D1, R2, KV, Queues, and Durable Objects are intentionally absent until a concrete runtime use case exists. Astro sessions are explicitly disabled, so the adapter does not provision an unused KV namespace.
+
+Events may omit an unknown end time or venue. Only a confirmed end can produce a live badge; started archive entries with unknown ends appear under earlier shows. Event programme times and artist set times have separate labels. Minimal-disclosure entries reject venue, media and external event links, and bypass Markdown rendering.

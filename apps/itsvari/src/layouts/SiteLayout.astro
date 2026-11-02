@@ -1,20 +1,31 @@
 ---
+import "@itsvari/ui/styles/tokens.css";
+import "@itsvari/ui/styles/base.css";
 import "../styles/global.css";
 import { siteOrigins } from "@itsvari/content";
+import FontFaces from "@itsvari/ui/FontFaces.astro";
+import RegistrationMarks from "@itsvari/ui/RegistrationMarks.astro";
+import SectionRail from "@itsvari/ui/SectionRail.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import PrimaryNavigation from "../components/PrimaryNavigation.astro";
+import { navigation } from "../navigation";
 
 interface Props {
   canonical?: URL | string;
   description: string;
   title: string;
+  sections?: string[];
+  section?: string;
 }
-
-const { canonical: canonicalProp, description, title } = Astro.props;
+const { canonical: canonicalProp, description, title, sections, section } = Astro.props;
+const activePath = Astro.url.pathname.replace(/\/$/, "") || "/";
+const currentNavigation = navigation.find(({ href }) => href === "/" ? activePath === "/" : activePath.startsWith(href));
+const pageIndex = section ?? currentNavigation?.number ?? "00";
 const pageTitle = title === "itsvari" ? title : `${title} · itsvari`;
 const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? siteOrigins.itsvari).toString();
 ---
-
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
@@ -27,29 +38,39 @@ const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? sit
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="preload" href="/fonts/departure-mono-regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/redaction-50-regular.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="alternate" type="application/rss+xml" title="itsvari RSS" href="/rss.xml" />
     <link rel="canonical" href={canonical} />
     <title>{pageTitle}</title>
+    <FontFaces />
+    <slot name="head" />
   </head>
   <body>
-    <header>
-      <a class="brand" href="/">itsvari</a>
-      <nav aria-label="Primary navigation">
-        <a href="/projects">Projects</a>
-        <a href="/blog">Blog</a>
-        <a href="/about">About</a>
-        <a href="/cv">CV</a>
-        <a href="/contact">Contact</a>
-        <a href="https://v4ri.wav">v4ri.wav</a>
-      </nav>
-    </header>
-    <main>
-      <slot />
-    </main>
-    <footer>
-      <span>© {new Date().getFullYear()} Ashe</span>
-      <a href="/rss.xml">RSS</a>
-    </footer>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <div class="site-page page">
+      <RegistrationMarks position="top" />
+      <div class="i-wrap">
+        <aside class="i-side">
+          <a class="i-brand" href="/" aria-label="itsvari home"><span class="brand-name">itsvari</span><span class="lbl dim">v3.0 · rev. 2026.11</span></a>
+          <div class="desktop-navigation"><PrimaryNavigation currentHref={currentNavigation?.href} /></div>
+          <details class="site-menu">
+            <summary class="tag">[ menu ]</summary>
+            <PrimaryNavigation currentHref={currentNavigation?.href} />
+          </details>
+          <SiteFooter section={pageIndex} />
+        </aside>
+        <main class="i-main" id="main" tabindex="-1">
+          <span class="i-meta lbl"><span>index · {pageIndex} / 05</span><span>rev. 2026.11</span></span>
+          <SectionRail sections={sections ?? [pageIndex]} active={pageIndex} />
+          <slot />
+          <SiteFooter section={pageIndex} compact />
+        </main>
+      </div>
+      <RegistrationMarks position="bottom" />
+    </div>
   </body>
 </html>

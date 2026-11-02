@@ -1,28 +1,16 @@
 ---
 import { getPost } from "@itsvari/content/astro";
 import { canonicalUrl } from "@itsvari/content";
-import { formatDate } from "@itsvari/ui";
 import { render } from "astro:content";
-
 import SiteLayout from "../../layouts/SiteLayout.astro";
-
+import ReadingArticle from "../../components/ReadingArticle.astro";
 const id = Astro.params.id;
 const post = id ? await getPost(id, "itsvari") : undefined;
-
 if (!post) return Astro.rewrite("/404");
-
-const { Content } = await render(post);
-const canonical = canonicalUrl("post", post.id, post.data.canonicalSite);
+const { Content, headings } = await render(post);
+const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "long", timeZone: "Asia/Singapore" }).format(post.data.publishedAt);
 ---
-
-<SiteLayout canonical={canonical} description={post.data.summary} title={post.data.title}>
-  <article>
-    <p class="meta">
-      <span>{post.data.kind}</span>
-      <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
-    </p>
-    <h1>{post.data.title}</h1>
-    <p>{post.data.summary}</p>
-    <Content />
-  </article>
+<SiteLayout canonical={canonicalUrl("post", post.id, post.data.canonicalSite)} description={post.data.summary} title={post.data.title}>
+  <ReadingArticle title={post.data.title} summary={post.data.summary} headings={headings} labels={[post.data.kind, date, ...post.data.tags]}><Content /></ReadingArticle>
+  <div class="reading-links tag"><a href="/blog">[ ← all writing ]</a><a href="/rss.xml">[ subscribe via rss ]</a></div>
 </SiteLayout>

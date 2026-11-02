@@ -1,0 +1,279 @@
+{
+  "verifiedOn": "2026-11-02",
+  "timezone": "Asia/Singapore",
+  "events": [
+    {
+      "id": "blacklight-rave-xiii-ghorehouse",
+      "sourceUrl": "https://peatix.com/event/4134200",
+      "calendarUrl": "https://peatix.com/event/4134200/download_calendar",
+      "posterUrl": "https://cdn.peatix.com/event/4134200/cover-366w2a2Vfyw79hmIEIEZnPqUzZJsmoYI.jpeg",
+      "timingScope": "event bounds; V4RI set times are not verified",
+      "organiserCopy": {
+        "mode": "full-verbatim",
+        "permission": "User explicitly confirmed permission to republish full descriptions for all events.",
+        "sourceFormat": "html",
+        "sourceSha256": "a1a69fab7105a26a5cb286d17849f9cb21500467611f821277e03ed52be77630",
+        "markdownSha256": "b1432ae36578e8bc601ace0676bc4ab0220ad543312e705ea78f65504d9050ef",
+        "lineup": [
+          "THREE EAR RABBIT",
+          "vylt",
+          "VARI",
+          "T.HIRST",
+          "D-LINEZ",
+          "FALLING ISLANDS",
+          "Xervixia"
+        ],
+        "sourceApiUrl": "https://peatix.com/event/4134200/get_view_data",
+        "renderedTextVerified": true,
+        "renderedTextSha256": "9cb0ccb51e2ca81c9ababb1a63773251b3ca354edb8ff09ac69f24637e88a101",
+        "markdownConfiguration": {
+          "smartypants": false
+        }
+      },
+      "ticketUrl": "https://peatix.com/event/4134200"
+    },
+    {
+      "id": "blacklight-rave-xiv-cyb3r-3d3n",
+      "sourceUrl": "https://blacklighttribe14.peatix.com",
+      "calendarUrl": "https://peatix.com/event/4173568/download_calendar",
+      "posterUrl": "https://cdn.peatix.com/event/4173568/cover-ZQeKULAsmKSpm6zJ3UstSN2h5Z7RUpFm.jpeg",
+      "timingScope": "event bounds; V4RI set times are not verified",
+      "organiserCopy": {
+        "mode": "full-verbatim",
+        "permission": "User explicitly confirmed permission to republish full descriptions for all events.",
+        "sourceFormat": "html",
+        "sourceSha256": "d54c2e2b0aa915c134997c21335659bdbbace2f3ee7f456a15e6c109bfb20960",
+        "markdownSha256": "b7ef655a4608561dbec53b62924f0acc4b8d107c75242ec1dde505fbb103abfd",
+        "lineup": [
+          "RORURU",
+          "WE HATE DEEJAYS",
+          "N5FR2",
+          "V4RI",
+          "WAT3RFL0W3R (LATVIA)",
+          "Falling Islands",
+          "goneMUNE"
+        ],
+        "sourceApiUrl": "https://peatix.com/event/4173568/get_view_data",
+        "renderedTextVerified": true,
+        "renderedTextSha256": "66d50d7d241ee48fe2030985c59f3b06dba3e99a70cd8b2a0cf0336568b8ac34",
+        "markdownConfiguration": {
+          "smartypants": false
+        }
+      },
+      "ticketUrl": "https://blacklighttribe14.peatix.com"
+    },
+    {
+      "id": "blacklight-national-60th-tuff",
+      "sourceUrl": "https://blacklighttuff.peatix.com/view",
+      "calendarUrl": "https://peatix.com/event/4515774/download_calendar",
+      "posterUrl": "https://cdn.peatix.com/event/4515774/cover-LJRM7w8BilQNNI2WjaokYv11kK6UyYJC.png",
+      "timingScope": "event bounds; V4RI set times are not verified",
+      "organiserCopy": {
+        "mode": "full-verbatim",
+        "permission": "User explicitly confirmed permission to republish full descriptions for all events.",
+        "sourceFormat": "html",
+        "sourceSha256": "c822b414c846e7583a61d35427f24e35d373ff03c01be9740867a48de1c58501",
+        "markdownSha256": "62865042ba6dfeabef146a53cf2f6725683b5e7e9dcdca48e61970297c7dc389",
+        "lineup": [
+          "D-LINEZ",
+          "V4RI",
+          "COSMO CARBON",
+          "FALLING ISLANDS"
+        ],
+        "sourceApiUrl": "https://peatix.com/event/4515774/get_view_data",
+        "renderedTextVerified": true,
+        "renderedTextSha256": "577a48c51c870e96f34447a6a4d26942d99394d938b568313c49e9326a96ddd0",
+        "markdownConfiguration": {
+          "smartypants": false
+        }
+      },
+      "ticketUrl": "https://blacklighttuff.peatix.com/view"
+    },
+    {
+      "id": "3niti-x-blacklight-000",
+      "sourceUrl": "https://blacklight3niti.peatix.com/view",
+      "calendarUrl": "https://peatix.com/event/4553633/download_calendar",
+      "posterUrl": "https://cdn.peatix.com/event/4553633/cover-WdUEUBLVAZrAZ9VvbSOm3dW0oUrUqvH2.png",
+      "timingScope": "event bounds; V4RI set times are not verified",
+      "organiserCopy": {
+        "mode": "full-verbatim",
+        "permission": "User explicitly confirmed permission to republish full descriptions for all events.",
+        "sourceFormat": "html",
+        "sourceSha256": "903c2c683c695781f7f6361f81273c6ba194ed231db9b222bad046c78148c886",
+        "markdownSha256": "6c0644b24dde9329a9a55cbb99f7c838f49abf62413f39ecb5b9448ee5c5d358",
+        "lineup": [
+          "rEmPiT g0dDe$$ (MY)",
+          "Suhsi (MY)",
+          "Metamoksha",
+          "Falling Islands",
+          "V4RI",
+          "VYLT"
+        ],
+        "sourceApiUrl": "https://peatix.com/event/4553633/get_view_data",
+        "renderedTextVerified": true,
+        "renderedTextSha256": "18320b690de9636187f9d85d26c84edba76285d994eb4e97d8fc822e37797fa5",
+        "markdownConfiguration": {
+          "smartypants": false
+        },
+        "timingDiscrepancy": {
+          "calendarStart": "20:30 SGT",
+          "descriptionStart": "9PM - Late",
+          "resolution": "Existing calendar-backed timing retained; organiser description reproduced unchanged."
+        }
+      },
+      "ticketUrl": "https://blacklight3niti.peatix.com/view"
+    },
+    {
+      "id": "blacklight-rave-xvi-nosferavetu",
+      "sourceUrl": "https://peatix.com/event/4994526?lang=en-sg",
+      "calendarUrl": "https://peatix.com/event/4994526/download_calendar",
+      "posterUrl": "https://cdn.peatix.com/event/4994526/cover-DPcBz7DnbaDlSKDA3cpt3BZ9M4yQqVbg.png",
+      "timingScope": "event bounds; V4RI set times are not verified",
+      "organiserCopy": {
+        "mode": "full-verbatim",
+        "permission": "User explicitly confirmed permission to republish full descriptions for all events.",
+        "sourceFormat": "html",
+        "sourceSha256": "1320bc85f5b39764ad676670b794adc77911d3b471e2772374f82652c3e4fdf1",
+        "markdownSha256": "26a94df7d59556cf0fdabf236126fe51dddfa17d5253ec9e9a678b33ef626cf3",
+        "lineup": [
+          "V4RI",
+          "FALLING ISLANDS",
+          "T.HIRST",
+          "D-LINEZ"
+        ],
+        "sourceApiUrl": "https://peatix.com/event/4994526/get_view_data",
+        "renderedTextVerified": true,
+        "renderedTextSha256": "dbb5463e936b0ca5c4e48a49b51375913a2a599dbf75afee679929031e1abe34",
+        "markdownConfiguration": {
+          "smartypants": false
+        }
+      },
+      "ticketUrl": "https://peatix.com/event/4994526?lang=en-sg"
+    },
+    {
+      "id": "blacklight-sessions-03",
+      "sourceUrl": "https://blacklightsessions3.peatix.com/view",
+      "calendarUrl": "https://peatix.com/event/5126005/download_calendar",
+      "posterUrl": "https://cdn.peatix.com/event/5126005/cover-YDCDCALuyTb9JdsvYYQJVjibWqDt1oD5.jpeg",
+      "timingScope": "event bounds; V4RI set times are not verified",
+      "organiserCopy": {
+        "mode": "full-verbatim",
+        "permission": "User explicitly confirmed permission to republish full descriptions for all events.",
+        "sourceFormat": "html",
+        "sourceSha256": "54aade698214412f7bf88ff8774606a7e0bbcdd4a2e0631113445b29aecd30e3",
+        "markdownSha256": "9f6652b5f466491a875f604311f0452c8fde8c6dfe3e0d98ff6c82ead97773e6",
+        "lineup": [
+          "Shao",
+          "Falling Islands",
+          "Beansclub",
+          "Xaetherx",
+          "V4RI"
+        ],
+        "sourceApiUrl": "https://peatix.com/event/5126005/get_view_data",
+        "renderedTextVerified": true,
+        "renderedTextSha256": "a8ca4a3796cd0dbda9e13482ae19978e42c916deda0ef5d83b9379fef53b92a0",
+        "markdownConfiguration": {
+          "smartypants": false
+        }
+      },
+      "ticketUrl": "https://blacklightsessions3.peatix.com/view"
+    },
+    {
+      "id": "next-beats-on-the-rise",
+      "sourceUrl": "https://t.me/synqnews/107",
+      "additionalSourceUrl": "https://t.me/synqnews/108",
+      "yearEvidence": "Organiser announcement posted 20 January 2026; that Saturday is 24 January 2026. Clean poster matches the supplied screenshot.",
+      "organiserCopy": {
+        "mode": "full-verbatim",
+        "permission": "User explicitly confirmed permission to republish full descriptions for all events.",
+        "sourceFormat": "organiser Telegram posts",
+        "sourceSha256": "bec6a9372df57cc1c18ec6c8c81520dac39786a32c44cbb2ae280cd2cb71c52e",
+        "markdownSha256": "27c80330154bd9d42333082a78842d04053a7c495c90f87d39f90ca32237a014",
+        "lineup": [
+          "Yuhong",
+          "David",
+          "Alex",
+          "Hector",
+          "Khai",
+          "Hoonleng",
+          "Dawn",
+          "Claudia",
+          "Nic",
+          "Ray",
+          "Shawn",
+          "Caleb",
+          "Ashe",
+          "Lucas"
+        ],
+        "sources": [
+          "https://t.me/synqnews/107",
+          "https://t.me/synqnews/108"
+        ],
+        "renderedTextVerified": true,
+        "renderedTextSha256": "a2901799d3f7f5c7db14dcc9f75454ffd512f0544320db15ec520cf639722aba",
+        "markdownConfiguration": {
+          "smartypants": false
+        }
+      },
+      "ticketUrl": "https://forms.gle/1JTXL8BAQDVeQAJc8"
+    },
+    {
+      "id": "blacklight-sessions-02",
+      "source": "User-provided event poster",
+      "timingScope": "19:30 till late; no exact end was supplied.",
+      "organiserCopy": {
+        "mode": "full-verbatim",
+        "permission": "User explicitly confirmed permission to republish full descriptions for all events.",
+        "sourceFormat": "user-provided poster transcription",
+        "sourceSha256": "cbb18bc67233698b9e4ee9fb79fecd55f87081cb061d1618fe70845fe0dad388",
+        "markdownSha256": "892172799f634249cbd85311a31774a3ac128c74f1a14cf6067dd295f20f2e55",
+        "lineup": [
+          "Falling Islands",
+          "V4RI"
+        ],
+        "lineupSources": [
+          "Falling Islands is named on the poster.",
+          "The user confirms performing as V4RI at this open-decks event."
+        ],
+        "renderedTextVerified": true,
+        "renderedTextSha256": "a1bfdfc53868f3c363eaa2afa7e61fb4e6a6b16f3c6ccac7f05089184ffae9c5",
+        "markdownConfiguration": {
+          "smartypants": false
+        }
+      },
+      "ticketUrl": null
+    },
+    {
+      "id": "skf2026",
+      "source": "User-provided title, description and set time only; no venue or media."
+    },
+    {
+      "id": "abyss-sonic-halloween-voyage",
+      "sourceUrl": "https://clubpass.rewardland.sg/events/htug7ri49brg8ui9fsuneuv1/",
+      "posterUrl": "https://exciting-flower-bc33aab938.media.strapiapp.com/Abyss_Blue_Square_Ver2_1_page_0001_92efaeff52.jpg",
+      "timingScope": "Event programme, not individual V4RI set time. Public listing provides start; event poster explicitly gives 20:00 to 03:00 overnight.",
+      "organiserCopy": {
+        "mode": "full-verbatim",
+        "permission": "User explicitly confirmed permission to republish full descriptions for all events.",
+        "sourceFormat": "markdown",
+        "sourceSha256": "106de3e0f2074bf249b6e07df108f55f11b822847e01d29efc5dbc118f5cd22c",
+        "markdownSha256": "e525c9cb8bd8fe8de7c4dfa54b34f41688c689f61a1f15035486d8f681391ce7",
+        "lineup": [
+          "LENERD",
+          "FALLING ISLANDS",
+          "SAYVERE",
+          "V4RI"
+        ],
+        "sourceApiUrl": "https://exciting-flower-bc33aab938.strapiapp.com/api/tickets/htug7ri49brg8ui9fsuneuv1?populate=*",
+        "headingOffset": 1,
+        "renderedTextVerified": true,
+        "renderedTextSha256": "4e35d034dbe91b453ff3f74c50d204198a0a4702da81bbfcb18ebdad0b3cf39a",
+        "markdownConfiguration": {
+          "smartypants": false
+        }
+      },
+      "ticketUrl": "https://clubpass.rewardland.sg/events/htug7ri49brg8ui9fsuneuv1/"
+    }
+  ],
+  "organiserCopyVerifiedAt": "2026-11-02T17:00:25.416556+00:00"
+}

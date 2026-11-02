@@ -1,25 +1,18 @@
 ---
 import { getPosts } from "@itsvari/content/astro";
-import { canonicalUrl } from "@itsvari/content";
+import { contentPath } from "@itsvari/content";
 import EmptyState from "@itsvari/ui/EmptyState.astro";
-import { formatDate } from "@itsvari/ui";
-
+import LedgerTable from "@itsvari/ui/LedgerTable.astro";
+import LedgerRow from "@itsvari/ui/LedgerRow.astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 
 const posts = await getPosts("v4ri");
 ---
 
-<SiteLayout description="DJ and production notes from v4ri." title="Posts">
-  <h1>Posts</h1>
-  {posts.length > 0 ? (
-    <ol class="entry-list">
-      {posts.map((post) => (
-        <li>
-          <time datetime={post.data.publishedAt.toISOString()}>{formatDate(post.data.publishedAt)}</time>
-          <h2><a href={canonicalUrl("post", post.id, post.data.canonicalSite)}>{post.data.title}</a></h2>
-          <p>{post.data.summary}</p>
-        </li>
-      ))}
-    </ol>
-  ) : <EmptyState message="No posts have been published yet." />}
+<SiteLayout description="Notes on music, records and the dancefloor from V4RI." title="Posts">
+  <header class="v-head"><div><div class="tag dim">§ 03 — posts · {String(posts.length).padStart(2, "0")} entries</div><h1>Posts <em>from the booth</em></h1></div><p>Notes on music and production.</p></header>
+  <div class="page-rule" aria-hidden="true"></div>
+  {posts.length > 0 ? <LedgerTable variant="content" titleLabel="Post">
+    {posts.map((post) => <LedgerRow href={post.data.canonicalSite === "v4ri" ? contentPath("post", post.id, "v4ri") : `https://itsvari.com${contentPath("post", post.id, "itsvari")}`} title={post.data.title} date={post.data.publishedAt} kind={post.data.kind} image={post.data.image} />)}
+  </LedgerTable> : <EmptyState message="No posts published." />}
 </SiteLayout>

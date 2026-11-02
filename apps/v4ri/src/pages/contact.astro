@@ -1,0 +1,12 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { pressKitUrl } from "../press-media";
+export const prerender = true;
+---
+
+<SiteLayout description="Contact V4RI for bookings and collaborations. Message @v4ri.wav on Instagram." title="Contact">
+  <header class="v-head"><div><div class="tag dim">§ 05 — contact</div><h1>Get in touch<em>.</em></h1></div><p>Bookings, collaborations, or a record I should hear.</p></header>
+  <div class="page-rule" aria-hidden="true"></div>
+  <div class="link-ledger"><div class="link-ledger-row"><span class="tag dim">[ instagram ]</span><div class="destination-block"><p class="destination">@v4ri.wav</p><p class="note">For bookings and collaborations, message @v4ri.wav on Instagram.</p></div><a class="tag" href="https://www.instagram.com/v4ri.wav/">[ send message <span class="red">↗</span> ]</a></div><div class="link-ledger-row"><span class="tag dim">[ based in ]</span><div class="destination-block"><p class="destination">Singapore</p><p class="note">SGT · UTC+8</p></div></div></div>
+  <div class="contact-actions tag"><a href={pressKitUrl}>[ download press kit <span class="red">↗</span> ]</a><a href="/gigs">[ gigs &amp; the archive → ]</a><a href="/socials">[ socials → ]</a></div>
+</SiteLayout>

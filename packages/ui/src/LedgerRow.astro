@@ -1,0 +1,49 @@
+---
+import type { ContentImage, EventDisplayPhase } from '@itsvari/content';
+import PhotoFill from './PhotoFill.astro';
+import { formatLedgerDate } from './index';
+interface Props { href: string; title: string; date: Date; time?: string; venue?: string; phase?: EventDisplayPhase; ticketUrl?: string; recordingUrl?: string; image?: ContentImage; kind?: string; links?: Record<string,string>; }
+const { href, title, date, time, venue, phase, ticketUrl, recordingUrl, image, kind, links = {} } = Astro.props;
+const status = phase === 'live' ? '● live' : phase === 'upcoming' ? ticketUrl ? 'tickets' : 'announced' : phase === 'past' ? recordingUrl ? 'rec' : '—' : phase;
+const statusLink = phase === 'upcoming' ? ticketUrl : phase === 'past' ? recordingUrl : undefined;
+---
+<div class:list={['ledger-row', { hasbg: image, content: !phase, cancelled: phase === 'cancelled', postponed: phase === 'postponed' }]} data-photo-row={image ? '' : undefined}>
+  {image && <PhotoFill image={image} />}
+  <time class="date" datetime={date.toISOString()}>{formatLedgerDate(date)}</time>
+  <span class="time dim tag">{phase ? time ?? '—' : kind ?? 'post'}</span>
+  <span class="title"><a href={href} data-photo-link data-photo-text>{title}</a></span>
+  {phase && <span class="venue">{venue}</span>}
+  <span class:list={['status', 'tag', { red: phase === 'live', dim: phase === 'postponed' || phase === 'cancelled' || phase === 'past' && !recordingUrl || phase === 'upcoming' && !ticketUrl }]}>
+    {statusLink ? <a href={statusLink} aria-label={`${phase === 'past' ? 'Watch recording of' : 'Tickets for'} ${title}`}>[ {status} <span class="red">↗</span> ]</a> : status ? <>[ {status} ]</> : Object.entries(links).map(([label, link]) => <a href={link}>[ {label} <span class="red">↗</span> ]</a>)}
+  </span>
+  <span class="arrow" aria-hidden="true">{href.startsWith('http') ? <span class="red">↗</span> : '→'}</span>
+</div>
+<style>
+  .ledger-row { position: relative; display: grid; grid-template-columns: 110px 124px minmax(0, 1fr) 260px 150px 30px; column-gap: var(--s-4); padding: var(--s-3) 0; border-bottom: 1px solid var(--rule); align-items: center; }
+  .ledger-row.content { grid-template-columns: 110px 124px minmax(0, 1fr) 150px 30px; }
+  .date { font: var(--t-1)/1.4 'Departure Mono', monospace; }
+  .title { font-weight: 500; overflow-wrap: anywhere; }
+  .title a::after { content: ''; position: absolute; inset: 0; z-index: 1; }
+  .venue { color: rgba(255,255,255,.7); }
+  .status { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+  .status a { position: relative; z-index: 2; }
+  .arrow { text-align: right; font-family: 'Departure Mono', monospace; }
+  .postponed .date, .cancelled .date { text-decoration: line-through; color: var(--dim); }
+  .postponed .title { color: var(--dim); }
+  .cancelled .title { text-decoration: line-through; color: var(--dim); }
+  @container page (max-width: 1023px) {
+    .ledger-row, .ledger-row.content { grid-template-columns: 110px minmax(0, 1fr) 150px 24px; grid-template-areas: 'date title status arrow' 'date venue status arrow'; row-gap: 2px; }
+    .ledger-row:not(.content) .time { display: none; }
+    .content .time { grid-area: kind; }
+    .ledger-row.content { grid-template-areas: 'date title status arrow' 'date kind status arrow'; }
+    .date { grid-area: date; }
+    .title { grid-area: title; }
+    .venue { grid-area: venue; }
+    .status { grid-area: status; }
+    .arrow { grid-area: arrow; }
+  }
+  @container page (max-width: 639px) {
+    .ledger-row, .ledger-row.content { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'date status' 'title title' 'venue arrow'; }
+    .content .time { display: block; grid-area: venue; }
+  }
+</style>

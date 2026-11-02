@@ -1,0 +1,6 @@
+---
+interface Props { state?: string; href?: string; }
+const { state, href } = Astro.props;
+const active = state === 'live' || state === 'active' || state === 'featured';
+---
+{href ? <a href={href} class:list={['tag', { red: active }]}>[ <slot /> ]</a> : <span class:list={['tag', { red: active }]}>[ <slot /> ]</span>}

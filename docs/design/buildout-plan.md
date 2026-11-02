@@ -4,7 +4,7 @@ Audience: the engineer or coding agent implementing the front end. Goal: a visua
 
 ## 0. Context you need first
 
-- Monorepo, pnpm, Node ≥ 22.12. `apps/itsvari` serves itsvari.com, `apps/v4ri` serves V4RI (domain `v4ri.wav`). Both are Astro 7 with the Cloudflare adapter in server mode. Read `docs/architecture.md`.
+- Monorepo, pnpm 12.16.1, Node ^22.23.4, ^24.16.0 or ≥26.3.0. `apps/itsvari` serves itsvari.com, `apps/v4ri` serves V4RI (domain `v4ri.xyz`). Both are Astro 7 with the Cloudflare adapter in server mode. Read `docs/architecture.md`.
 - `packages/content` owns all Markdown content and Zod schemas (`src/schemas.ts`), the domain logic (`src/domain.ts`: event phases, canonical URLs, activity feed) and Astro loaders (`src/astro.ts`). `packages/ui` holds shared Astro components (`ActivityList.astro`, `EmptyState.astro`) and `formatDate` helpers.
 - Existing pages per app are in `apps/*/src/pages`; each app has a `SiteLayout.astro` and a `styles/global.css` that will be replaced.
 - Verification commands: `pnpm lint`, `pnpm check`, `pnpm test`, `pnpm build`. Keep all four green at the end of every phase.
@@ -135,4 +135,4 @@ Spec-strip ruler:
 ```
 
 ## 5. Out of scope
-Light mode, a CMS, client-side routing, animations beyond those listed, any new colour. Do not add analytics or third-party scripts.
+Light mode, a CMS, client-side routing, any new colour. Approved motion and interaction refinements are documented in `design-guide.md`. Do not add analytics or third-party scripts.

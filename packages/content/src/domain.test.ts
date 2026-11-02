@@ -16,6 +16,12 @@ const startsAt = new Date("2026-09-12T22:00:00+08:00");
 const endsAt = new Date("2026-09-13T02:00:00+08:00");
 
 describe("getEventPhase", () => {
+  it("never claims an event is live without a confirmed ending", () => {
+    expect(getEventPhase({ startsAt }, new Date(startsAt.getTime() - 1))).toBe("upcoming");
+    expect(getEventPhase({ startsAt }, startsAt)).toBe("past");
+    expect(getEventPhase({ startsAt }, new Date(startsAt.getTime() + 1))).toBe("past");
+  });
+
   it("derives the phase at exact event boundaries", () => {
     expect(getEventPhase({ endsAt, startsAt }, new Date(startsAt.getTime() - 1))).toBe(
       "upcoming",
@@ -29,6 +35,23 @@ describe("getEventPhase", () => {
 });
 
 describe("getEventDisplayPhase", () => {
+  it("handles an unknown ending without overriding editorial states", () => {
+    expect(getEventDisplayPhase({ eventStatus: "scheduled", startsAt }, startsAt)).toBe("past");
+    expect(getEventDisplayPhase({ eventStatus: "postponed", startsAt }, startsAt)).toBe("postponed");
+    expect(getEventDisplayPhase({ eventStatus: "cancelled", startsAt }, startsAt)).toBe("cancelled");
+  });
+
+  it.each([
+    ["2026-09-12T21:59:59+08:00", "upcoming"],
+    ["2026-09-12T22:00:00+08:00", "live"],
+    ["2026-09-13T02:00:00+08:00", "past"],
+  ])("derives scheduled display state at %s", (time, expectedPhase) => {
+    expect(getEventDisplayPhase(
+      { endsAt, eventStatus: "scheduled", startsAt },
+      new Date(time),
+    )).toBe(expectedPhase);
+  });
+
   it("lets editorial cancellation and postponement override time", () => {
     const now = new Date("2026-09-12T23:00:00+08:00");
 
@@ -121,7 +144,7 @@ describe("createActivityFeed", () => {
     );
 
     expect(feed.map(({ id }) => id)).toEqual(["music-note", "portfolio"]);
-    expect(feed[0]?.href).toBe("https://v4ri.wav/posts/music-note");
+    expect(feed[0]?.href).toBe("https://v4ri.xyz/posts/music-note");
   });
 
   it("keeps editorial event status in the activity item", () => {
@@ -164,14 +187,14 @@ describe("canonicalUrl", () => {
       "https://itsvari.com/blog/hello",
     );
     expect(canonicalUrl("post", "hello", "v4ri")).toBe(
-      "https://v4ri.wav/posts/hello",
+      "https://v4ri.xyz/posts/hello",
     );
   });
 
   it("covers every valid canonical kind/site pair", () => {
-    expect(canonicalUrl("event", "gig", "v4ri")).toBe("https://v4ri.wav/gigs/gig");
+    expect(canonicalUrl("event", "gig", "v4ri")).toBe("https://v4ri.xyz/gigs/gig");
     expect(canonicalUrl("release", "mix", "v4ri")).toBe(
-      "https://v4ri.wav/releases/mix",
+      "https://v4ri.xyz/releases/mix",
     );
     expect(canonicalUrl("project", "cloudark", "itsvari")).toBe(
       "https://itsvari.com/projects/cloudark",

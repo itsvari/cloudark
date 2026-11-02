@@ -1,24 +1,14 @@
 ---
 import { getProjects } from "@itsvari/content/astro";
-import { canonicalUrl } from "@itsvari/content";
+import Card from "@itsvari/ui/Card.astro";
 import EmptyState from "@itsvari/ui/EmptyState.astro";
-
 import SiteLayout from "../../layouts/SiteLayout.astro";
-
 const projects = await getProjects("itsvari");
 ---
-
-<SiteLayout description="Software and creative projects by Ashe." title="Projects">
-  <h1>Projects</h1>
-  {projects.length > 0 ? (
-    <ol class="entry-list">
-      {projects.map((project) => (
-        <li>
-          <p class="meta"><span>{project.data.status}</span>{project.data.featured && <span>Featured</span>}</p>
-          <h2><a href={canonicalUrl("project", project.id, project.data.canonicalSite)}>{project.data.title}</a></h2>
-          <p>{project.data.summary}</p>
-        </li>
-      ))}
-    </ol>
-  ) : <EmptyState message="No projects have been published yet." />}
+<SiteLayout description="Selected software, systems and small tools by Ashe." title="Projects">
+  <div class="page-meta tag">§ 01 — projects · {String(projects.length).padStart(2, "0")} entries</div>
+  <h1 class="page-title">Projects <em>&amp; experiments</em></h1>
+  <p class="page-lede">Things I've built, things I'm still working on, and a few useful detours.</p>
+  <div class="rule" aria-hidden="true"></div>
+  {projects.length > 0 ? <div class="cards">{projects.map(({ id, data }, index) => <Card href={`/projects/${id}`} title={data.title} summary={data.summary} status={data.status} featured={data.featured} image={data.image} tags={data.tags} links={data.links} number={index + 1} />)}</div> : <EmptyState />}
 </SiteLayout>

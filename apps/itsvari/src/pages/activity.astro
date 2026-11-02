@@ -1,0 +1,15 @@
+---
+import { getActivityFeed } from "@itsvari/content/astro";
+import LedgerTable from "@itsvari/ui/LedgerTable.astro";
+import LedgerRow from "@itsvari/ui/LedgerRow.astro";
+import EmptyState from "@itsvari/ui/EmptyState.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+const activity = await getActivityFeed("itsvari");
+---
+<SiteLayout description="A chronological ledger of projects, writing, releases and gigs." title="Activity">
+  <div class="page-meta tag">index — activity · {String(activity.length).padStart(2, "0")} entries</div>
+  <h1 class="page-title">Activity <em>across both halves</em></h1>
+  <p class="page-lede">Projects, writing and the music in between. Each entry links to its original home.</p>
+  <div class="rule" aria-hidden="true"></div>
+  {activity.length > 0 ? <LedgerTable variant="content" titleLabel="Entry" venueLabel="Site">{activity.map((item) => <LedgerRow href={item.canonicalSite === "itsvari" ? new URL(item.href).pathname : item.href} title={item.title} date={item.date} kind={item.kind} />)}</LedgerTable> : <EmptyState />}
+</SiteLayout>

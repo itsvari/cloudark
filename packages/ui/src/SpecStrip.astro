@@ -1,0 +1,25 @@
+---
+interface Props { items: { label: string; value: string; href?: string }[]; index?: number; total?: number; }
+const { items, index = 1, total = 5 } = Astro.props;
+---
+<div class="spec-strip">
+  {items.map((item) => <div><div class="lbl dim">{item.label}</div>{item.href ? <a href={item.href} class:list={{ red: item.href.startsWith('http') }}>{item.value}</a> : <b>{item.value}</b>}</div>)}
+  <div class="carousel-index"><span class="tag">{String(index).padStart(2,'0')} / {String(total).padStart(2,'0')}</span><span aria-hidden="true">{Array.from({length: total}, (_, position) => <i class:list={{ active: position + 1 === index }}></i>)}</span></div>
+  <slot />
+</div>
+<style>
+  .spec-strip { position: relative; padding-top: calc(var(--s-4) + 8px); display: grid; grid-template-columns: 1.3fr 1.2fr 1.2fr .7fr auto; gap: var(--s-5); }
+  .spec-strip::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 9px; background: linear-gradient(var(--rule),var(--rule)) top / 100% 1px no-repeat,repeating-linear-gradient(90deg,rgba(255,255,255,.6) 0 1px,transparent 1px 80px) top / 100% 9px no-repeat,repeating-linear-gradient(90deg,rgba(255,255,255,.28) 0 1px,transparent 1px 8px) top / 100% 5px no-repeat; }
+  .lbl { margin-bottom: var(--s-1); }
+  b, a { font-weight: 500; font-size: var(--t0); display: block; }
+  .carousel-index { text-align: right; align-self: end; }
+  .carousel-index .tag { display: block; margin-bottom: var(--s-2); }
+  i { display: inline-block; width: 34px; height: 2px; background: rgba(255,255,255,.3); margin-left: 6px; vertical-align: middle; }
+  i.active { background: var(--red); }
+  @container page (max-width: 1023px) {
+    .spec-strip { grid-template-columns: 1fr 1fr; }
+    .carousel-index { grid-column: 1/-1; text-align: left; display: flex; justify-content: space-between; align-items: center; }
+    .carousel-index .tag { margin: 0; }
+  }
+  @container page (max-width: 639px) { .spec-strip { grid-template-columns: 1fr; gap: var(--s-3); } }
+</style>

@@ -1,0 +1,53 @@
+{
+  "source": "URLs and event labels supplied by the site owner; titles verified with YouTube oEmbed.",
+  "recordings": [
+    {
+      "eventId": "blacklight-national-60th-tuff",
+      "label": "Tuff Club Takeover",
+      "date": "2025-08-02",
+      "videoId": "bVndYY1EUFI",
+      "title": "V4RI | BlackLight Tuff Takeover @ Tuff Club (2025-08-02)",
+      "authorName": "VARI",
+      "authorUrl": "https://www.youtube.com/@itsvariii",
+      "thumbnailUrl": "https://i.ytimg.com/vi/bVndYY1EUFI/hqdefault.jpg",
+      "url": "https://youtu.be/bVndYY1EUFI",
+      "releaseId": "tuff-club-takeover"
+    },
+    {
+      "eventId": "blacklight-sessions-02",
+      "label": "Sessions 02 @ Enclavebar",
+      "date": "2025-08-01",
+      "videoId": "z7Qj5SC5mhg",
+      "title": "V4RI | Blacklight Sessions 02 @ Enclavebar (2025-08-01)",
+      "authorName": "VARI",
+      "authorUrl": "https://www.youtube.com/@itsvariii",
+      "thumbnailUrl": "https://i.ytimg.com/vi/z7Qj5SC5mhg/hqdefault.jpg",
+      "url": "https://youtu.be/z7Qj5SC5mhg",
+      "releaseId": "sessions-02-enclavebar"
+    },
+    {
+      "eventId": "3niti-x-blacklight-000",
+      "label": "Blacklight x 3NiTi: 000",
+      "date": "2025-09-26",
+      "videoId": "pOGgN6mS4oE",
+      "title": "V4RI | 3NiTi x Blacklight: 000 @ Tuff Club (2025-09-26)",
+      "authorName": "VARI",
+      "authorUrl": "https://www.youtube.com/@itsvariii",
+      "thumbnailUrl": "https://i.ytimg.com/vi/pOGgN6mS4oE/hqdefault.jpg",
+      "url": "https://youtu.be/pOGgN6mS4oE",
+      "releaseId": "3niti-blacklight-000"
+    },
+    {
+      "eventId": "blacklight-rave-xvi-nosferavetu",
+      "label": "Blacklight 16",
+      "date": "2026-05-26",
+      "videoId": "rHTQarD-aKw",
+      "title": "V4RI | Blacklight 16: Nosferavetu @ Headquarters Upstairs (2026-05-26)",
+      "authorName": "VARI",
+      "authorUrl": "https://www.youtube.com/@itsvariii",
+      "thumbnailUrl": "https://i.ytimg.com/vi/rHTQarD-aKw/hqdefault.jpg",
+      "url": "https://youtu.be/rHTQarD-aKw",
+      "releaseId": "blacklight-16"
+    }
+  ]
+}

@@ -1,20 +1,28 @@
 ---
+import "@itsvari/ui/styles/tokens.css";
+import "@itsvari/ui/styles/base.css";
 import "../styles/global.css";
 import { siteOrigins } from "@itsvari/content";
+import RegistrationMarks from "@itsvari/ui/RegistrationMarks.astro";
+import FontFaces from "@itsvari/ui/FontFaces.astro";
+import CalibrationSwatches from "@itsvari/ui/CalibrationSwatches.astro";
 
 interface Props {
   canonical?: URL | string;
   description: string;
   title: string;
+  home?: boolean;
 }
 
-const { canonical: canonicalProp, description, title } = Astro.props;
-const pageTitle = title === "v4ri.wav" ? title : `${title} · v4ri.wav`;
+const { canonical: canonicalProp, description, title, home = false } = Astro.props;
+const pageTitle = title === "V4RI" ? title : `${title} · V4RI`;
 const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? siteOrigins.v4ri).toString();
+const navigation = [{ href: "/gigs", label: "gigs" }, { href: "/releases", label: "recordings" }, { href: "/posts", label: "posts" }, { href: "/about", label: "about" }, { href: "/socials", label: "socials" }, { href: "/contact", label: "contact" }];
+const isCurrent = (href: string): boolean => Astro.url.pathname.startsWith(href);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
@@ -23,31 +31,48 @@ const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? sit
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:site_name" content="v4ri.wav" />
+    <meta property="og:site_name" content="V4RI" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="alternate" type="application/rss+xml" title="v4ri.wav RSS" href="/rss.xml" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="alternate" type="application/rss+xml" title="V4RI RSS" href="/rss.xml" />
     <link rel="canonical" href={canonical} />
+    <FontFaces />
+    <slot name="head" />
     <title>{pageTitle}</title>
   </head>
-  <body>
-    <header>
-      <a class="brand" href="/">v4ri.wav</a>
-      <nav aria-label="Primary navigation">
-        <a href="/gigs">Gigs</a>
-        <a href="/releases">Releases</a>
-        <a href="/posts">Posts</a>
-        <a href="https://itsvari.com">itsvari.com</a>
-      </nav>
-    </header>
-    <main>
-      <slot />
-    </main>
-    <footer>
-      <span>© {new Date().getFullYear()} v4ri</span>
-      <a href="/rss.xml">RSS</a>
-    </footer>
+  <body class:list={["page", "music-page", { "is-home": home }]}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <RegistrationMarks position="top" />
+    <slot name="background" />
+    <div class:list={["music-shell", { "home-shell": home }]}>
+      <header class="v-top">
+        <a class="logo" href="/" aria-label="V4RI home">
+          <svg viewBox="0 0 1900 1900" aria-hidden="true"><path fill="currentColor" d="M1733.64,1700l-711.76-720.01h711.76L950,157.52,166.51,980h711.52L166.51,1700h84.87l668.63-677.59v618.75h59.99v-618.74s669.03,677.16,669.03,677.16l84.62.42ZM920,920l-613.18-.59L920,275.07v644.93ZM980,275.07l613.8,644.92h-613.8V275.07Z" /><polygon fill="#DC2626" points="166.51 199.95 233.84 199.95 950 1565.91 1666.45 199.95 1733.62 199.95 950 1700 166.51 199.95" /></svg>
+          <span>V4RI</span>
+        </a>
+        <span class="v-sub tag dim">[ dj / producer — singapore ]</span>
+        <nav class="v-nav tag" aria-label="Primary navigation">
+          {navigation.map(({ href, label }) => <a class:list={[{ on: isCurrent(href) }]} href={href} aria-current={isCurrent(href) ? "page" : undefined}>[ {label} ]</a>)}
+          <a class="dim" href="https://itsvari.com">itsvari.com <span class="red">↗</span></a>
+        </nav>
+        <details class="v-menu tag">
+          <summary>[ menu ]</summary>
+          <nav aria-label="Mobile navigation">
+            {navigation.map(({ href, label }) => <a class:list={[{ on: isCurrent(href) }]} href={href} aria-current={isCurrent(href) ? "page" : undefined}>[ {label} ]</a>)}
+            <a href="https://itsvari.com">itsvari.com <span class="red">↗</span></a>
+          </nav>
+        </details>
+      </header>
+      <main id="main" tabindex="-1"><slot /></main>
+      {!home && <footer class="v-foot tag">
+        <span class="footer-stamp"><CalibrationSwatches /> © {new Date().getFullYear()} V4RI · rev. 2026.11.02</span>
+        <span class="footer-links"><a href="/rss.xml">[ rss ]</a><a href="/sitemap.xml">[ sitemap ]</a><a href="/about">[ about ]</a><a href="/socials">[ socials ]</a><a href="/contact">[ contact ]</a><a href="https://itsvari.com">[ itsvari.com <span class="red">↗</span> ]</a></span>
+      </footer>}
+    </div>
+    <RegistrationMarks position="bottom" />
   </body>
 </html>

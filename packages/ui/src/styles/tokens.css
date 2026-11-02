@@ -1,0 +1,49 @@
+:root, .page {
+  color-scheme: dark;
+  --bg: #000000;
+  --fg: #FFFFFF;
+  --red: #DC2626;
+  --dim: rgba(255,255,255,.55);
+  --rule: rgba(255,255,255,.22);
+  --dot: rgba(255,255,255,.4);
+  --s-1: .25rem;
+  --s-2: .5rem;
+  --s-3: .75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --s-10: 8rem;
+  --content-max: 1280px;
+  --wide-max: 1536px;
+  --measure: 65ch;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  --fl: calc((100vw - 390px) / 1050);
+  --t-2: 10.5px;
+  --t-1: clamp(12.5px, calc(12.5px + .3 * var(--fl)), 12.8px);
+  --t0: clamp(15px, calc(15px + 1 * var(--fl)), 16px);
+  --t1: clamp(18px, calc(18px + 2 * var(--fl)), 20px);
+  --t2: clamp(21.6px, calc(21.6px + 3.4 * var(--fl)), 25px);
+  --t3: clamp(25.9px, calc(25.9px + 5.35 * var(--fl)), 31.25px);
+  --t4: clamp(31.1px, calc(31.1px + 8 * var(--fl)), 39.1px);
+  --t5: clamp(37.3px, calc(37.3px + 11.5 * var(--fl)), 48.8px);
+  --t6: clamp(44.8px, calc(44.8px + 16.2 * var(--fl)), 61px);
+  --t7: clamp(53.7px, calc(53.7px + 22.6 * var(--fl)), 76.3px);
+  --t8: clamp(64.5px, calc(64.5px + 30.9 * var(--fl)), 95.4px);
+  --t9: clamp(77.4px, calc(77.4px + 41.8 * var(--fl)), 119.2px);
+  --t10: clamp(92.9px, calc(92.9px + 56.1 * var(--fl)), 149px);
+  --gutter: clamp(16px, calc(16px + 32 * var(--fl)), 48px);
+  --section: clamp(32px, calc(32px + 32 * var(--fl)), 64px);
+  --edge: clamp(10px, calc(10px + 6 * var(--fl)), 16px);
+  --safe: clamp(44px, calc(44px + 20 * var(--fl)), 64px);
+}
+
+.page {
+  --fl: calc((100cqi - 390px) / 1050);
+}

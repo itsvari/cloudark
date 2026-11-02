@@ -1,7 +1,7 @@
 import { getEvents, getPosts, getReleases } from "@itsvari/content/astro";
 import { canonicalUrl, sitemapXml, siteOrigins } from "@itsvari/content";
 
-const staticPaths = ["/", "/gigs", "/posts", "/releases"];
+const staticPaths = ["/", "/gigs", "/posts", "/releases", "/about", "/socials", "/contact"];
 
 export async function GET() {
   const [posts, events, releases] = await Promise.all([

@@ -1,6 +1,6 @@
 export const siteOrigins = {
   itsvari: "https://itsvari.com",
-  v4ri: "https://v4ri.wav",
+  v4ri: "https://v4ri.xyz",
 } as const;
 
 export type Site = keyof typeof siteOrigins;
@@ -16,7 +16,7 @@ export interface PublicationData {
 }
 
 export interface EventTiming {
-  endsAt: Date;
+  endsAt?: Date;
   startsAt: Date;
 }
 
@@ -68,7 +68,8 @@ export function getEventPhase(
   now = new Date(),
 ): EventPhase {
   if (now < startsAt) return "upcoming";
-  if (now < endsAt) return "live";
+  // an unknown ending cannot substantiate a live-now claim.
+  if (endsAt && now < endsAt) return "live";
   return "past";
 }
 

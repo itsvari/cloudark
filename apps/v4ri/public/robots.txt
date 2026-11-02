@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://v4ri.wav/sitemap.xml
+Sitemap: https://v4ri.xyz/sitemap.xml

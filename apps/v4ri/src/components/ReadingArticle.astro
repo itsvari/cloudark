@@ -1,0 +1,38 @@
+---
+import TableOfContents from "@itsvari/ui/TableOfContents.astro";
+import { numberArticleHeadings } from "@itsvari/ui";
+
+interface Props {
+  title: string;
+  summary: string;
+  showSummary?: boolean;
+  headings: { depth: number; slug: string; text: string }[];
+}
+const { title, summary, showSummary = true, headings } = Astro.props;
+const contents = numberArticleHeadings(headings);
+---
+<article class="reading-article" data-reading-article>
+  <header class="reading-header"><div class="reading-meta tag"><slot name="meta" /></div><slot name="actions" /><h1>{title}</h1>{showSummary && <p class="lede">{summary}</p>}<div class="page-rule" aria-hidden="true"></div><slot name="details" /></header>
+  <div class:list={["reading-layout", { "without-contents": contents.length === 0 }]}>
+    <div class="prose numbered-prose"><slot /></div>
+    <TableOfContents headings={headings} />
+  </div>
+</article>
+<style>
+  .reading-article { --reading-rail: 220px; --reading-gap: var(--s-8); width: 100%; max-width: min(1280px, calc(65ch + var(--reading-rail) + var(--reading-gap))); margin-inline: auto; min-width: 0; }
+  .reading-header { max-width: none; margin-bottom: var(--s-6); }
+  .reading-header h1 { max-width: 22ch; overflow-wrap: anywhere; }
+  .reading-header .lede { max-width: 65ch; }
+  .reading-layout { grid-template-columns: minmax(0, 1fr) var(--reading-rail); gap: var(--reading-gap); }
+  .without-contents { grid-template-columns: minmax(0, 65ch); }
+  .numbered-prose { counter-reset: article-section; }
+  .numbered-prose :global(h2) { counter-increment: article-section; counter-reset: article-subsection; scroll-margin-top: var(--s-9); }
+  .numbered-prose :global(h3) { counter-increment: article-subsection; scroll-margin-top: var(--s-9); }
+  .numbered-prose :global(h2)::before, .numbered-prose :global(h3)::before { display: block; margin-bottom: var(--s-2); color: var(--dim); font: var(--t-1)/1.4 "Departure Mono", monospace; letter-spacing: .04em; }
+  .numbered-prose :global(h2)::before { content: "§ " counter(article-section, decimal-leading-zero); }
+  .numbered-prose :global(h3)::before { content: "§ " counter(article-section, decimal-leading-zero) "." counter(article-subsection); }
+  @container page (max-width: 1023px) {
+    .reading-article { max-width: 65ch; }
+    .reading-layout { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>
