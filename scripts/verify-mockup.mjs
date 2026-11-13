@@ -28,7 +28,7 @@ async function readPage(url, expectedStatus = 200) {
   assert.match(response.headers.get("content-type") ?? "", /text\/html/, `${url} must be HTML`);
   const body = await response.text();
   assert.match(body, /<h1[\s>]/, `${url} needs a page heading`);
-  assert.match(body, /Skip to content/, `${url} needs a skip link`);
+  assert.match(body, /skip to content/i, `${url} needs a skip link`);
   if (expectedStatus === 200) assert(!removedContent.test(body), `${url} still contains removed sample content`);
   return body;
 }

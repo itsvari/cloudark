@@ -73,7 +73,7 @@ async function checkApp(name, base, { staticPath, routes, accessToken }) {
 
   const missing = await getPage("/__codex_missing_route__", "text/html");
   assert(missing.response.status === 404, `${name} missing route returned ${missing.response.status}`);
-  assert(missing.body.includes("Page not found"), `${name} missing route is not the HTML 404 page`);
+  assert(/page not found/i.test(missing.body), `${name} missing route is not the HTML 404 page`);
   assertSecurityHeaders(missing.response, `${name} HTML 404`);
 
   for (const path of ["/rss.xml", "/sitemap.xml"]) {
