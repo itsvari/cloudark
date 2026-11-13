@@ -8,7 +8,7 @@ export async function GET(context: APIContext) {
 
   const response = await rss({
     customData: "<language>en-SG</language>",
-    description: "Writing and notes from Ashe.",
+    description: "writing and notes from Ashe.",
     items: posts.map((post) => ({
       description: post.data.summary,
       link: canonicalUrl("post", post.id, post.data.canonicalSite),
