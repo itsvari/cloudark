@@ -1,6 +1,6 @@
 ---
 title: NUS AI Society website
-summary: An Astro publishing site for society events, writing and member profiles, with a separate content repository and deployments to Cloudflare Workers.
+summary: an Astro publishing site for society events, writing and member profiles, with a separate content repository and deployments to Cloudflare Workers.
 publishedAt: 2026-11-02T08:00:00+08:00
 canonicalSite: itsvari
 syndicateTo: []
@@ -12,18 +12,18 @@ links:
 featured: false
 ---
 
-## A home for the society
+## a home for the society
 
-As Publicity Lead for the NUS School of Computing AI Society, I built a responsive website to bring events, blog posts and member profiles into one place. The site uses Astro, React and Tailwind CSS, hosted on Cloudflare Workers.
+as publicity lead for the NUS School of Computing AI Society, i built a responsive website to bring events, blog posts and member profiles into one place. the site uses Astro, React and Tailwind CSS, hosted on Cloudflare Workers.
 
-For a student society without a DevOps budget, deployment needs to leave room for the actual publishing work. Workers offered global deployment and a developer experience that fit that constraint.
+for a student society without a DevOps budget, deployment needs to leave room for the actual publishing work. Workers offered global deployment and a developer experience that fit that constraint.
 
-## Content to deployment
+## content to deployment
 
-I set up a GitHub Actions pipeline to build, deploy and synchronise website updates from a dedicated GitHub content repository.
+i set up a GitHub Actions pipeline to build, deploy and synchronise website updates from a dedicated GitHub content repository.
 
-The publishing workflow is part of the product. A society website only stays useful if the people running events and writing announcements can keep it current.
+the publishing workflow is part of the product. a society website only stays useful if the people running events and writing announcements can keep it current.
 
-## Identity across channels
+## identity across channels
 
-The website was one part of a wider brand identity redesign. I worked on typography, layouts, colour and voice, with the system carried through social channels and promotional materials as well as the web.
+the website was one part of a wider brand identity redesign. i worked on typography, layouts, colour and voice, with the system carried through social channels and promotional materials as well as the web.

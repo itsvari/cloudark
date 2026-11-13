@@ -1,9 +1,9 @@
 ---
-title: Home
-summary: Ashe Andromeda Low. Computer Science at NUS, practical AI tools, web systems and music.
+title: home
+summary: Ashe Andromeda Low. computer science at NUS, practical AI tools, web systems and music.
 updatedAt: 2026-11-02
 tagline: writes code, builds useful tools, DJs
-intro: Computer Science student at NUS, based in Singapore. I build AI tools and web systems that help people do their best work, with a focus on security, software engineering and practical usefulness.
+intro: computer science student at NUS, based in Singapore. i build AI tools and web systems that help people do their best work, with a focus on security, software engineering and practical usefulness.
 links:
   - label: more about me
     href: /about
@@ -17,11 +17,11 @@ now:
     href: /projects/cloudark
     state: active
   - label: studying
-    value: Computer Science at the National University of Singapore
+    value: computer science at the National University of Singapore
     href: /cv#education
     state: NUS
   - label: recent
-    value: A summer building agentic AI tools at Cloudflare
+    value: a summer building agentic AI tools at Cloudflare
     href: /projects/agentic-research
     state: '2026'
 images:
