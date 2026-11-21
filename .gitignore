@@ -62,3 +62,7 @@ worker-configuration.d.ts
 /docs/design/qa/**/*.avif
 /docs/design/qa/**/*.gif
 /output/
+
+# local personal writing style guide for agents (keep outside the public repo)
+/docs/writing-style.md
+

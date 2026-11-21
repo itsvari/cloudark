@@ -2,14 +2,14 @@
 title: CV
 summary: Ashe Andromeda Low. Computer Science at NUS, software engineering, practical AI and technical communication.
 draft: false
-updatedAt: 2026-11-03
+updatedAt: 2026-11-22
 ---
 
 [contact@itsvari.com](mailto:contact@itsvari.com) · [linkedin.com/in/itsvari](https://linkedin.com/in/itsvari) · [itsvari.com](https://itsvari.com)
 
 ## Profile
 
-I'm Ashe Andromeda Low, based in Singapore. I build AI tools and web systems with a focus on software engineering, security and practical usefulness.
+I'm Ashe Andromeda Low, based in Singapore. I'm a final-year CS student at the National University of Singapore, and I build tools and web systems with a focus on software engineering, security, and practical usefulness.
 
 ## Education
 
@@ -20,6 +20,14 @@ I'm Ashe Andromeda Low, based in Singapore. I build AI tools and web systems wit
 Focus areas: Computer Security and Software Engineering.
 
 ## Work experience
+
+### National University of Singapore
+
+**Teaching Assistant, CS3227 (Agentic Software Engineering)** · August 2026 to present · Singapore
+
+- Graded four coding mini-projects and provided online consultations for an assigned tutorial group.
+- Designed and iterated on a multi-agent grading workflow across multiple model families, with independent evidence gathering, arbitration, sanity review and human-in-the-loop sign-off.
+- Generalised the internal agentic grading pipeline into [Markwire](/projects/markwire), an open-source, cross-platform CLI and offline HTML review suite.
 
 ### Cloudflare
 
@@ -62,6 +70,12 @@ Focus areas: Computer Security and Software Engineering.
 - Built a JavaScript Telegram bot to automate internal equipment loans.
 
 ## Projects
+
+### Markwire
+
+A cross-platform Python CLI and offline HTML review suite for multi-agent coding assignment grading, evolved from my TA work on CS3227 at NUS. Built as a human-in-the-loop accelerant with pinned submission snapshots, independent multi-model passes, arbitration, sibling revisions, detached remote checks and structured remediation packets.
+
+[Read about Markwire](/projects/markwire)
 
 ### Ariadne
 

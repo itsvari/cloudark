@@ -1,7 +1,7 @@
 ---
 title: home
 summary: Ashe Andromeda Low. computer science at NUS, practical AI tools, web systems and music.
-updatedAt: 2026-11-02
+updatedAt: 2026-11-22
 tagline: writes code, builds useful tools, DJs
 intro: computer science student at NUS, based in Singapore. i build AI tools and web systems that help people do their best work, with a focus on security, software engineering and practical usefulness.
 links:
@@ -12,6 +12,10 @@ links:
   - label: contact
     href: /contact
 now:
+  - label: building
+    value: Markwire, a multi-agent grading workflow for coding assignments
+    href: /projects/markwire
+    state: active
   - label: building
     value: Cloudark, one content model for two independent sites
     href: /projects/cloudark
