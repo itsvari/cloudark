@@ -28,7 +28,6 @@ minimumReleaseAgeExclude:
   - '@vitest/coverage-v8@5.1.0'
   - '@vitest/mocker@5.1.0'
   - '@vitest/spy@5.1.0'
-  - 'astro@7.4.5'
   - 'miniflare@5.20261101.0-beta'
   - 'miniflare@5.20261102.0-beta'
   - 'minimatch@11.0.4'
