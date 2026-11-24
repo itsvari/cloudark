@@ -9,7 +9,7 @@ timeNote: "till late"
 timeKind: "event"
 venue: {"name":"Tipsy Unicorn","city":"Singapore","country":"SG"}
 genres: ["commercial pop","EDM"]
-image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/next-beats-on-the-rise.jpg","alt":"Next Beats: On the Rise poster with V4RI in the lineup"}
+image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/next-beats-on-the-rise.jpg","alt":"Next Beats: On the Rise poster with V4RI in the lineup","width":640,"height":800}
 sourceUrl: "https://t.me/synqnews/107"
 lineup: ["Yuhong", "David", "Alex", "Hector", "Khai", "Hoonleng", "Dawn", "Claudia", "Nic", "Ray", "Shawn", "Caleb", "Ashe", "Lucas"]
 ticketUrl: "https://forms.gle/1JTXL8BAQDVeQAJc8"

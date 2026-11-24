@@ -9,7 +9,7 @@ endsAt: "2025-09-27T03:30:00+08:00"
 timeKind: "event"
 timeNote: "The event calendar lists 20:30; the organiser description lists 21:00."
 venue: {"name":"TUFF CLUB @ Oxley Tower","address":"138 Robinson Road, #19-01","city":"Singapore","country":"SG"}
-image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/3niti-x-blacklight-000.png","alt":"3NiTi x Blacklight: 000 event poster"}
+image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/3niti-x-blacklight-000.png","alt":"3NiTi x Blacklight: 000 event poster","width":920,"height":450}
 sourceUrl: "https://blacklight3niti.peatix.com/view"
 recordingUrl: "https://youtu.be/pOGgN6mS4oE"
 lineup: ["rEmPiT g0dDe$$ (MY)", "Suhsi (MY)", "Metamoksha", "Falling Islands", "V4RI", "VYLT"]

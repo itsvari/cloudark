@@ -8,7 +8,7 @@ startsAt: "2026-08-21T22:30:00+08:00"
 endsAt: "2026-08-22T03:00:00+08:00"
 timeKind: "event"
 venue: {"name":"TUFF CLUB @ Oxley Tower","address":"138 Robinson Rd, #19-01, Singapore","city":"Singapore","country":"SG"}
-image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-sessions-03.jpeg","alt":"BlackLight Tribe - Underground Music Battle Royale event poster"}
+image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-sessions-03.jpeg","alt":"BlackLight Tribe - Underground Music Battle Royale event poster","width":1840,"height":900}
 sourceUrl: "https://blacklightsessions3.peatix.com/view"
 lineup: ["Shao", "Falling Islands", "Beansclub", "Xaetherx", "V4RI"]
 ticketUrl: "https://blacklightsessions3.peatix.com/view"

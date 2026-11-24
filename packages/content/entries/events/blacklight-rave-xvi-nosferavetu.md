@@ -8,7 +8,7 @@ startsAt: "2026-05-26T22:30:00+08:00"
 endsAt: "2026-05-27T03:00:00+08:00"
 timeKind: "event"
 venue: {"name":"Headquarters","address":"66A Boat Quay, Singapore","city":"Singapore","country":"SG"}
-image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-rave-xvi-nosferavetu.png","alt":"BlackLight Rave XVI: NOSFERAVETU event poster"}
+image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-rave-xvi-nosferavetu.png","alt":"BlackLight Rave XVI: NOSFERAVETU event poster","width":920,"height":450}
 sourceUrl: "https://peatix.com/event/4994526?lang=en-sg"
 recordingUrl: "https://youtu.be/rHTQarD-aKw"
 lineup: ["V4RI", "FALLING ISLANDS", "T.HIRST", "D-LINEZ"]

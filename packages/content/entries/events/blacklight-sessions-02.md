@@ -8,7 +8,7 @@ startsAt: "2025-08-01T19:30:00+08:00"
 timeNote: "till late"
 timeKind: "event"
 venue: {"name":"Enclavebar","address":"55A Neil Road, #02-00, Singapore 088892","city":"Singapore","country":"SG"}
-image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-sessions-02.jpg","alt":"Blacklight Sessions 02 event poster, 1 August 2025 at Enclavebar"}
+image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-sessions-02.jpg","alt":"Blacklight Sessions 02 event poster, 1 August 2025 at Enclavebar","width":1280,"height":1280}
 recordingUrl: "https://youtu.be/z7Qj5SC5mhg"
 lineup: ["Falling Islands", "V4RI"]
 ---

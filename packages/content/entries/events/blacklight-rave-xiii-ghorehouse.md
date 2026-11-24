@@ -8,7 +8,7 @@ startsAt: "2024-10-19T19:00:00+08:00"
 endsAt: "2024-10-20T03:00:00+08:00"
 timeKind: "event"
 venue: {"name":"Blu Jaz, Bali Lane","address":"11 Bali Lane, Singapore","city":"Singapore","country":"SG"}
-image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-rave-xiii-ghorehouse.jpeg","alt":"BlackLight Rave XIII: GHOREHOUSE event poster"}
+image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-rave-xiii-ghorehouse.jpeg","alt":"BlackLight Rave XIII: GHOREHOUSE event poster","width":920,"height":450}
 sourceUrl: "https://peatix.com/event/4134200"
 lineup: ["THREE EAR RABBIT", "vylt", "VARI", "T.HIRST", "D-LINEZ", "FALLING ISLANDS", "Xervixia"]
 ticketUrl: "https://peatix.com/event/4134200"

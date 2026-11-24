@@ -26,6 +26,11 @@ export const imageSchema = z.object({
   }, { message: "Use a root-relative path or an HTTPS image URL" }),
   alt: z.string().min(1),
   exif: z.string().min(1).optional(),
+  // intrinsic pixel size. an image shown at its own proportions needs both, so its box is reserved before it loads.
+  width: z.number().int().positive().optional(),
+  height: z.number().int().positive().optional(),
+}).refine((image) => (image.width === undefined) === (image.height === undefined), {
+  message: "Give an image both width and height, or neither",
 });
 
 export type ContentImage = z.infer<typeof imageSchema>;

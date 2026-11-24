@@ -8,7 +8,7 @@ startsAt: "2025-01-11T20:00:00+08:00"
 endsAt: "2025-01-12T03:30:00+08:00"
 timeKind: "event"
 venue: {"name":"Rave Singapore","address":"1 Selegie Road, GR, ID, B1-05/06","city":"Singapore","country":"SG"}
-image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-rave-xiv-cyb3r-3d3n.jpeg","alt":"BlackLight Rave XIV: CYB3R 3D3N event poster"}
+image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-rave-xiv-cyb3r-3d3n.jpeg","alt":"BlackLight Rave XIV: CYB3R 3D3N event poster","width":920,"height":450}
 sourceUrl: "https://blacklighttribe14.peatix.com"
 lineup: ["RORURU", "WE HATE DEEJAYS", "N5FR2", "V4RI", "WAT3RFL0W3R (LATVIA)", "Falling Islands", "goneMUNE"]
 ticketUrl: "https://blacklighttribe14.peatix.com"

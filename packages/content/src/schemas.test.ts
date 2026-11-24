@@ -124,6 +124,14 @@ describe("content photography", () => {
     });
   });
 
+  it("accepts an intrinsic size only when both dimensions are given", () => {
+    expect(imageSchema.parse({ ...image, width: 920, height: 450 })).toEqual({ ...image, width: 920, height: 450 });
+    expect(imageSchema.safeParse({ ...image, width: 920 }).success).toBe(false);
+    expect(imageSchema.safeParse({ ...image, height: 450 }).success).toBe(false);
+    expect(imageSchema.safeParse({ ...image, width: 0, height: 450 }).success).toBe(false);
+    expect(imageSchema.safeParse({ ...image, width: 920.5, height: 450 }).success).toBe(false);
+  });
+
   it("rejects empty alt text and unsafe or ambiguous image sources", () => {
     expect(imageSchema.safeParse({ ...image, alt: "" }).success).toBe(false);
     for (const src of ["", "photos/01.jpg", "//example.com/image.jpg", "javascript:alert(1)"]) {

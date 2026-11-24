@@ -9,7 +9,7 @@ endsAt: "2026-11-01T03:00:00+08:00"
 timeKind: "event"
 venue: {"name":"SCAPE GROUND THEATRE, Level 2","address":"2 Orchard Link, Singapore 237978","city":"Singapore","country":"SG"}
 genres: ["dubstep","trap","drum and bass"]
-image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/abyss-sonic-halloween-voyage.jpg","alt":"ABYSS: Sonic Halloween Voyage event poster"}
+image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/abyss-sonic-halloween-voyage.jpg","alt":"ABYSS: Sonic Halloween Voyage event poster","width":2250,"height":2250}
 sourceUrl: "https://clubpass.rewardland.sg/events/htug7ri49brg8ui9fsuneuv1/"
 lineup: ["LENERD", "FALLING ISLANDS", "SAYVERE", "V4RI"]
 ticketUrl: "https://clubpass.rewardland.sg/events/htug7ri49brg8ui9fsuneuv1/"

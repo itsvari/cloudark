@@ -8,7 +8,7 @@ startsAt: "2025-08-02T22:00:00+08:00"
 endsAt: "2025-08-03T04:00:00+08:00"
 timeKind: "event"
 venue: {"name":"TUFF CLUB @ Oxley Tower","address":"138 Robinson Road, #19-01","city":"Singapore","country":"SG"}
-image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-national-60th-tuff.png","alt":"Happy National 60th Party at Tuff by BlackLight Tribe event poster"}
+image: {"src":"https://media.itsvari.com/cloudark/v1/gigs/blacklight-national-60th-tuff.png","alt":"Happy National 60th Party at Tuff by BlackLight Tribe event poster","width":920,"height":450}
 sourceUrl: "https://blacklighttuff.peatix.com/view"
 recordingUrl: "https://youtu.be/bVndYY1EUFI"
 lineup: ["D-LINEZ", "V4RI", "COSMO CARBON", "FALLING ISLANDS"]
