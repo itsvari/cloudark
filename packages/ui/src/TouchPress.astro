@@ -1,0 +1,23 @@
+<script>
+  // browsers disagree on when a touch counts as :active (some never apply it without a touch listener), so a held touch
+  // marks the pressable under it and motion.css treats the mark exactly like :active.
+  // the browser cancels the pointer when a touch turns into a scroll, which clears the mark.
+  let pressedElement: Element | undefined;
+
+  function clearPressed(): void {
+    pressedElement?.removeAttribute("data-pressed");
+    pressedElement = undefined;
+  }
+
+  document.addEventListener("pointerdown", (event) => {
+    if (event.pointerType !== "touch" || !(event.target instanceof Element)) return;
+    clearPressed();
+    pressedElement = event.target.closest("a, button, summary") ?? undefined;
+    pressedElement?.setAttribute("data-pressed", "");
+  }, { passive: true });
+  document.addEventListener("pointerup", clearPressed, { passive: true });
+  document.addEventListener("pointercancel", clearPressed, { passive: true });
+  window.addEventListener("pagehide", clearPressed);
+  // tells the stylesheet this report is running, so the browser's own tap flash can step aside.
+  document.documentElement.setAttribute("data-touch-press", "");
+</script>

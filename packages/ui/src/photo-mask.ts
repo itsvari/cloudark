@@ -1,3 +1,5 @@
+import { bayerPattern, bayerSideLength, ditherCellSizePx as pixelSizePx, ditherLevelCount as bayerLevelCount } from "./dither-cells";
+
 export interface PhotoMaskGeometry {
   readonly widthPx: number;
   readonly fadeStartPx: number;
@@ -11,15 +13,6 @@ interface PhotoMaskMeasurements {
   readonly textEndPx?: number;
 }
 
-const pixelSizePx = 2;
-const bayerPattern = [
-  [0, 8, 2, 10],
-  [12, 4, 14, 6],
-  [3, 11, 1, 9],
-  [15, 7, 13, 5],
-];
-const bayerSideLength = bayerPattern.length;
-const bayerLevelCount = bayerSideLength * bayerSideLength;
 const textClearancePx = 16;
 const minimumFadeStartRatio = .12;
 const maximumFadeStartRatio = .6;

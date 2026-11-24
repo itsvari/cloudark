@@ -78,8 +78,9 @@ try {
         const x = box.x + Math.min(box.width / 2, 80), y = box.y + box.height / 2;
         await touch(session, 'touchStart', x, y);
         await page.waitForTimeout(80);
-        const pressed = await link.evaluate(element => ({ pressed: element.closest('[data-photo-row]').hasAttribute('data-photo-pressed'), filter: getComputedStyle(element.closest('[data-photo-row]').querySelector('.photo-fill')).filter }));
-        assert.deepEqual(pressed, { pressed: true, filter: 'none' });
+        // a pressed row shows its photograph in colour at once: the greyscale veil over it has no cells left.
+        const pressed = await link.evaluate(element => ({ pressed: element.closest('[data-photo-row]').hasAttribute('data-photo-pressed'), veilLevel: getComputedStyle(element.closest('[data-photo-row]').querySelector('.photo-fill'), '::before').getPropertyValue('--dither-level').trim() }));
+        assert.deepEqual(pressed, { pressed: true, veilLevel: '0' });
         if (gesture === 'tap') {
           const navigation = page.waitForURL(href);
           await touch(session, 'touchEnd', x, y);

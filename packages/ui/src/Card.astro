@@ -1,21 +1,50 @@
 ---
 import type { ContentImage } from '@itsvari/content';
 import PhotoFill from './PhotoFill.astro';
+import { viewTransitionStyle } from './view-transition-names';
 interface Props { href: string; title: string; summary: string; status?: string; featured?: boolean; image?: ContentImage; tags?: string[]; links?: Record<string,string>; number?: number; }
 const { href, title, summary, status = 'active', featured = false, image, tags = [], links = {}, number = 1 } = Astro.props;
 ---
 <article class:list={['card', { featured, hasbg: image }]} data-photo-row={image ? '' : undefined}>
   {image && <PhotoFill image={image} />}
   <div class="meta tag"><span>[ <span class:list={{ red: status === 'active' }}>{status}</span>{featured && ' · featured'} ]</span><span class="lbl dim">fig. {String(number).padStart(3, '0')}</span></div>
-  <h3><a href={href} data-photo-text>{title}</a></h3><p data-photo-text>{summary}</p>
+  <h3 style={viewTransitionStyle('card-title', href)}><a href={href} data-photo-text>{title}</a></h3><p data-photo-text>{summary}</p>
   <div class="bottom tag"><span>{tags.join(' · ')}</span><span class="links">{Object.entries(links).map(([label, link]) => <a href={link}>{label} <span class="red">↗</span></a>)}</span></div>
 </article>
 <style>
-  .card { position: relative; border: 1px solid var(--rule); padding: var(--s-4) var(--s-5); min-height: 150px; display: flex; flex-direction: column; }
+  .card { position: relative; border: 1px solid var(--rule); padding: var(--s-4) var(--s-5); min-height: 150px; display: flex; flex-direction: column; background-image: var(--press-tone); background-size: 8px 8px; translate: 0 calc(var(--pressed) * 1px); transition: border-color var(--motion-hover-ms) linear, translate var(--motion-press-ms) linear; }
+  /* the frame brightens with the pointer; a featured card is already at full white. */
+  .card:not(.featured) { border-color: color-mix(in srgb, var(--fg) calc(var(--active) * 100%), var(--rule)); }
   .featured { border-color: #fff; }
+  /* crop marks register on the corners. they sit in a fixed box and slide along their own axes, so nothing in the layout moves. */
+  .card::after {
+    --mark-length: 6px;
+    --mark-travel: 4px;
+    --mark-edge: 13px;
+    --mark-offset: calc(var(--active) * var(--mark-travel));
+    content: '';
+    position: absolute;
+    inset: calc(-1px - var(--mark-edge));
+    pointer-events: none;
+    opacity: var(--active);
+    background-image: linear-gradient(var(--fg), var(--fg)), linear-gradient(var(--fg), var(--fg)), linear-gradient(var(--fg), var(--fg)), linear-gradient(var(--fg), var(--fg)), linear-gradient(var(--fg), var(--fg)), linear-gradient(var(--fg), var(--fg)), linear-gradient(var(--fg), var(--fg)), linear-gradient(var(--fg), var(--fg));
+    background-repeat: no-repeat;
+    background-size: var(--mark-length) 1px, 1px var(--mark-length), var(--mark-length) 1px, 1px var(--mark-length), var(--mark-length) 1px, 1px var(--mark-length), var(--mark-length) 1px, 1px var(--mark-length);
+    background-position:
+      var(--mark-offset) var(--mark-edge),
+      var(--mark-edge) var(--mark-offset),
+      calc(100% - var(--mark-offset)) var(--mark-edge),
+      calc(100% - var(--mark-edge)) var(--mark-offset),
+      var(--mark-offset) calc(100% - var(--mark-edge)),
+      var(--mark-edge) calc(100% - var(--mark-offset)),
+      calc(100% - var(--mark-offset)) calc(100% - var(--mark-edge)),
+      calc(100% - var(--mark-edge)) calc(100% - var(--mark-offset));
+    transition: background-position var(--motion-select-ms) var(--motion-ease), opacity var(--motion-hover-ms) linear;
+  }
   .featured::before { content: ''; position: absolute; left: -1px; top: -1px; width: 3px; height: 40px; background: var(--red); }
   .meta { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-3); margin-bottom: var(--s-3); color: var(--dim); }
-  h3 { font: 400 var(--t2)/1 'Redaction', Georgia, serif; margin-bottom: var(--s-2); }
+  /* the title hugs its text so it can scale into the page heading as one shape. */
+  h3 { font: 400 var(--t2)/1 'Redaction', Georgia, serif; margin-bottom: var(--s-2); width: fit-content; max-width: 100%; }
   h3 a::after { content: ''; position: absolute; inset: 0; z-index: 1; }
   p { color: rgba(255,255,255,.72); font-size: var(--t0); line-height: 1.5; margin: 0 0 var(--s-3); }
   .bottom { display: flex; justify-content: space-between; gap: var(--s-3); color: var(--dim); flex-wrap: wrap; margin-top: auto; }

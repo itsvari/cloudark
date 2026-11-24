@@ -1,12 +1,15 @@
 ---
 import "@itsvari/ui/styles/tokens.css";
 import "@itsvari/ui/styles/base.css";
+import "@itsvari/ui/styles/dither.css";
+import "@itsvari/ui/styles/motion.css";
 import "../styles/global.css";
 import { siteOrigins } from "@itsvari/content";
 import RegistrationMarks from "@itsvari/ui/RegistrationMarks.astro";
 import FontFaces from "@itsvari/ui/FontFaces.astro";
 import CalibrationSwatches from "@itsvari/ui/CalibrationSwatches.astro";
 import NavigationDrawer from "@itsvari/ui/NavigationDrawer.astro";
+import TouchPress from "@itsvari/ui/TouchPress.astro";
 
 interface Props {
   canonical?: URL | string;
@@ -21,6 +24,9 @@ const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? sit
 const navigation = [{ href: "/gigs", label: "gigs" }, { href: "/releases", label: "recordings" }, { href: "/posts", label: "posts" }, { href: "/about", label: "about" }, { href: "/socials", label: "socials" }, { href: "/contact", label: "contact" }];
 const isCurrent = (href: string): boolean => Astro.url.pathname.startsWith(href);
 const drawerLinks = [...navigation.map((link) => ({ ...link, current: isCurrent(link.href) })), { href: siteOrigins.itsvari, label: "itsvari.com", external: true }];
+// faces that set line breaks above the fold are fetched before first paint, so a late swap cannot reflow the page in view.
+// labels and italic asides are on every page; the home page adds its wordmark, every other page an upright heading.
+const earlyFonts = ["departure-mono-regular", "redaction-35-italic", home ? "redaction-50-italic" : "redaction-regular"];
 ---
 
 <!doctype html>
@@ -42,6 +48,9 @@ const drawerLinks = [...navigation.map((link) => ({ ...link, current: isCurrent(
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="alternate" type="application/rss+xml" title="V4RI RSS" href="/rss.xml" />
     <link rel="canonical" href={canonical} />
+    {earlyFonts.map((file) => <link rel="preload" href={`/fonts/${file}.woff2`} as="font" type="font/woff2" crossorigin />)}
+    {/* a page change waits for the incoming main column, so a view transition never captures a half-parsed page. */}
+    <link rel="expect" href="#main" blocking="render" />
     <FontFaces />
     <slot name="head" />
     <title>{pageTitle}</title>
@@ -73,5 +82,6 @@ const drawerLinks = [...navigation.map((link) => ({ ...link, current: isCurrent(
       </footer>}
     </div>
     <RegistrationMarks position="bottom" />
+    <TouchPress />
   </body>
 </html>

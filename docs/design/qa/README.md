@@ -95,3 +95,36 @@ The mobile interaction update removes click cancellation from photo links. Passi
 Chrome checks used touch emulation at 390 × 844, plus V4RI at 640 × 768, 768 × 768 and 844 × 390, with desktop checks at 1280 and 1440px. The final re-check verified an 80ms press reveals colour, one uncancelled click follows the gig link, cancellation clears the pressed state, and a swipe scrolls without navigating. Nonzero scroll positions were locked and restored on both sites, background focus stayed inside the modal, the link lists scrolled, and close and Escape restored focus to the opener. Resizing closed and unlocked the drawer; normal scroll clamping applied where the desktop page became shorter. Close controls remained reachable on short screens. Earlier checks also covered Tab containment and the no-JavaScript details fallback. These are emulated Chrome checks, not physical-device results.
 
 Run `node docs/design/qa/mobile-interactions-check.mjs /path/to/playwright` for the focused regression check. It expects the local production previews on ports 4431 and 4432 and writes its results to `/tmp/cloudark-mobile-interactions-results.json`.
+
+## Motion system, 24 November 2026
+
+The interaction layer in `design-guide.md` §6 replaced the earlier 160ms fills, 2px card lift and 480ms rise on load. It was chosen from switchable prototypes: ruled hairlines throughout, with dither kept for photographs and for the tone a held surface takes, no page dissolve, and no scanlines on the V4RI home.
+
+`motion-check.mjs` is the regression check. It takes the directory of an installed Playwright package and, optionally, the two base URLs, which default to the development servers on ports 4321 and 4322. It writes `/tmp/cloudark-motion-results.json`.
+
+```sh
+node docs/design/qa/motion-check.mjs /path/to/playwright
+```
+
+All 21 checks passed in installed Chrome 157, once against the development servers and once against the production builds served by `astro preview` on ports 4431 and 4432:
+
+- 64 page loads (eight routes per site at 390, 768, 1280 and 2560px): no console errors, no horizontal overflow, cumulative layout shift no more than 0.002 on load in development and 0.005 in the production builds, 0 while hovering, no animation running on a page at rest other than the carousel's progress line, and no duplicate view-transition names.
+- Keyboard focus on both sites: the skip link, the brand mark and the first navigation entries each reported the engaged state, kept the 1px outline, and drew their hairline in full.
+- Reduced motion on both sites: every motion token computed to 0, hover started no animation, the carousel held its photograph for 4.6 seconds and still answered a manual selection at once, and the page change was an ordinary navigation.
+- Touch emulation at 390px: no hover media, a held touch set the pressed state and its tone on the card or row, and the first tap navigated.
+- Touch targets at 390, 768 and 1024px with a coarse pointer: 921 links and buttons measured, all at least 44×44px. Links inside article prose are exempt and keep the height of their line.
+- Seven page changes ran as view transitions with the expected pairs: chrome and marker, a project card title in both directions, a ledger title to its heading anchor on both sites and back, and four gig rows carried through a filter change. No poster took part.
+- The carousel dissolve ran for 480ms, linearly, from level 1 to 16 without ever removing a cell, and did not run on load. The home page has no scanline layer.
+- A photo row's colour veil opened over 220ms on hover and was fully open afterwards.
+- The drawer opened over 320ms with focus inside, and Escape closed it and returned focus to the opener, on both sites.
+- Firefox 157, which has no cross-document view transitions, navigated normally on both sites without errors.
+
+Two findings came out of removing the rise on load, which had been hiding them from both the eye and the layout-shift metric. Web fonts swapping in after first paint reflowed text above the fold, worst on V4RI `/gigs` at 390px (0.17); both layouts now preload the faces that set line breaks there. The gig poster had no intrinsic size, so the article jumped when it loaded (0.07 at 768px); event images now carry `width` and `height` in their frontmatter and the page reserves the box.
+
+Each page was also captured twice at the same size, once as a mouse sees it and once with a coarse pointer, at 390, 768 and 1280px. Every itsvari route and the V4RI about, contact, socials and gig detail pages were pixel-identical, so the enlarged touch targets are invisible. The V4RI gig and recording ledgers differed by one to four thousand pixels inside their photographs; two mouse captures of the same page differed by the same amount, so that is the photographs' own render-to-render variation and not the pointer type.
+
+The CV printed to the same number of pages from the local build and from the live site with one method. `scripts/verify-cv.mjs` currently fails because the committed PDF predates the latest CV text; neither file was changed in this pass.
+
+A production build served from a local address is refused by two hosts that only answer the real sites: the TX-02 font host, so body text fell back to the system monospace in that run, and the analytics beacon. The script sets those two refusals aside and counts every other console error.
+
+These are emulated checks in one Chrome build, not physical-device results. The home carousel was not included in the mouse-against-touch comparison because its photograph changes between captures.

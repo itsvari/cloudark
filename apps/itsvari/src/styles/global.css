@@ -10,6 +10,8 @@ body { margin: 0; }
 .i-nav a:last-child { border-bottom: 1px solid var(--rule); }
 .nav-number { color: var(--dim); width: 22px; }
 .i-nav a.on, .i-nav a.on .nav-number { color: var(--red); }
+/* the current page is marked by a red bar on the sidebar's edge, which a page change carries from one entry to the next. */
+.i-nav a.on::before { content: ""; position: absolute; inset: -1px calc(-1 * var(--s-5) - 1px) -1px auto; width: 3px; background: var(--red); view-transition-name: navigation-marker; }
 .i-main { padding: var(--safe) var(--gutter); position: relative; min-width: 0; }
 .i-meta { position: absolute; right: var(--gutter); top: var(--safe); color: var(--dim); display: flex; gap: var(--s-3); }
 .l-name { font: 400 var(--t9)/.85 "Redaction 50", Georgia, serif; margin: var(--s-7) 0 var(--s-4); }
@@ -21,6 +23,8 @@ body { margin: 0; }
 .page-meta { display: flex; gap: var(--s-3); color: var(--dim); margin-top: var(--s-6); flex-wrap: wrap; }
 .page-title { font: 400 var(--t6)/1 "Redaction", serif; margin: var(--s-4) 0 0; overflow-wrap: anywhere; }
 .page-title em { font-family: "Redaction 35", serif; font-style: italic; color: var(--dim); }
+/* a reading page's heading hugs its text, so a card title can scale into it as one shape. */
+.reading-article .page-title { width: fit-content; max-width: 100%; }
 .page-lede { font-size: var(--t1); line-height: 1.5; max-width: var(--measure); margin: var(--s-5) 0; }
 .ab-grid { display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: var(--s-7); margin-top: var(--s-2); }
 .ab-grid p { font-size: var(--t0); line-height: 1.6; margin: 0 0 var(--s-3); max-width: var(--measure); }
@@ -54,8 +58,10 @@ body { margin: 0; }
   .i-brand .lbl { display: none; }
   .desktop-navigation { margin: 0; }
   .i-nav { display: flex; gap: var(--s-4); flex-wrap: wrap; justify-content: flex-end; }
-  .i-nav a { border: 0; padding: 0; }
+  .i-nav a { border: 0; padding: 0; --row-rule-offset: -4px; }
   .i-nav a:last-child { border: 0; }
+  /* in the header the entries sit in a line, so the marker and the hover hairline both run under the label. */
+  .i-nav a.on::before { inset: auto 0 -4px 0; width: auto; height: 1px; }
   .nav-number { display: none; }
   .i-meta { display: none; }
   .i-main { padding-top: var(--s-6); }
@@ -77,3 +83,20 @@ body { margin: 0; }
 }
 .reading-links button { background: none; border: 0; padding: 0; font: inherit; text-align: left; }
 .nav-number.red { color: var(--red); }
+/* in the header the navigation entries are bare labels, so on touch each is extended to a 44px target without moving its neighbours. */
+@media (any-pointer: coarse) {
+  @container page (max-width: 1023px) {
+    .i-nav a { padding-block: calc((44px - 1lh) / 2); margin-block: calc((1lh - 44px) / 2); }
+    .i-nav a.on::before { bottom: calc((44px - 1lh) / 2 - 4px); }
+    .i-nav a { --row-rule-offset: calc((44px - 1lh) / 2 - 4px); }
+  }
+  /* the brand is one line in the header and two in the sidebar, so each layout borrows what it needs to reach 44px. */
+  .i-brand { --brand-pad: 5px; padding-block: var(--brand-pad); margin-block: calc(-1 * var(--brand-pad)) calc(var(--s-7) - var(--brand-pad)); }
+  @container page (max-width: 1023px) {
+    .i-brand { --brand-pad: 14px; margin-block: calc(-1 * var(--brand-pad)); }
+  }
+  /* a sidebar entry is a hairline short of 44px, so it takes the next entry's hairline into its own box. */
+  @container page (min-width: 1024px) {
+    .i-nav a:not(:last-child) { border-bottom: 1px solid transparent; margin-bottom: -1px; }
+  }
+}

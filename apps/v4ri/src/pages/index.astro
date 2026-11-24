@@ -22,8 +22,8 @@ const staticTime = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "
 <SiteLayout description="V4RI, Singapore-based producer and DJ. Dark techno, EBM, industrial and recorded live sets." title="V4RI" home>
   {firstImage && <link slot="head" rel="preload" as="image" href={firstImage.src} imagesrcset={firstImage.srcset} imagesizes="100vw" fetchpriority="high" />}
   <div slot="background" class="carousel" aria-hidden="true" data-carousel>
-    {images.map((image, index) => <img class:list={["carousel-photo", { "is-current": index === 0 }]} data-photo-caption={image.exif ?? "singapore · after dark"} src={image.src} srcset={image.srcset} sizes="100vw" alt="" width={image.width} height={image.height} loading={index === 0 ? "eager" : "lazy"} fetchpriority={index === 0 ? "high" : "low"} decoding="async" />)}
-    <div class="veil"></div><div class="shade"></div><div class="scan"></div>
+    {images.map((image, index) => <img class:list={["carousel-photo", "dither-resolve", { "is-current": index === 0 }]} data-photo-caption={image.exif ?? "singapore · after dark"} src={image.src} srcset={image.srcset} sizes="100vw" alt="" width={image.width} height={image.height} loading={index === 0 ? "eager" : "lazy"} fetchpriority={index === 0 ? "high" : "low"} decoding="async" />)}
+    <div class="veil"></div><div class="shade"></div>
   </div>
   <aside class="v-rail lbl dim" aria-hidden="true"><span>SGT <span data-local-time>{staticTime}</span></span><span>01.3521°N 103.8198°E</span><span>◼ REC — {now.getFullYear()}</span></aside>
   <section class="v-hero" aria-label="V4RI">
@@ -58,18 +58,23 @@ const staticTime = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "
 
 <style>
   :global(.home-shell) { min-height: max(720px, 100svh); }
-  .carousel { position: absolute; inset: 0; overflow: hidden; background: var(--bg); }
-  .carousel-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity var(--motion-entry, 480ms) var(--motion-ease, ease); }
-  .carousel-photo.is-current { opacity: 1; }
-  .veil, .shade, .scan { position: absolute; inset: 0; pointer-events: none; }
+  /* the carousel is its own stacking context, so a photograph can be revealed over the one it replaces and still sit under the veil. */
+  .carousel { position: absolute; inset: 0; overflow: hidden; background: var(--bg); isolation: isolate; }
+  .carousel-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; }
+  .carousel-photo.is-previous { opacity: 1; z-index: 1; }
+  .carousel-photo.is-current { opacity: 1; z-index: 2; }
+  /* the signature moment: the next photograph resolves over the last through all sixteen dither thresholds, at constant speed.
+     it is armed only once something has changed, so the first photograph never animates in on load. */
+  [data-carousel-started] .carousel-photo.is-current { animation: dither-resolve var(--motion-signature-ms) linear both; }
+  .veil, .shade { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
   .veil { background: rgba(0,0,0,.42); }
   .shade { background: linear-gradient(180deg, rgba(0,0,0,.25), transparent 28%, transparent 50%, rgba(0,0,0,.78)); }
-  .scan { background: repeating-linear-gradient(0deg, rgba(0,0,0,.22) 0 1px, transparent 1px 4px); }
   .v-rail { position: absolute; left: calc(var(--gutter) - 20px); top: calc(var(--safe) + 80px); bottom: calc(var(--safe) + 170px); writing-mode: vertical-rl; transform: rotate(180deg); display: flex; justify-content: space-between; align-items: center; }
   .v-hero { position: absolute; left: calc(var(--gutter) + 44px); bottom: calc(var(--safe) + var(--hero-b, 170px)); max-width: 72%; }
   .v-hero h1 { font: italic var(--t10)/.9 "Redaction 50", Georgia, serif; margin: 0 0 var(--s-2); letter-spacing: -.01em; }
   .tagline { font: italic var(--t5)/1.1 "Redaction 35", serif; color: rgba(255,255,255,.85); margin: 0 0 var(--s-4); }
-  .live-line { color: var(--red); background: rgba(0,0,0,.92); padding: var(--s-1) var(--s-2); box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+  /* the live line keeps its own backing, so its hairline is drawn along the bottom of that block rather than under bare text. */
+  .live-line { color: var(--red); background: linear-gradient(currentColor, currentColor) calc((1 - var(--active)) * 100%) 100% / calc(var(--active) * 100%) calc(1px + var(--pressed) * 1px) no-repeat rgba(0,0,0,.92); padding: var(--s-1) var(--s-2); box-decoration-break: clone; -webkit-box-decoration-break: clone; text-decoration: none; transition: background-size var(--motion-hover-ms) var(--motion-ease); }
   .live-line i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--red); box-shadow: 0 0 10px var(--red); margin: 0 7px 0 2px; vertical-align: middle; }
   .hero-links { display: flex; flex-wrap: wrap; gap: var(--s-5); margin-top: var(--s-5); }
   .v-cap { position: absolute; right: var(--gutter); bottom: calc(var(--safe) + 150px); color: rgba(255,255,255,.72); }
@@ -83,7 +88,10 @@ const staticTime = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "
   .carousel-controls[hidden] { display: none; }
   .index-bars { display: flex; gap: var(--s-1); }
   .slide-control { display: grid; place-items: center; width: 34px; min-height: 44px; padding: 0; border: 0; background: transparent; cursor: pointer; }
-  .slide-control i { position: relative; display: block; width: 100%; height: 2px; overflow: hidden; background: rgba(255,255,255,.3); }
+  /* the line thickens under the pointer and again while held; the row around it does not move. */
+  .slide-control i { position: relative; display: block; width: 100%; height: 2px; overflow: hidden; background: rgba(255,255,255,.3); scale: 1 calc(1 + var(--active) + var(--pressed)); transition: scale var(--motion-hover-ms) var(--motion-ease), background-color var(--motion-hover-ms) linear; }
+  /* the caption and index change in place when the photograph does. */
+  :is([data-carousel-index], [data-caption])[data-changed] { animation: motion-fade-in var(--motion-select-ms) linear; }
   .slide-progress { position: absolute; inset: 0; background: var(--red); transform: scaleX(0); transform-origin: left; }
   .slide-control.on .slide-progress { transform: scaleX(1); }
   .slide-control:hover, .slide-control:focus-visible, .slide-control:active { background: transparent; border: 0; transform: none; }
@@ -106,8 +114,10 @@ const staticTime = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "
     .index-bars { width: 100%; justify-content: flex-end; }
     .slide-control { width: 30px; }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .carousel-photo { transition: none; }
+  /* on touch each line gets a full 44px target; the line itself keeps its length and the row spreads to fit. */
+  @media (any-pointer: coarse) {
+    .slide-control { width: 44px; }
+    .slide-control i { width: 34px; }
   }
 </style>
 
@@ -122,15 +132,28 @@ const staticTime = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "
   const indexLabel = document.querySelector("[data-carousel-index]");
   const caption = document.querySelector("[data-caption]");
   const controls = document.querySelector("[data-carousel-controls]");
+  const carousel = document.querySelector("[data-carousel]");
   const photos = [...document.querySelectorAll(".carousel-photo")];
   const slideButtons = [...document.querySelectorAll("[data-slide-index]")];
   const progressLines = [...document.querySelectorAll("[data-slide-progress]")];
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let activeIndex = 0;
+  let previousIndex: number | undefined;
   let progressAnimation: Animation | undefined;
 
+  // removing and restoring the attribute restarts the arrival animation the stylesheet attaches to it.
+  const markChanged = (element: Element | null): void => {
+    if (!(element instanceof HTMLElement)) return;
+    element.removeAttribute("data-changed");
+    void element.offsetWidth;
+    element.setAttribute("data-changed", "");
+  };
+
   const renderCurrentPhoto = (): void => {
-    photos.forEach((photo, index) => photo.classList.toggle("is-current", index === activeIndex));
+    photos.forEach((photo, index) => {
+      photo.classList.toggle("is-current", index === activeIndex);
+      photo.classList.toggle("is-previous", index === previousIndex);
+    });
     slideButtons.forEach((button, index) => {
       button.classList.toggle("on", index === activeIndex);
       button.setAttribute("aria-pressed", String(index === activeIndex));
@@ -158,8 +181,15 @@ const staticTime = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "
 
   const selectPhoto = (nextIndex: number): void => {
     if (photos.length === 0) return;
-    activeIndex = (nextIndex + photos.length) % photos.length;
-    renderCurrentPhoto();
+    const requestedIndex = (nextIndex + photos.length) % photos.length;
+    if (requestedIndex !== activeIndex) {
+      previousIndex = activeIndex;
+      activeIndex = requestedIndex;
+      // the first photograph must never animate in on load, so transitions only arm once something has changed.
+      carousel?.setAttribute("data-carousel-started", "");
+      renderCurrentPhoto();
+      [indexLabel, caption].forEach(markChanged);
+    }
     startProgress();
   };
 

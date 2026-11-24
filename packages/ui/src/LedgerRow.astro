@@ -2,16 +2,19 @@
 import type { ContentImage, EventDisplayPhase } from '@itsvari/content';
 import PhotoFill from './PhotoFill.astro';
 import { formatLedgerDate } from './index';
-interface Props { href: string; title: string; date: Date; time?: string; venue?: string; phase?: EventDisplayPhase; ticketUrl?: string; recordingUrl?: string; image?: ContentImage; kind?: string; links?: Record<string,string>; }
-const { href, title, date, time, venue, phase, ticketUrl, recordingUrl, image, kind, links = {} } = Astro.props;
+import { viewTransitionStyle } from './view-transition-names';
+interface Props { href: string; title: string; date: Date; time?: string; venue?: string; phase?: EventDisplayPhase; ticketUrl?: string; recordingUrl?: string; image?: ContentImage; kind?: string; links?: Record<string,string>; carriesBetweenFilters?: boolean; }
+const { href, title, date, time, venue, phase, ticketUrl, recordingUrl, image, kind, links = {}, carriesBetweenFilters = false } = Astro.props;
+// a ledger that can be filtered names its rows, so a row still listed after a filter change is carried to its new place.
+const rowTransition = carriesBetweenFilters ? viewTransitionStyle('ledger-row', href) : undefined;
 const status = phase === 'live' ? '● live' : phase === 'upcoming' ? ticketUrl ? 'tickets' : 'announced' : phase === 'past' ? recordingUrl ? 'rec' : '—' : phase;
 const statusLink = phase === 'upcoming' ? ticketUrl : phase === 'past' ? recordingUrl : undefined;
 ---
-<div class:list={['ledger-row', { hasbg: image, content: !phase, cancelled: phase === 'cancelled', postponed: phase === 'postponed' }]} data-photo-row={image ? '' : undefined}>
+<div class:list={['ledger-row', { hasbg: image, content: !phase, cancelled: phase === 'cancelled', postponed: phase === 'postponed' }]} data-photo-row={image ? '' : undefined} style={rowTransition}>
   {image && <PhotoFill image={image} />}
   <time class="date" datetime={date.toISOString()}>{formatLedgerDate(date)}</time>
   <span class="time dim tag">{phase ? time ?? '—' : kind ?? 'post'}</span>
-  <span class="title"><a href={href} data-photo-text>{title}</a></span>
+  <span class="title" style={viewTransitionStyle('ledger-title', href)}><a href={href} data-photo-text>{title}</a></span>
   {phase && <span class="venue">{venue}</span>}
   <span class:list={['status', 'tag', { red: phase === 'live', dim: phase === 'postponed' || phase === 'cancelled' || phase === 'past' && !recordingUrl || phase === 'upcoming' && !ticketUrl }]}>
     {statusLink ? <a href={statusLink} aria-label={`${phase === 'past' ? 'Watch recording of' : 'Tickets for'} ${title}`}>[ {status} <span class="red">↗</span> ]</a> : status ? <>[ {status} ]</> : Object.entries(links).map(([label, link]) => <a href={link}>[ {label} <span class="red">↗</span> ]</a>)}

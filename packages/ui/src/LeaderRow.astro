@@ -23,6 +23,11 @@ const Element = href ? 'a' : 'div';
   .writing .key { width: 74px; min-width: 74px; flex: none; }
   .writing .value { font-weight: 500; }
   .arrow { grid-column: 5; font-family: 'Departure Mono', monospace; }
+  /* on touch a linked row reaches 44px by borrowing a few pixels from the rows either side. the reach is a layer of its own
+     rather than padding, because the negative margins that would cancel padding collapse between neighbouring rows. */
+  @media (any-pointer: coarse) {
+    a.leader-row::before { content: ''; position: absolute; inset: -3px 0; }
+  }
   @container page (max-width: 639px) {
     .leader-row:not(.writing) { display: grid; grid-template-columns: 1fr auto; column-gap: var(--s-3); row-gap: 2px; }
     .leader-row:not(.writing) .key { min-width: 0; }

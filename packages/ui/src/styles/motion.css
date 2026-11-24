@@ -1,0 +1,221 @@
+/* the interaction layer shared by itsvari.com and V4RI. docs/design/design-guide.md §6 is its specification.
+   lines do the moving: a hairline is ruled in along its length and thickens under pressure, and between pages only the red
+   rule and a title travel. dither belongs to photographs and to the tone a held surface takes.
+   every duration comes from the tokens in tokens.css, which reduced motion sets to zero. */
+
+/* ---------- state contract ----------
+   a pressable publishes whether the pointer or keyboard is on it and whether it is held down, and everything visual reads
+   those two numbers. the reset stops a pressable inheriting the state of a pressable ancestor, such as a link inside a card.
+   browsers disagree on when a touch counts as :active, so TouchPress.astro also reports a held touch through [data-pressed]. */
+:is(a, button, summary, .card, .ledger-row) {
+  --engaged: 0;
+  --pressed: 0;
+  --active: max(var(--engaged), var(--pressed));
+  --press-tone: none;
+}
+@media (hover: hover) {
+  :is(a, button, summary, .card, .ledger-row):hover { --engaged: 1; }
+}
+:is(a, button, summary):focus-visible { --engaged: 1; }
+:is(a, button, summary):is(:active, [data-pressed]) { --pressed: 1; }
+
+/* a card or ledger row is one target: the link stretched across it speaks for the whole surface, focus ring included.
+   these stay apart from the rules above so a browser without :has() loses only this refinement. */
+@supports selector(:has(a)) {
+  .card:has(h3 a:focus-visible), .ledger-row:has(.title a:focus-visible) { --engaged: 1; outline: 1px solid var(--fg); outline-offset: 2px; }
+  .card:has(h3 a:is(:active, [data-pressed])), .ledger-row:has(.title a:is(:active, [data-pressed])) { --pressed: 1; }
+  .card h3 a:focus-visible, .ledger-row .title a:focus-visible { outline: none; }
+}
+
+/* the browser's own tap flash stays as the fallback and steps aside once the held-touch report is running. */
+a, button, summary { -webkit-tap-highlight-color: rgba(255,255,255,.12); }
+:root[data-touch-press] :is(a, button, summary) { -webkit-tap-highlight-color: transparent; }
+
+/* ---------- inline labels ----------
+   the resting hairline is overdrawn from the left, retracts to the right and doubles in weight while held.
+   the selector carries no specificity, so a component can still restyle one of its own links. */
+:where(a.tag, .tag a, .l-links a, .reading-links a, .footer-links a, .v-nav a, .prose a, .facts a.value, .v-spec a, .feature-title):where(:not(.cv-download, .ticket-link, .contact-actions a, .drawer-brand, .drawer-links a, .table-of-contents a, .live-line)) {
+  --rest-rule: var(--rule);
+  /* a held pressable finishes its line at press speed instead of hover speed. */
+  --line-ms: calc(var(--motion-hover-ms) * (1 - var(--pressed)) + var(--motion-press-ms) * var(--pressed));
+  text-decoration: none;
+  padding-bottom: 3px;
+  margin-bottom: -3px;
+  background-image: linear-gradient(currentColor, currentColor), linear-gradient(var(--rest-rule), var(--rest-rule)), var(--press-tone);
+  background-origin: content-box;
+  background-clip: border-box, border-box, content-box;
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-position: calc((1 - var(--active)) * 100%) calc(100% + 2px), 0 calc(100% + 2px), 0 0;
+  background-size: calc(var(--active) * 100%) calc(1px + var(--pressed) * 1px), 100% 1px, 8px 8px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: background-size var(--line-ms) var(--motion-ease);
+}
+:where(.prose a) { --rest-rule: var(--dot); }
+/* navigation entries, and links that read as plain values, carry no resting line: theirs is drawn only while the pointer or keyboard is on them. */
+:where(.facts a.value, .v-spec a, .feature-title, .v-nav a) { --rest-rule: transparent; }
+:where(.v-spec > div > a) { width: fit-content; }
+
+/* an external arrow leaves along its own diagonal. */
+a:not(.leader-row, .writing-row) .red {
+  display: inline-block;
+  translate: calc(var(--active) * 2px) calc(var(--active) * -2px);
+  transition: translate var(--motion-hover-ms) var(--motion-ease);
+}
+
+/* ---------- bordered controls ----------
+   the frame brightens, a heavier rule is drawn along the bottom edge, and the control travels one pixel while held. */
+:is(button, .control, .cv-download, .ticket-link, .contact-actions a):not(.slide-control, .drawer-trigger, .drawer-close) {
+  --line-ms: calc(var(--motion-hover-ms) * (1 - var(--pressed)) + var(--motion-press-ms) * var(--pressed));
+  background-image: linear-gradient(currentColor, currentColor), var(--press-tone);
+  background-repeat: no-repeat, repeat;
+  background-position: calc((1 - var(--active)) * 100%) 100%, 0 0;
+  background-size: calc(var(--active) * 100%) calc(2px + var(--pressed) * 1px), 8px 8px;
+  translate: 0 calc(var(--pressed) * 1px);
+  transition: background-size var(--line-ms) var(--motion-ease), border-color var(--motion-hover-ms) linear, translate var(--motion-press-ms) linear;
+}
+:is(button, .control, .contact-actions a):not(.slide-control, .drawer-trigger, .drawer-close) {
+  border-color: color-mix(in srgb, var(--fg) calc(var(--active) * 100%), var(--rule));
+}
+
+/* ---------- brand marks ---------- */
+.brand-name, .logo span {
+  width: fit-content;
+  padding-bottom: 2px;
+  margin-bottom: -2px;
+  background: linear-gradient(currentColor, currentColor) calc((1 - var(--active)) * 100%) 100% / calc(var(--active) * 100%) 1px no-repeat;
+  transition: background-size var(--motion-hover-ms) var(--motion-ease);
+}
+
+/* ---------- rows ----------
+   the row's own hairline is overdrawn across its full width and the arrow advances. */
+:is(.ledger-row, .writing-row, a.leader-row, .i-nav a, .drawer-links a, .table-of-contents a) {
+  --row-rule-offset: -1px;
+  position: relative;
+}
+:is(.writing-row, a.leader-row) { --row-rule-offset: 0px; }
+:is(.ledger-row, .writing-row, a.leader-row, .i-nav a, .drawer-links a, .table-of-contents a)::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 var(--row-rule-offset) 0;
+  height: calc(1px + var(--pressed) * 1px);
+  background: currentColor;
+  pointer-events: none;
+  scale: var(--active) 1;
+  transform-origin: calc((1 - var(--active)) * 100%) 100%;
+  transition: scale calc(var(--motion-select-ms) * (1 - var(--pressed)) + var(--motion-press-ms) * var(--pressed)) var(--motion-ease);
+}
+:is(.ledger-row, .leader-row) .arrow, .writing-arrow {
+  translate: calc(var(--active) * 4px) 0;
+  transition: translate var(--motion-hover-ms) var(--motion-ease);
+}
+/* a leader row already owns a line: its dotted leader is ruled solid instead of adding a second one. */
+a.leader-row .lead::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -2px 0;
+  height: 2px;
+  background: var(--fg);
+  scale: var(--active) 1;
+  transform-origin: calc((1 - var(--active)) * 100%) 100%;
+  transition: scale calc(var(--motion-select-ms) * (1 - var(--pressed)) + var(--motion-press-ms) * var(--pressed)) var(--motion-ease);
+}
+/* below 640px the leader is hidden, so the row falls back to ruling its bottom edge. */
+@container page (min-width: 640px) {
+  a.leader-row::after { display: none; }
+}
+
+/* ---------- press tone ----------
+   a held surface takes a tone of 2px cells, which shows around a fingertip where a hairline cannot:
+   half the cells for labels and controls, a quarter for rows and cards. */
+:is(.ledger-row, .writing-row, a.leader-row, .i-nav a, .drawer-links a, .table-of-contents a, .i-brand, .logo) {
+  background-image: var(--press-tone);
+  background-size: 8px 8px;
+}
+:is(a.tag, .tag a, .l-links a, .reading-links a, .footer-links a, .v-nav a, .prose a, .facts a.value, .v-spec a, .feature-title, button, .control, .cv-download, .ticket-link, .contact-actions a, .i-brand, .logo):not(.slide-control, .drawer-links a, .table-of-contents a, .live-line):is(:active, [data-pressed]) { --press-tone: var(--dither-half-tone); }
+:is(.writing-row, a.leader-row, .i-nav a, .drawer-links a, .table-of-contents a):is(:active, [data-pressed]) { --press-tone: var(--dither-quarter-tone); }
+@supports selector(:has(a)) {
+  .card:has(h3 a:is(:active, [data-pressed])), .ledger-row:has(.title a:is(:active, [data-pressed])) { --press-tone: var(--dither-quarter-tone); }
+}
+
+/* ---------- photographs ----------
+   a photograph is greyscale until engaged. a veil that takes its saturation out breaks up through the dither to let the
+   colour through, and closes again on leaving. blending needs no second copy of the image. */
+.dither-veil::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #000;
+  mix-blend-mode: saturation;
+  pointer-events: none;
+  --dither-level: calc(16 - var(--active, 0) * 16);
+  transition: --dither-level var(--motion-select-ms) linear;
+}
+
+/* ---------- touch targets ----------
+   where any pointer is coarse, a standalone label is extended to 44px without moving anything: the padding is cancelled by
+   an equal negative margin, and the hairline stays where it was because it is positioned from the content box.
+   bordered controls already stand 44px tall. links inside running prose are left alone, since stretching them would
+   overlap the lines above and below. docs/design/qa/motion-check.mjs measures every target on both sites. */
+@media (any-pointer: coarse) {
+  :where(a.tag, .tag a, .l-links a, .reading-links a, .footer-links a, .v-nav a, .facts a.value, .v-spec a):where(:not(.cv-download, .ticket-link, .contact-actions a, .drawer-brand, .drawer-links a, .table-of-contents a, .live-line, .back-link)) {
+    /* an inline box is as tall as its glyphs, a little under one line, so the padding allows for that difference. */
+    --target-pad-block: max(3px, calc((46px - 1lh) / 2));
+    --target-pad-inline: 8px;
+    padding: var(--target-pad-block) var(--target-pad-inline);
+    margin: calc(-1 * var(--target-pad-block)) calc(-1 * var(--target-pad-inline));
+  }
+  /* a contents entry is a few pixels short, and borrows them from the entries either side. */
+  .table-of-contents a::before { content: ""; position: absolute; inset: -2px 0; }
+}
+
+/* ---------- view transitions ----------
+   moving between pages is continuous where the browser supports it and an ordinary navigation where it does not.
+   the opt-in sits in this stylesheet, which only the two public layouts import. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+}
+
+/* persistent chrome keeps its own snapshot, so page content changes beneath it while it stays still.
+   an open drawer covers the chrome, so the chrome rejoins the page snapshot until the drawer is gone. */
+.i-side, .v-top { view-transition-name: site-chrome; }
+:root:has(.drawer-dialog[open]) :is(.i-side, .v-top) { view-transition-name: none; }
+/* each page keeps exactly one red rule under its heading, and that rule glides to where the next page keeps its own. */
+:is(.i-main > .rule, .reading-article > .rule, .page-rule) { view-transition-name: page-rule; }
+
+/* titles are named after the page they link to (see view-transition-names.ts), which pairs them without script.
+   the class says how a pair behaves; a name with no counterpart on the other page simply fades with the page. */
+.card h3, .reading-article .page-title { view-transition-class: card-title; }
+.ledger-row .title, .writing-title { view-transition-class: ledger-title; }
+.ledger-row { view-transition-class: ledger-row; }
+/* a ledger title is set in the body face, so it never becomes the heading. it travels, at its own size, to an anchor on
+   the heading's first line, and the heading itself fades with its page. */
+.title-anchor { position: relative; }
+.title-anchor::before {
+  content: "";
+  position: absolute;
+  inset: calc((1lh - 1.5 * var(--t0)) / 2) auto auto 0;
+  width: 1px;
+  height: 1px;
+  view-transition-name: var(--title-anchor);
+  view-transition-class: ledger-title;
+}
+
+::view-transition-group(*) { animation-duration: var(--motion-page-ms); animation-timing-function: var(--motion-ease); }
+::view-transition-old(*), ::view-transition-new(*) { animation-duration: var(--motion-page-ms); animation-timing-function: linear; }
+/* page content crossfades in place: the old page is gone before the new one is half in, so the two never read at once. */
+::view-transition-old(root), ::view-transition-old(*):only-child { animation: motion-fade-out var(--motion-hover-ms) linear both; }
+::view-transition-new(root), ::view-transition-new(*):only-child { animation: motion-fade-in var(--motion-select-ms) linear var(--motion-press-ms) both; }
+/* a rule or marker arriving on a page that had none is drawn the way every other line here is. */
+::view-transition-new(page-rule):only-child, ::view-transition-new(navigation-marker):only-child { animation: motion-wipe-right var(--motion-page-ms) var(--motion-ease) both; }
+/* a card title and its page heading are the same face at two sizes, so one scales into the other. */
+::view-transition-old(.card-title), ::view-transition-new(.card-title) { height: 100%; object-fit: contain; object-position: left top; }
+/* the ledger line holds until it has nearly arrived and then gives way; coming back it is the first thing to appear. */
+::view-transition-old(.ledger-title), ::view-transition-new(.ledger-title) { inline-size: auto; block-size: auto; mix-blend-mode: normal; }
+::view-transition-old(.ledger-title):not(:only-child) { animation: motion-hold-fade-out var(--motion-page-ms) linear both; }
+::view-transition-new(.ledger-title):not(:only-child) { animation: motion-fade-in var(--motion-hover-ms) linear both; }
+
+@keyframes motion-fade-in { from { opacity: 0; } }
+@keyframes motion-fade-out { to { opacity: 0; } }
+@keyframes motion-hold-fade-out { 0%, 45% { opacity: 1; } 100% { opacity: 0; } }
+@keyframes motion-wipe-right { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0); } }

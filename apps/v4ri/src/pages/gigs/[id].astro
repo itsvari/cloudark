@@ -1,6 +1,7 @@
 ---
 import { getEvent, getReleases } from "@itsvari/content/astro";
 import { canonicalUrl, getEventDisplayPhase } from "@itsvari/content";
+import { titleAnchorStyle } from "@itsvari/ui";
 import YouTubeEmbed from "@itsvari/ui/YouTubeEmbed.astro";
 import Tag from "@itsvari/ui/Tag.astro";
 import { render } from "astro:content";
@@ -32,7 +33,7 @@ const articleHeadings = minimal ? [] : [
 
 <SiteLayout canonical={canonicalUrl("event", event.id, event.data.canonicalSite)} description={event.data.summary} title={event.data.title}>
   {minimal ? <article class="minimal-event">
-    <h1>{event.data.title}</h1>
+    <h1 class="title-anchor" style={titleAnchorStyle(Astro.url.pathname)}>{event.data.title}</h1>
     <p class="minimal-summary">{event.data.summary}</p>
     <div class="page-rule" aria-hidden="true"></div>
     <p class="tag"><span>{event.data.timeKind === "set" ? "Set time" : "Event time"} · SGT</span><br /><time datetime={event.data.startsAt.toISOString()}>{formatDate(event.data.startsAt)} · {formatTime(event.data.startsAt)}</time>{event.data.endsAt && <>–<time datetime={event.data.endsAt.toISOString()}>{formatTime(event.data.endsAt)}</time></>}</p>
@@ -47,7 +48,7 @@ const articleHeadings = minimal ? [] : [
         {event.data.ticketUrl && <a class="ticket-link tag" href={event.data.ticketUrl}>[ {ticketLabel} <span class="red">↗</span> ]</a>}
         <div class="detail-links tag">{event.data.sourceUrl && event.data.sourceUrl !== event.data.ticketUrl && <a href={event.data.sourceUrl}>[ event details <span class="red">↗</span> ]</a>}{event.data.recordingUrl && <a href="#recording">[ watch the recording ↓ ]</a>}</div>
       </div>
-      {event.data.image && <figure class="event-photo"><a href={event.data.image.src} aria-label={`View full poster for ${event.data.title}`}><img src={event.data.image.src} alt={event.data.image.alt} loading="lazy" decoding="async" /></a>{event.data.image.exif && <figcaption class="lbl">{event.data.image.exif}</figcaption>}</figure>}
+      {event.data.image && <figure class="event-photo"><a class="dither-veil" href={event.data.image.src} aria-label={`View full poster for ${event.data.title}`}><img src={event.data.image.src} alt={event.data.image.alt} width={event.data.image.width} height={event.data.image.height} loading="lazy" decoding="async" /></a>{event.data.image.exif && <figcaption class="lbl">{event.data.image.exif}</figcaption>}</figure>}
     </div>
     {event.data.lineup.length > 0 && <section><h2 id="event-lineup">Lineup</h2><ul class="event-lineup">{event.data.lineup.map((performer) => <li>{performer}</li>)}</ul></section>}
     {Content && hasOrganiserDescription && <section><h2 id="event-description">Description</h2><Content /></section>}
@@ -63,7 +64,7 @@ const articleHeadings = minimal ? [] : [
   .minimal-summary { font-size: var(--t1); margin-bottom: var(--s-5); }
   .minimal-event > .tag { margin-top: var(--s-5); line-height: 1.8; }
   .ticket-link { display: inline-flex; align-items: center; justify-content: space-between; gap: var(--s-5); min-height: var(--s-7); padding: var(--s-4) var(--s-5); border: 1px solid var(--fg); color: var(--red); background: transparent; }
-  .ticket-link:hover, .ticket-link:focus-visible { border-color: var(--red); background: transparent; }
+  .ticket-link:hover, .ticket-link:focus-visible { border-color: var(--red); }
   .event-lineup { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-3) var(--s-6); list-style: none; padding: 0; }
   .event-lineup li { border-bottom: 1px solid var(--rule); padding: var(--s-2) 0; }
   .event-details { margin-top: var(--s-5); }
@@ -71,9 +72,9 @@ const articleHeadings = minimal ? [] : [
   .event-facts { margin-top: 0; border-top: 0; padding-top: 0; }
   .time-note { display: block; margin-top: var(--s-3); color: var(--dim); line-height: 1.5; }
   .event-photo { margin: 0; }
-  .event-photo a { display: block; }
-  .event-photo img { display: block; width: 100%; height: auto; filter: grayscale(1); transition: filter .35s; }
-  .event-photo:hover img { filter: none; }
+  /* the poster link is the surface the colour veil is laid over, so it contains the veil and its blend. */
+  .event-photo a { display: block; position: relative; isolation: isolate; }
+  .event-photo img { display: block; width: 100%; height: auto; }
   .event-photo figcaption { margin-top: var(--s-2); color: var(--dim); overflow-wrap: anywhere; }
   @container page (max-width: 639px) {
     .event-lineup { grid-template-columns: minmax(0, 1fr); }

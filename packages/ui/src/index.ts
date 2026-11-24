@@ -27,3 +27,5 @@ export function formatLedgerDate(date: Date, compact = false): string {
 export { youtubeVideoId } from './youtube';
 
 export { numberArticleHeadings } from "./article-contents";
+
+export { titleAnchorStyle, viewTransitionName, viewTransitionStyle } from "./view-transition-names";

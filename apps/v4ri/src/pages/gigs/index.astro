@@ -32,7 +32,7 @@ const recordedCount = events.filter(({ data }) => data.recordingUrl).length;
   {filteredEvents.length === 0 ? <EmptyState message="No gigs match this filter." /> : <LedgerTable variant="events">
     {groups.map(({ phase, label, entries }) => entries.length > 0 && <>
       <h2 class="group-label tag">[ {label} — {String(entries.length).padStart(2, "0")} ]</h2>
-      {entries.map((event) => <LedgerRow href={`/gigs/${event.id}`} title={event.data.title} date={event.data.startsAt} time={`${formatTime(event.data.startsAt)}${event.data.endsAt ? `–${formatTime(event.data.endsAt)}` : event.data.timeNote && event.data.disclosure === "public" ? ` · ${event.data.timeNote}` : ""}`} venue={event.data.venue ? `${event.data.venue.name}, ${event.data.venue.city}` : undefined} phase={phase} ticketUrl={event.data.ticketUrl} recordingUrl={event.data.recordingUrl} image={event.data.image} />)}
+      {entries.map((event) => <LedgerRow href={`/gigs/${event.id}`} title={event.data.title} date={event.data.startsAt} time={`${formatTime(event.data.startsAt)}${event.data.endsAt ? `–${formatTime(event.data.endsAt)}` : event.data.timeNote && event.data.disclosure === "public" ? ` · ${event.data.timeNote}` : ""}`} venue={event.data.venue ? `${event.data.venue.name}, ${event.data.venue.city}` : undefined} phase={phase} ticketUrl={event.data.ticketUrl} recordingUrl={event.data.recordingUrl} image={event.data.image} carriesBetweenFilters />)}
     </>)}
   </LedgerTable>}
 </SiteLayout>

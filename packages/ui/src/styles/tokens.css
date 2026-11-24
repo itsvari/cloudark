@@ -47,3 +47,25 @@
 .page {
   --fl: calc((100cqi - 390px) / 1050);
 }
+
+/* motion: one duration for each kind of interaction and a single easing. nothing else in the codebase states a duration.
+   these live on the root alone, because view-transition pseudo-elements inherit from nowhere else. */
+:root {
+  --motion-press-ms: 80ms;
+  --motion-hover-ms: 140ms;
+  --motion-select-ms: 220ms;
+  --motion-page-ms: 320ms;
+  --motion-signature-ms: 480ms;
+  --motion-ease: cubic-bezier(.2, 0, 0, 1);
+}
+
+/* reduced motion is a complete mode: every duration collapses, so states and colours still change, at once. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-press-ms: 0ms;
+    --motion-hover-ms: 0ms;
+    --motion-select-ms: 0ms;
+    --motion-page-ms: 0ms;
+    --motion-signature-ms: 0ms;
+  }
+}

@@ -8,6 +8,12 @@
 .cv-resume h3 { margin-top: var(--s-6); }
 .cv-resume p, .cv-resume ul { margin-top: var(--s-3); }
 
+/* a project link that is the whole of its paragraph is a standalone control, so on touch it gets a full target. */
+@media (any-pointer: coarse) {
+  /* an inline box is as tall as its glyphs, about 1.3em in the body face, and its vertical padding never moves a line. */
+  .cv-resume p > a[href^="/projects"]:only-child { padding-block: calc((46px - 1.3em) / 2); }
+}
+
 @page { size: A4; margin: 15mm 16mm; }
 
 @media print {

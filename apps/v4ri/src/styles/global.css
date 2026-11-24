@@ -22,6 +22,10 @@
 .logo span { font: var(--t-1) "Departure Mono", monospace; letter-spacing: .14em; }
 .v-nav { display: flex; gap: var(--s-4); align-items: center; white-space: nowrap; }
 .v-nav .on { color: var(--red); }
+/* the current section is marked by a red line under its entry, which a page change carries from one entry to the next. */
+.v-nav a.on { position: relative; }
+/* the marker sits where the entry's hairline would, measured from the label itself, so a larger touch target does not move it. */
+.v-nav a.on::before { content: ""; position: absolute; inset: auto var(--target-pad-inline, 0px) calc(var(--target-pad-block, 3px) - 3px); height: 1px; background: var(--red); view-transition-name: navigation-marker; }
 .v-foot { margin-top: auto; padding-top: var(--s-7); display: flex; justify-content: space-between; align-items: center; color: var(--dim); gap: var(--s-4); flex-wrap: wrap; }
 .footer-stamp, .footer-links { display: inline-flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; }
 .footer-links { gap: var(--s-4); }
@@ -52,7 +56,6 @@
 .prose h3 { font: 400 var(--t2)/1.1 "Redaction", Georgia, serif; margin: var(--s-6) 0 var(--s-4); }
 .prose blockquote { margin: var(--s-6) 0; padding-left: var(--s-5); border-left: 2px solid var(--red); font: italic var(--t3)/1.3 "Redaction 35", Georgia, serif; }
 .prose em { font: italic 1.12em "Redaction 35", Georgia, serif; color: rgba(255,255,255,.9); }
-.prose a { text-decoration: underline; text-underline-offset: 4px; }
 .prose img { max-width: 100%; height: auto; }
 .prose pre { overflow-x: auto; border-block: 1px solid var(--rule); padding-block: var(--s-4); }
 .contents { position: sticky; top: var(--s-6); max-width: 300px; }
@@ -64,6 +67,8 @@
 .event-facts dd { margin: 0; }
 .detail-links { display: flex; flex-wrap: wrap; gap: var(--s-5); margin-block: var(--s-5); }
 .back-link { display: inline-block; margin-top: var(--s-7); }
+/* the header's backing blurs what scrolls beneath it; during a page change its snapshot stands in for it and blurs the same way. */
+::view-transition-group(site-chrome) { -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
 .error-page { max-width: 65ch; margin-block: var(--section); }
 .error-page h1 { font: 400 var(--t6)/1.1 "Redaction", Georgia, serif; }
 .error-page p { font-size: var(--t1); }
@@ -109,4 +114,10 @@
   .link-ledger-row { grid-template-columns: 1fr auto; gap: var(--s-3); }
   .link-ledger-row .destination-block { grid-row: 2; grid-column: 1 / -1; }
   .link-ledger-row > a { grid-column: 2; grid-row: 1; }
+}
+/* the closing link of a page stands alone under the article, so on touch it is given a full 44px line of its own. */
+@media (any-pointer: coarse) {
+  /* the mark is 26px tall; the header centres it, so the extra reach is cancelled above and below. */
+  .logo { padding-block: 9px; margin-block: -9px; }
+  .back-link { --target-pad: calc((46px - 1lh) / 2); padding-block: var(--target-pad); margin-block: calc(var(--s-7) - var(--target-pad)) calc(-1 * var(--target-pad)); }
 }

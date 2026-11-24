@@ -15,8 +15,8 @@ const numberWidthCharacters = Math.max(2, ...contents.map(({ number }) => number
   .table-of-contents h2 { margin: 0 0 var(--s-3); color: var(--dim); }
   .table-of-contents ol { margin: 0; padding: 0; list-style: none; }
   .table-of-contents a { display: grid; grid-template-columns: var(--contents-number-width) minmax(0, 1fr); gap: var(--s-3); padding: var(--s-3) 0; border-top: 1px solid var(--rule); align-items: start; }
-  .contents-number { color: var(--fg); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .contents-label { color: var(--dim); overflow-wrap: anywhere; }
+  .contents-number { color: var(--fg); font-variant-numeric: tabular-nums; white-space: nowrap; transition: color var(--motion-select-ms) linear; }
+  .contents-label { color: var(--dim); overflow-wrap: anywhere; transition: color var(--motion-select-ms) linear; }
   .table-of-contents a:hover .contents-label { color: var(--fg); }
   .table-of-contents a[aria-current='location'] .contents-number, .table-of-contents a[aria-current='location'] .contents-label { color: var(--red); }
   .table-of-contents .subsection { padding-left: var(--s-3); }

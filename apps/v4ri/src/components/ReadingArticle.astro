@@ -1,6 +1,6 @@
 ---
 import TableOfContents from "@itsvari/ui/TableOfContents.astro";
-import { numberArticleHeadings } from "@itsvari/ui";
+import { numberArticleHeadings, titleAnchorStyle } from "@itsvari/ui";
 
 interface Props {
   title: string;
@@ -12,7 +12,7 @@ const { title, summary, showSummary = true, headings } = Astro.props;
 const contents = numberArticleHeadings(headings);
 ---
 <article class="reading-article" data-reading-article>
-  <header class="reading-header"><div class="reading-meta tag"><slot name="meta" /></div><slot name="actions" /><h1>{title}</h1>{showSummary && <p class="lede">{summary}</p>}<div class="page-rule" aria-hidden="true"></div><slot name="details" /></header>
+  <header class="reading-header"><div class="reading-meta tag"><slot name="meta" /></div><slot name="actions" /><h1 class="title-anchor" style={titleAnchorStyle(Astro.url.pathname)}>{title}</h1>{showSummary && <p class="lede">{summary}</p>}<div class="page-rule" aria-hidden="true"></div><slot name="details" /></header>
   <div class:list={["reading-layout", { "without-contents": contents.length === 0 }]}>
     <div class="prose numbered-prose"><slot /></div>
     <TableOfContents headings={headings} />

@@ -94,5 +94,14 @@ The verifier requires Poppler's `pdfinfo`, `pdftotext` and `pdffonts`. It checks
 embedded Unicode fonts, source text, contact details, section order and two-page pagination.
 The PDF and print styles use white paper and greyscale text; the website stays dark.
 
+The interaction layer is specified in [`docs/design/design-guide.md`](docs/design/design-guide.md) §6. After changing the dither
+matrix, cell size or tones in `packages/ui/src/dither-cells.ts`, regenerate the stylesheet built from it; a unit test fails
+while the two disagree. `docs/design/qa/motion-check.mjs` checks motion, touch targets and layout shift against two running sites.
+
+```sh
+node scripts/generate-dither-cells.mjs
+node docs/design/qa/motion-check.mjs /path/to/playwright
+```
+
 See [media assets](docs/design/media-assets.md) for photo sources, YouTube recordings,
 Cloudflare image URLs and the optional `TX02_FONT_BASE_URL` setting.

@@ -1,7 +1,11 @@
 ---
 const configuredBase: unknown = import.meta.env.TX02_FONT_BASE_URL;
-function licensedFontFaces(value: unknown): string {
-  if (typeof value !== 'string' || !value) return '';
+interface LicensedFonts {
+  readonly faces: string;
+  readonly regularUrl?: string;
+}
+function licensedFonts(value: unknown): LicensedFonts {
+  if (typeof value !== 'string' || !value) return { faces: '' };
   let base: URL;
   try {
     base = new URL(value.endsWith('/') ? value : `${value}/`);
@@ -11,11 +15,15 @@ function licensedFontFaces(value: unknown): string {
   if (!['https:', 'http:'].includes(base.protocol)) {
     throw new Error('TX02_FONT_BASE_URL must be an absolute HTTP(S) URL');
   }
-  return [
+  const fileUrl = (file: string): string => new URL(`tx-02-${file}.woff2`, base).href;
+  const faces = [
     { file: 'regular', weight: 400, local: 'TX-02 Regular' },
     { file: 'medium', weight: 500, local: 'TX-02 Medium' },
-  ].map((face) => `@font-face{font-family:"TX-02";font-weight:${face.weight};src:url(${JSON.stringify(new URL(`tx-02-${face.file}.woff2`, base).href)}) format("woff2"),local(${JSON.stringify(face.local)});font-display:swap}`).join('\n');
+  ].map((face) => `@font-face{font-family:"TX-02";font-weight:${face.weight};src:url(${JSON.stringify(fileUrl(face.file))}) format("woff2"),local(${JSON.stringify(face.local)});font-display:swap}`).join('\n');
+  return { faces, regularUrl: fileUrl('regular') };
 }
-const faces = licensedFontFaces(configuredBase);
+const { faces, regularUrl } = licensedFonts(configuredBase);
 ---
+{/* the body face sets every line break, so it is fetched before first paint: a late swap would reflow the page in view. */}
+{regularUrl && <link rel="preload" href={regularUrl} as="font" type="font/woff2" crossorigin />}
 {faces && <style is:inline set:html={faces} />}

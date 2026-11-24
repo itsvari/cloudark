@@ -1,6 +1,6 @@
 ---
 import TableOfContents from "@itsvari/ui/TableOfContents.astro";
-import { numberArticleHeadings } from "@itsvari/ui";
+import { numberArticleHeadings, titleAnchorStyle, viewTransitionStyle } from "@itsvari/ui";
 
 interface Props {
   title: string;
@@ -11,11 +11,13 @@ interface Props {
 }
 const { title, summary, headings = [], labels = [], links = {} } = Astro.props;
 const contents = numberArticleHeadings(headings);
+// the heading answers to both kinds of list that can lead here: a card title scales into it, a ledger title travels to its anchor.
+const headingTransition = [viewTransitionStyle("card-title", Astro.url.pathname), titleAnchorStyle(Astro.url.pathname)].filter(Boolean).join(";") || undefined;
 ---
 <article class="reading-article" data-reading-article>
   <div class="page-meta tag">{labels.map((label) => <span>[ {label} ]</span>)}</div>
   <slot name="actions" />
-  <h1 class="page-title">{title}</h1>
+  <h1 class="page-title title-anchor" style={headingTransition}>{title}</h1>
   <p class="page-lede">{summary}</p>
   <div class="rule" aria-hidden="true"></div>
   <div class:list={["reading-grid", { "without-contents": contents.length === 0 }]}>

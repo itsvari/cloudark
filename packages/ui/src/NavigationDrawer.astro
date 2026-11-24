@@ -36,14 +36,31 @@ const { id, brand, links, collapseAtPx } = Astro.props;
 </div>
 <style>
   .navigation-drawer { position: relative; flex-shrink: 0; }
-  .drawer-trigger, .drawer-close, .drawer-brand { display: inline-flex; align-items: center; justify-content: center; min-width: var(--s-7); min-height: var(--s-7); padding: var(--s-3); color: var(--fg); background: var(--bg); border: 0; border-radius: 0; text-decoration: none; cursor: pointer; }
-  .drawer-trigger { padding-inline: var(--s-2); background: transparent; }
+  .drawer-trigger, .drawer-close, .drawer-brand { display: inline-flex; align-items: center; justify-content: center; min-width: var(--s-7); min-height: var(--s-7); padding: var(--s-3); color: var(--fg); background-color: var(--bg); border: 0; border-radius: 0; text-decoration: none; cursor: pointer; }
+  .drawer-trigger { padding-inline: var(--s-2); background-color: transparent; }
+  /* these are borderless, so they answer like an inline label: a hairline under the text, heavier while held, over the press tone. */
+  .drawer-trigger, .drawer-close {
+    background-image: linear-gradient(currentColor, currentColor), var(--press-tone);
+    background-origin: content-box;
+    background-repeat: no-repeat, repeat;
+    background-position: calc((1 - var(--active)) * 100%) 100%, 0 0;
+    background-size: calc(var(--active) * 100%) calc(1px + var(--pressed) * 1px), 8px 8px;
+    transition: background-size calc(var(--motion-hover-ms) * (1 - var(--pressed)) + var(--motion-press-ms) * var(--pressed)) var(--motion-ease);
+  }
+  .drawer-trigger:is(:active, [data-pressed]), .drawer-close:is(:active, [data-pressed]) { --press-tone: var(--dither-half-tone); }
   .drawer-trigger[hidden], .drawer-fallback[hidden] { display: none; }
   .drawer-fallback summary { list-style: none; }
   .drawer-fallback summary::-webkit-details-marker { display: none; }
-  .drawer-dialog { position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: var(--bg); color: var(--fg); overflow: hidden; }
+  /* the drawer is drawn down over the page like a fresh sheet and lifts away faster than it arrived.
+     where a browser cannot transition a dialog out of the top layer, it simply closes at once. */
+  .drawer-dialog { position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; border-radius: 0; background: var(--bg); color: var(--fg); overflow: hidden; clip-path: inset(0 0 100% 0); transition: clip-path var(--motion-select-ms) var(--motion-ease), display var(--motion-select-ms) allow-discrete, overlay var(--motion-select-ms) allow-discrete; }
   .drawer-dialog:not([open]) { display: none; }
-  .drawer-dialog::backdrop { background: var(--bg); }
+  .drawer-dialog[open] { clip-path: inset(0); transition-duration: var(--motion-page-ms); }
+  @starting-style {
+    .drawer-dialog[open] { clip-path: inset(0 0 100% 0); }
+  }
+  /* the sheet is opaque and covers the viewport itself; a second opaque layer behind it would hide the page before the sheet arrived. */
+  .drawer-dialog::backdrop { background: transparent; }
   .drawer-panel { display: flex; flex-direction: column; height: 100%; min-height: 0; padding: max(var(--safe), env(safe-area-inset-top)) max(var(--gutter), env(safe-area-inset-right)) max(var(--safe), env(safe-area-inset-bottom)) max(var(--gutter), env(safe-area-inset-left)); }
   .drawer-header { display: flex; flex-shrink: 0; align-items: center; justify-content: space-between; gap: var(--s-4); margin-bottom: var(--s-5); }
   .drawer-header form { margin: 0; }
@@ -130,8 +147,19 @@ const { id, brand, links, collapseAtPx } = Astro.props;
       const focusTarget = trigger.getClientRects().length ? trigger : document.querySelector('nav[aria-label="Primary navigation"] a[aria-current="page"], a[aria-label$="home"]');
       if (focusTarget instanceof HTMLElement) focusTarget.focus({ preventScroll: true });
     });
+    // when a view transition will carry the visitor to another page, the open drawer is the outgoing picture:
+    // closing it first would flash the page underneath. pagehide still closes it for the back/forward cache.
+    function leavesThroughViewTransition(link: HTMLAnchorElement, event: MouseEvent): boolean {
+      if (!('onpagereveal' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return false;
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || link.target) return false;
+      const destination = new URL(link.href, window.location.href);
+      const samePage = destination.pathname === window.location.pathname && destination.search === window.location.search;
+      return destination.origin === window.location.origin && !samePage;
+    }
+
     dialog.addEventListener('click', (event) => {
-      if (event.target instanceof Element && event.target.closest('a[href]')) dialog.close();
+      const link = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>('a[href]') : null;
+      if (link && !leavesThroughViewTransition(link, event)) dialog.close();
     });
     desktop.addEventListener('change', () => {
       if (desktop.matches && dialog.open) dialog.close();

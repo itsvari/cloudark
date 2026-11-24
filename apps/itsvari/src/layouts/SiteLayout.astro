@@ -1,12 +1,15 @@
 ---
 import "@itsvari/ui/styles/tokens.css";
 import "@itsvari/ui/styles/base.css";
+import "@itsvari/ui/styles/dither.css";
+import "@itsvari/ui/styles/motion.css";
 import "../styles/global.css";
 import { siteOrigins } from "@itsvari/content";
 import FontFaces from "@itsvari/ui/FontFaces.astro";
 import RegistrationMarks from "@itsvari/ui/RegistrationMarks.astro";
 import SectionRail from "@itsvari/ui/SectionRail.astro";
 import NavigationDrawer from "@itsvari/ui/NavigationDrawer.astro";
+import TouchPress from "@itsvari/ui/TouchPress.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import PrimaryNavigation from "../components/PrimaryNavigation.astro";
 import { navigation } from "../navigation";
@@ -25,6 +28,9 @@ const drawerLinks = [...navigation.map((link) => ({ ...link, current: currentNav
 const pageIndex = section ?? currentNavigation?.number ?? "00";
 const pageTitle = title === "itsvari" ? title : `${title} · itsvari`;
 const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? siteOrigins.itsvari).toString();
+// faces that set line breaks above the fold are fetched before first paint, so a late swap cannot reflow the page in view.
+// labels, headings and their italic asides are on every page; the bitmapped wordmark is on the home page alone.
+const earlyFonts = ["departure-mono-regular", "redaction-regular", "redaction-35-italic", ...(activePath === "/" ? ["redaction-50-regular"] : [])];
 ---
 <!doctype html>
 <html lang="en-GB">
@@ -43,8 +49,9 @@ const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? sit
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="preload" href="/fonts/departure-mono-regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/redaction-50-regular.woff2" as="font" type="font/woff2" crossorigin />
+    {earlyFonts.map((file) => <link rel="preload" href={`/fonts/${file}.woff2`} as="font" type="font/woff2" crossorigin />)}
+    {/* a page change waits for the incoming main column, so a view transition never captures a half-parsed page. */}
+    <link rel="expect" href="#main" blocking="render" />
     <link rel="alternate" type="application/rss+xml" title="itsvari RSS" href="/rss.xml" />
     <link rel="canonical" href={canonical} />
     <title>{pageTitle}</title>
@@ -74,5 +81,6 @@ const canonical = canonicalProp ?? new URL(Astro.url.pathname, Astro.site ?? sit
       </div>
       <RegistrationMarks position="bottom" />
     </div>
+    <TouchPress />
   </body>
 </html>
